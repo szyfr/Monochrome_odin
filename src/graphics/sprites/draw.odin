@@ -30,7 +30,7 @@ draw :: proc(
 		sprite.low^,
 		sprite_rect(sprite),
 		sprite.position,
-		{0, 1, 1},
+		{0, 0, 1},
 		{1, 1},
 		{0, 0},
 		0,
