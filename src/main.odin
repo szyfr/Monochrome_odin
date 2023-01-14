@@ -6,6 +6,8 @@ import "core:fmt"
 
 import "vendor:raylib"
 
+import "graphics/areas"
+import "graphics/tiles"
 import "graphics/sprites"
 import "graphics/sprites/animations"
 
@@ -15,6 +17,8 @@ sprite : sprites.Sprite
 
 texture : raylib.Texture2D
 model   : raylib.Model
+modelPly: raylib.Model
+meshPly : raylib.Mesh
 
 //= Main
 main :: proc() {
@@ -30,13 +34,15 @@ main :: proc() {
 
 	texture = raylib.LoadTexture("data/sprTest.png")
 
-	camera.position   = {0.5, 10, 0.01}
-	camera.target     = {0.5,  0, 0}
+	camera.position   = {0.5, 7.5, 3}
+	camera.target     = {0.5, 0.5, 0.5}
 	camera.up         = {0, 1, 0}
 	camera.fovy       = 70
 	camera.projection = .PERSPECTIVE
 
 	model = raylib.LoadModel("data/Map.obj")
+	meshPly  = raylib.GenMeshCube(0.8, 0.8, 0.8)
+	modelPly = raylib.LoadModelFromMesh(meshPly)
 
 	sprite = {
 		width    = 16,
@@ -52,9 +58,29 @@ main :: proc() {
 		},
 	}
 
+	tiles.init()
+	areas.init_area("data/mapTest.json")
+
 	for !raylib.WindowShouldClose() {
 
+		mod : raylib.Vector3 = {}
+		if raylib.IsKeyPressed(raylib.KeyboardKey.W) do mod.z = -1
+		if raylib.IsKeyPressed(raylib.KeyboardKey.S) do mod.z =  1
+		if raylib.IsKeyPressed(raylib.KeyboardKey.A) do mod.x = -1
+		if raylib.IsKeyPressed(raylib.KeyboardKey.D) do mod.x =  1
 
+		camera.target   += mod
+		camera.position += mod
+
+		if raylib.IsKeyPressed(raylib.KeyboardKey.P) {
+			if camera.projection == .ORTHOGRAPHIC {
+				camera.fovy       = 70
+				camera.projection = .PERSPECTIVE
+			} else {
+				camera.fovy       = 10
+				camera.projection = .ORTHOGRAPHIC
+			}
+		}
 		
 		raylib.BeginDrawing()
 		raylib.ClearBackground(raylib.RAYWHITE)
@@ -63,16 +89,18 @@ main :: proc() {
 
 		raylib.DrawGrid(100, 1)
 		//DrawModelEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint);
+		
 		raylib.DrawModelEx(
-			model,
-			{-4.5, -0.5, -4},
+			modelPly,
+			camera.target,
 			{0, 1, 0},
 			0,
 			{1, 1, 1},
 			raylib.WHITE,
 		)
+		areas.draw(camera)
 
-		//sprites.draw(camera, &sprite)
+		sprites.draw(camera, &sprite)
 
 		raylib.EndMode3D()
 
