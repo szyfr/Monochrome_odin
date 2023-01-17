@@ -48,7 +48,7 @@ init_area :: proc(
 			ti.surf  = tileList[(i*int(area.width))+o].(json.Object)["surf"].(bool)
 			append(&temp, ti)
 		}
-		append(&area.tilesls2, temp)
+		append(&area.tilesls, temp)
 	}
 
 	areas[area.name] = area

@@ -6,6 +6,7 @@ import "core:fmt"
 
 import "vendor:raylib"
 
+import "game"
 import "graphics/areas"
 import "graphics/tiles"
 import "graphics/sprites"
@@ -29,7 +30,7 @@ main :: proc() {
 		720,
 		"Monochrome",
 	)
-	raylib.SetTargetFPS(80)
+	//raylib.SetTargetFPS(80)
 	raylib.SetExitKey(raylib.KeyboardKey.NULL)
 
 	texture = raylib.LoadTexture("data/sprTest.png")
@@ -59,6 +60,7 @@ main :: proc() {
 	}
 
 	tiles.init()
+
 	areas.init_area("data/mapTest.json")
 
 	for !raylib.WindowShouldClose() {
@@ -81,13 +83,16 @@ main :: proc() {
 				camera.projection = .ORTHOGRAPHIC
 			}
 		}
+
+		if raylib.IsKeyPressed(raylib.KeyboardKey.O) do game.DRAW_MAP = !game.DRAW_MAP
 		
 		raylib.BeginDrawing()
 		raylib.ClearBackground(raylib.BLACK)
 
+		//* 3D
 		raylib.BeginMode3D(camera)
 
-		raylib.DrawGrid(100, 1)
+		//raylib.DrawGrid(100, 1)
 		//DrawModelEx(Model model, Vector3 position, Vector3 rotationAxis, float rotationAngle, Vector3 scale, Color tint);
 		
 		raylib.DrawModelEx(
@@ -98,11 +103,13 @@ main :: proc() {
 			{1, 1, 1},
 			raylib.WHITE,
 		)
-		areas.draw(camera)
+		areas.draw_single_area(camera, areas.areas["New Bark Town"])
 
 		sprites.draw(camera, &sprite)
 
 		raylib.EndMode3D()
+
+		raylib.DrawFPS(10,10)
 
 		raylib.EndDrawing()
 	}

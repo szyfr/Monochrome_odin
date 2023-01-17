@@ -8,14 +8,17 @@ import "core:slice"
 import "vendor:raylib"
 
 import "../tiles"
+import "../../game"
 
-test : bool = false
 
 //= Procedures
-draw :: proc(camera : raylib.Camera3D) {
-	for area in areas {
+draw_single_area :: proc(
+	camera : raylib.Camera3D,
+	area   : AreaMap,
+) {
+	if game.DRAW_MAP {
 		//* First half
-		for tile in areas[area].tilesls2 {
+		for tile in area.tilesls {
 			for tile2 in tile {
 				if tile2.pos.x < camera.target.x-1 {
 					raylib.DrawModelEx(
@@ -30,7 +33,7 @@ draw :: proc(camera : raylib.Camera3D) {
 			}
 		}
 		//* Second half
-		for tile in areas[area].tilesls2 {
+		for tile in area.tilesls {
 			slice.reverse(tile[:])
 			for tile2 in tile {
 				if tile2.pos.x > camera.target.x-1 {
