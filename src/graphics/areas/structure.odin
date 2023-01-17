@@ -18,6 +18,5 @@ AreaMap :: struct {
 	height    : f32,
 	position  : raylib.Vector3,
 	outskirts : string,
-	tilesls   : [dynamic]tiles.Tile,
 	tilesls2  : [dynamic][dynamic]tiles.Tile,
 }
