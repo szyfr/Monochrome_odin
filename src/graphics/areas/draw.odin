@@ -3,30 +3,48 @@ package areas
 
 //= Imports
 import "core:fmt"
+import "core:slice"
 
 import "vendor:raylib"
 
 import "../tiles"
 
+test : bool = false
 
 //= Procedures
 draw :: proc(camera : raylib.Camera3D) {
 	for area in areas {
-		//TODO: Potentially draw them 0 up to player location then end down?
-		for i:=0;i<len(areas[area].tiles);i+=1 {
-			tilePos : raylib.Vector3 = {
-				f32(int(i) % int(areas[area].width)),
-				areas[area].tiles[i].level,
-				f32(int(i) / int(areas[area].width)),
+		//* First half
+		for tile in areas[area].tilesls2 {
+			for tile2 in tile {
+				if tile2.pos.x < camera.target.x-1 {
+					raylib.DrawModelEx(
+						tiles.data[tile2.model],
+						tile2.pos,
+						{0, 1, 0},
+						0,
+						{1, 1, 1},
+						raylib.WHITE,
+					)
+				}
 			}
-			raylib.DrawModelEx(
-				tiles.data[areas[area].tiles[i].model],
-				tilePos,
-				{0, 1, 0},
-				0,
-				{1, 1, 1},
-				raylib.WHITE,
-			)
+		}
+		//* Second half
+		for tile in areas[area].tilesls2 {
+			slice.reverse(tile[:])
+			for tile2 in tile {
+				if tile2.pos.x > camera.target.x-1 {
+					raylib.DrawModelEx(
+						tiles.data[tile2.model],
+						tile2.pos,
+						{0, 1, 0},
+						0,
+						{1, 1, 1},
+						raylib.WHITE,
+					)
+				}
+			}
+			slice.reverse(tile[:])
 		}
 	}
 }

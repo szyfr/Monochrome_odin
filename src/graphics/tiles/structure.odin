@@ -11,9 +11,9 @@ data : map[string]raylib.Model
 
 //= Structures
 Tile :: struct {
-	//model : ^raylib.Model,
 	model : string,
-	level : f32,
+	pos   : raylib.Vector3,
+//	level : f32,
 	solid : bool,
 	surf  : bool, 
 }

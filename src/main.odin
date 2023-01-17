@@ -83,7 +83,7 @@ main :: proc() {
 		}
 		
 		raylib.BeginDrawing()
-		raylib.ClearBackground(raylib.RAYWHITE)
+		raylib.ClearBackground(raylib.BLACK)
 
 		raylib.BeginMode3D(camera)
 

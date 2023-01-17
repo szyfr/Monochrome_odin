@@ -15,7 +15,9 @@ areas : map[string]AreaMap
 AreaMap :: struct {
 	name      : string,
 	width     : f32,
-	//outskirts : ^raylib.Model,
+	height    : f32,
+	position  : raylib.Vector3,
 	outskirts : string,
-	tiles     : [dynamic]tiles.Tile,
+	tilesls   : [dynamic]tiles.Tile,
+	tilesls2  : [dynamic][dynamic]tiles.Tile,
 }
