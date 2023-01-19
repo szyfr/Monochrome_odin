@@ -2,6 +2,8 @@ package sprites
 
 
 //= Imports
+import "core:fmt"
+
 import "vendor:raylib"
 
 import "animations"
@@ -12,35 +14,34 @@ draw :: proc(
 	camera : raylib.Camera3D,
 	sprite : ^Sprite,
 ) {
-//	DrawBillboardPro(
-//		Camera camera,
-//		Texture2D texture,
-//		Rectangle source,
-//		Vector3 position,
-//		Vector3 up,
-//		Vector2 size,
-//		Vector2 origin,
-//		float rotation,
-//		Color tint,
-//	);
+	frameX := f32(sprite.animator.animations[sprite.animator.currentAnimation].frames[sprite.animator.frame])
+	rect : raylib.Rectangle = {
+		frameX * sprite.size.x,
+		0,
+		sprite.size.x,
+		sprite.size.y,
+	}
 
-	//* Low
 	raylib.DrawBillboardPro(
 		camera,
-		sprite.low^,
-		sprite_rect(sprite),
-		sprite.position,
-		{0, 0, 1},
-		{1, 1},
-		{0, 0},
+		sprite.texture,
+		rect,
+		camera.target,
+		{0,0.9,-0.65},
+		{1,1},
+		{0,0},
 		0,
 		raylib.WHITE,
 	)
-}
 
-sprite_rect :: proc(sprite : ^Sprite) -> raylib.Rectangle {
-	rect : raylib.Rectangle = {0, 0, f32(sprite.width), f32(sprite.height)}
-	rect.x = f32(sprite.animator.frame * sprite.width)
+	sprite.animator.timer += 1
 
-	return rect
+	if sprite.animator.timer >= sprite.animator.animations[sprite.animator.currentAnimation].animationSpeed {
+		sprite.animator.timer  = 0
+		sprite.animator.frame += 1
+
+		if sprite.animator.frame >= u32(len(sprite.animator.animations[sprite.animator.currentAnimation].frames)) {
+			sprite.animator.frame = 0
+		}
+	}
 }

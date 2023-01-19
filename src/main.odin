@@ -56,21 +56,14 @@ main_draw :: proc() {
 		raylib.BeginMode3D(camera)
 
 		//* Draw "player"
-		//TODO
-		raylib.DrawModelEx(
-			modelPly,
-			camera.target,
-			{0, 1, 0},
-			0,
-			{1, 1, 1},
-			raylib.WHITE,
-		)
+		//TODO Move player drawing to area drawing when player controller is done
+		sprites.draw(camera, &sprite)
 
 		//* Draw area
 		areas.draw_single_area(camera, areas.areas["New Bark Town"])
 
 		//* Draw sprite
-		sprites.draw(camera, &sprite)
+		
 
 		raylib.EndMode3D()
 
@@ -103,21 +96,9 @@ main_init :: proc() {
 	raylib.SetExitKey(raylib.KeyboardKey.NULL)
 
 	//* Load sprite
-	texture = raylib.LoadTexture("data/sprTest.png")
+	texture = raylib.LoadTexture("data/sprites/spr_player_1.png")
 
-	sprite = {
-		width    = 16,
-		height   = 16,
-		position = {0.5, 5, 0.5},
-		low      = &texture,
-		mid      = nil,
-		high     = nil,
-		animator = {
-			currentAnimation = 0,
-			frame = 0,
-			timer = 0,
-		},
-	}
+	sprite = sprites.create("player_1")^
 
 	//* Camera initialization
 	camera.position   = {0.5, 7.5, 3}
@@ -130,7 +111,7 @@ main_init :: proc() {
 	tiles.init()
 
 	//* Load test map
-	areas.init_area("data/mapTest.json")
+	areas.init_area("data/maps/mapTest.json")
 }
 
 main_close :: proc() {

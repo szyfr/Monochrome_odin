@@ -7,11 +7,11 @@ import "vendor:raylib"
 
 //= Structures
 AnimationController :: struct {
-	currentAnimation : u32,
+	currentAnimation : string,
 	frame : u32,
 	timer : u32,
 
-	animations : [dynamic]Animation,
+	animations : map[string]Animation,
 }
 
 Animation :: struct {
