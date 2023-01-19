@@ -5,5 +5,6 @@ package game
 
 
 //= Globals
-DEBUG : bool = true
-DRAW_MAP : bool = true
+DEBUG     : bool = true
+LIMIT_FPS : bool = true
+DRAW_MAP  : bool = true

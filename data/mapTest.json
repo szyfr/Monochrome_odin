@@ -4,6 +4,10 @@
 	"width":20,
 	"height":18,
 	"position":{"x":0,"y":0,"z":0},
+	"connected":[
+		"Route 29",
+		"Route 27"
+	],
 	"tiles":[
 		{"tile":"tile_tree_1","level":0,"solid":true,"surf":false},
 		{"tile":"tile_tree_1","level":0,"solid":true,"surf":false},
