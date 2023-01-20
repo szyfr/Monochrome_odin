@@ -7,6 +7,8 @@ import "core:fmt"
 import "vendor:raylib"
 
 import "game"
+import "game/over_char"
+import "game/player"
 import "graphics/areas"
 import "graphics/tiles"
 import "graphics/sprites"
@@ -24,14 +26,7 @@ meshPly : raylib.Mesh
 //= Main
 main_logic :: proc() {
 	//* Test movement
-	//TODO
-	mod : raylib.Vector3 = {}
-	if raylib.IsKeyPressed(raylib.KeyboardKey.W) do mod.z = -1
-	if raylib.IsKeyPressed(raylib.KeyboardKey.S) do mod.z =  1
-	if raylib.IsKeyPressed(raylib.KeyboardKey.A) do mod.x = -1
-	if raylib.IsKeyPressed(raylib.KeyboardKey.D) do mod.x =  1
-	camera.target   += mod
-	camera.position += mod
+	player.update()
 
 	//* Change camera perspective
 	if raylib.IsKeyPressed(raylib.KeyboardKey.P) {
@@ -95,17 +90,8 @@ main_init :: proc() {
 	if game.LIMIT_FPS do raylib.SetTargetFPS(80)
 	raylib.SetExitKey(raylib.KeyboardKey.NULL)
 
-	//* Load sprite
-	texture = raylib.LoadTexture("data/sprites/spr_player_1.png")
-
-	sprite = sprites.create("player_1")^
-
-	//* Camera initialization
-	camera.position   = {0.5, 7.5, 3}
-	camera.target     = {0.5, 0.5, 0.5}
-	camera.up         = {0, 1, 0}
-	camera.fovy       = 70
-	camera.projection = .PERSPECTIVE
+	//* Player Init
+	player.init()
 
 	//* Load all tiles
 	tiles.init()
