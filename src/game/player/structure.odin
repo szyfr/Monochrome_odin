@@ -13,6 +13,6 @@ data : ^Player
 
 //= Structures
 Player :: struct {
-	camera : raylib.Camera3D,
 	overworldCharacter : over_char.OverworldCharacter,
+	moveTimer : u8,
 }

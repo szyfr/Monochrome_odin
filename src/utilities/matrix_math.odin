@@ -1,4 +1,4 @@
-package matrix_math
+package utilities
 
 
 //= Imports

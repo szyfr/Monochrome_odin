@@ -6,7 +6,7 @@ import "core:fmt"
 
 import "vendor:raylib"
 
-import "../player"
+import "../camera"
 import "../../graphics/sprites"
 
 
@@ -14,5 +14,5 @@ import "../../graphics/sprites"
 draw :: proc(
 	char : ^OverworldCharacter,
 ) {
-	sprites.draw(player.camera, char.sprite)
+	sprites.draw(camera.data, &char.sprite)
 }

@@ -7,6 +7,7 @@ import "core:fmt"
 import "vendor:raylib"
 
 import "game"
+import "game/camera"
 import "game/over_char"
 import "game/player"
 import "graphics/areas"
@@ -15,7 +16,6 @@ import "graphics/sprites"
 import "graphics/sprites/animations"
 
 
-camera : raylib.Camera3D
 sprite : sprites.Sprite
 
 texture : raylib.Texture2D
@@ -29,13 +29,14 @@ main_logic :: proc() {
 	player.update()
 
 	//* Change camera perspective
+	//TODO Move to cmaera package
 	if raylib.IsKeyPressed(raylib.KeyboardKey.P) {
-		if camera.projection == .ORTHOGRAPHIC {
-			camera.fovy       = 70
-			camera.projection = .PERSPECTIVE
+		if camera.data.projection == .ORTHOGRAPHIC {
+			camera.data.fovy       = 70
+			camera.data.projection = .PERSPECTIVE
 		} else {
-			camera.fovy       = 10
-			camera.projection = .ORTHOGRAPHIC
+			camera.data.fovy       = 10
+			camera.data.projection = .ORTHOGRAPHIC
 		}
 	}
 
@@ -48,14 +49,14 @@ main_draw :: proc() {
 		raylib.ClearBackground(raylib.BLACK)
 
 		//* 3D
-		raylib.BeginMode3D(camera)
+		raylib.BeginMode3D(camera.data)
+
+		//* Draw area
+		areas.draw_single_area(camera.data, areas.areas["New Bark Town"])
 
 		//* Draw "player"
 		//TODO Move player drawing to area drawing when player controller is done
-		sprites.draw(camera, &sprite)
-
-		//* Draw area
-		areas.draw_single_area(camera, areas.areas["New Bark Town"])
+		player.draw()
 
 		//* Draw sprite
 		
@@ -89,6 +90,9 @@ main_init :: proc() {
 	)
 	if game.LIMIT_FPS do raylib.SetTargetFPS(80)
 	raylib.SetExitKey(raylib.KeyboardKey.NULL)
+
+	//* Camera init
+	camera.init()
 
 	//* Player Init
 	player.init()
