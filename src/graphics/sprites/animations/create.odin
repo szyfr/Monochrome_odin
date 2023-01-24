@@ -6,7 +6,9 @@ import "core:encoding/json"
 
 
 //= Procedures
-create :: proc(
+create :: proc{ create_array }
+
+create_array :: proc(
 	array : json.Array,
 ) -> Animation {
 	ani : Animation = { animationSpeed = u32(array[0].(f64)) }

@@ -1,4 +1,4 @@
-package utilities
+package mathz
 
 
 //= Imports
@@ -37,6 +37,7 @@ approximately_Vector3 :: proc(
 	str1 = fmt.sbprintf(&builder1, "%.3f", v1.z)
 	str2 = fmt.sbprintf(&builder2, "%.3f", v2.z)
 	if str1 != str2 do return false
+
 
 	return true
 }

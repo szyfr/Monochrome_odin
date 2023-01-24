@@ -4,7 +4,7 @@ package player
 //= Imports
 import "vendor:raylib"
 
-import "../over_char"
+import "../entity"
 
 
 //= Globals
@@ -13,6 +13,6 @@ data : ^Player
 
 //= Structures
 Player :: struct {
-	overworldCharacter : over_char.OverworldCharacter,
+	entity    : entity.Entity,
 	moveTimer : u8,
 }

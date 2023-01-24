@@ -14,6 +14,7 @@ draw :: proc(
 	camera : raylib.Camera3D,
 	sprite : ^Sprite,
 ) {
+	//* Calculate current frame
 	frameX := f32(sprite.animator.animations[sprite.animator.currentAnimation].frames[sprite.animator.frame])
 	rect : raylib.Rectangle = {
 		frameX * sprite.size.x,
@@ -22,6 +23,7 @@ draw :: proc(
 		sprite.size.y,
 	}
 
+	//* Draw sprite as billboard
 	raylib.DrawBillboardPro(
 		camera,
 		sprite.texture,
@@ -34,8 +36,8 @@ draw :: proc(
 		raylib.WHITE,
 	)
 
+	//* Increment and test animation timer
 	sprite.animator.timer += 1
-
 	if sprite.animator.timer >= sprite.animator.animations[sprite.animator.currentAnimation].animationSpeed {
 		sprite.animator.timer  = 0
 		sprite.animator.frame += 1

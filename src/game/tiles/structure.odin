@@ -13,7 +13,6 @@ data : map[string]raylib.Model
 Tile :: struct {
 	model : string,
 	pos   : raylib.Vector3,
-//	level : f32,
 	solid : bool,
 	surf  : bool, 
 }

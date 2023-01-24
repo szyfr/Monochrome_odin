@@ -24,6 +24,13 @@ init :: proc() {
 	raylib.ClearDirectoryFiles()
 
 	data["null"] = raylib.LoadModelFromMesh(raylib.GenMeshCube(0,0,0))
+}
 
-	//for tile in data do fmt.printf("%v\n", tile)
+close :: proc() {
+	for model in data {
+		//? For some reason, without this it crashes
+		//? It's not really important... But still weird...
+		fmt.printf("\n")
+		raylib.UnloadModel(data[model])
+	}
 }

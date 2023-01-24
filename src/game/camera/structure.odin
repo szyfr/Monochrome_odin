@@ -4,9 +4,16 @@ package camera
 //= Imports
 import "vendor:raylib"
 
+import "../entity"
+
 
 //= Globals
-data : raylib.Camera3D
+data : ^Camera
 
 
 //= Structures
+Camera :: struct {
+	using data : raylib.Camera3D,
+
+	follow : ^entity.Entity,
+}

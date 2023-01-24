@@ -6,8 +6,7 @@ import "core:fmt"
 
 import "vendor:raylib"
 
-import "../camera"
-import "../over_char"
+import "../entity"
 
 
 //= Constants
@@ -15,31 +14,30 @@ MOVE_WAIT :: 6
 
 
 //= Procedure
-//TODO Check if tile is solid or another level
 update :: proc() {
 	upDown    := raylib.IsKeyDown(raylib.KeyboardKey.W)
 	downDown  := raylib.IsKeyDown(raylib.KeyboardKey.S)
 	leftDown  := raylib.IsKeyDown(raylib.KeyboardKey.A)
 	rightDown := raylib.IsKeyDown(raylib.KeyboardKey.D)
 
-	if upDown && !data.overworldCharacter.isMoving {
-		if data.moveTimer > MOVE_WAIT do over_char.move(.up, &data.overworldCharacter)
-		else do data.overworldCharacter.direction = .up
+	if upDown && !data.entity.isMoving {
+		if data.moveTimer > MOVE_WAIT do entity.move_entity(.up, &data.entity)
+		else do data.entity.direction = .up
 		data.moveTimer += 1
 	}
-	if downDown && !data.overworldCharacter.isMoving {
-		if data.moveTimer > MOVE_WAIT do over_char.move(.down, &data.overworldCharacter)
-		else do data.overworldCharacter.direction = .down
+	if downDown && !data.entity.isMoving {
+		if data.moveTimer > MOVE_WAIT do entity.move_entity(.down, &data.entity)
+		else do data.entity.direction = .down
 		data.moveTimer += 1
 	}
-	if leftDown && !data.overworldCharacter.isMoving {
-		if data.moveTimer > MOVE_WAIT do over_char.move(.left, &data.overworldCharacter)
-		else do data.overworldCharacter.direction = .left
+	if leftDown && !data.entity.isMoving {
+		if data.moveTimer > MOVE_WAIT do entity.move_entity(.left, &data.entity)
+		else do data.entity.direction = .left
 		data.moveTimer += 1
 	}
-	if rightDown && !data.overworldCharacter.isMoving {
-		if data.moveTimer > MOVE_WAIT do over_char.move(.right, &data.overworldCharacter)
-		else do data.overworldCharacter.direction = .right
+	if rightDown && !data.entity.isMoving {
+		if data.moveTimer > MOVE_WAIT do entity.move_entity(.right, &data.entity)
+		else do data.entity.direction = .right
 		data.moveTimer += 1
 	}
 	if  !upDown    &&
@@ -49,6 +47,5 @@ update :: proc() {
 		data.moveTimer = 0
 	}
 
-	over_char.update(&data.overworldCharacter)
-	camera.move(data.overworldCharacter.currentPosition)
+	entity.update(&data.entity)
 }

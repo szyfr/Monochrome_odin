@@ -6,7 +6,7 @@ import "core:fmt"
 
 import "vendor:raylib"
 
-import "../over_char"
+import "../entity"
 import "../../graphics/sprites"
 
 
@@ -14,7 +14,14 @@ import "../../graphics/sprites"
 init :: proc() {
 	data = new(Player)
 
-	data.overworldCharacter.sprite = sprites.create("player_1")^
+	data.entity.position  = {13,0,6}
+	data.entity.target    = {13,0,6}
+	data.entity.direction = .down
+	data.entity.sprite    = sprites.create("player_1")^
 
-	data.moveTimer = 0
+	data.moveTimer        = 0
+}
+
+close :: proc() {
+	free(data)
 }

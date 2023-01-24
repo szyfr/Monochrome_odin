@@ -8,65 +8,35 @@ import "vendor:raylib"
 
 import "game"
 import "game/camera"
-import "game/over_char"
 import "game/player"
-import "graphics/areas"
-import "graphics/tiles"
-import "graphics/sprites"
-import "graphics/sprites/animations"
+import "game/tiles"
+import "game/zone"
+import "graphics"
 
-
-sprite : sprites.Sprite
-
-texture : raylib.Texture2D
-model   : raylib.Model
-modelPly: raylib.Model
-meshPly : raylib.Mesh
 
 //= Main
+
 main_logic :: proc() {
-	//* Test movement
+
+	//* Player / Camera
 	player.update()
+	camera.update()
 
-	//* Change camera perspective
-	//TODO Move to cmaera package
-	if raylib.IsKeyPressed(raylib.KeyboardKey.P) {
-		if camera.data.projection == .ORTHOGRAPHIC {
-			camera.data.fovy       = 70
-			camera.data.projection = .PERSPECTIVE
-		} else {
-			camera.data.fovy       = 10
-			camera.data.projection = .ORTHOGRAPHIC
-		}
-	}
-
-	//* Turn off map drawing
-	if raylib.IsKeyPressed(raylib.KeyboardKey.O) do game.DRAW_MAP = !game.DRAW_MAP
 }
 
 main_draw :: proc() {
 	raylib.BeginDrawing()
-		raylib.ClearBackground(raylib.BLACK)
+	raylib.ClearBackground(raylib.BLACK)
+	raylib.BeginMode3D(camera.data)
 
-		//* 3D
-		raylib.BeginMode3D(camera.data)
+	//* Zones
+	graphics.draw_single()
 
-		//* Draw area
-		areas.draw_single_area(camera.data, areas.areas["New Bark Town"])
+	//* Player TEMP
+	graphics.draw_entity(&player.data.entity)
 
-		//* Draw "player"
-		//TODO Move player drawing to area drawing when player controller is done
-		player.draw()
-
-		//* Draw sprite
-		
-
-		raylib.EndMode3D()
-
-		//* Draw FPS
-		if game.DEBUG do raylib.DrawFPS(10,10)
-
-		raylib.EndDrawing()
+	raylib.EndMode3D()
+	raylib.EndDrawing()
 }
 
 main :: proc() {
@@ -78,10 +48,11 @@ main :: proc() {
 		main_logic()
 		main_draw()
 	}
+
 }
 
 main_init :: proc() {
-	//* Raylib initialization
+	//* Init Raylib
 	raylib.SetTraceLogLevel(.NONE)
 	raylib.InitWindow(
 		1280,
@@ -91,23 +62,30 @@ main_init :: proc() {
 	if game.LIMIT_FPS do raylib.SetTargetFPS(80)
 	raylib.SetExitKey(raylib.KeyboardKey.NULL)
 
-	//* Camera init
+	//* Init Player / Camera
+	player.init()
 	camera.init()
 
-	//* Player Init
-	player.init()
-
-	//* Load all tiles
+	//* Init Tiles
 	tiles.init()
 
-	//* Load test map
-	areas.init_area("data/maps/mapTest.json")
+	//* Init Zones
+	zone.init()
 }
 
 main_close :: proc() {
-	//* Close raylib
+	//* Close Raylib
+	raylib.CloseWindow()
+	fmt.printf("Raylib closed\n")
 
-	//* Unload tiles
+	//* Unload Player / Camera
+	player.close()
+	camera.close()
+	fmt.printf("Player / Camera closed\n")
 
-	//* Unload areas
+	//* Unload Tiles
+	tiles.close()
+	fmt.printf("Tiles closed\n")
+
+	//* Unload Zones
 }

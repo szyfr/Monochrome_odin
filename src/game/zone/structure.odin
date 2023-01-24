@@ -1,22 +1,28 @@
-package areas
+package zone
 
 
 //= Imports
 import "vendor:raylib"
 
+//import "../entity"
 import "../tiles"
 
 
 //= Globals
-areas : map[string]AreaMap
+zones : map[string]Zone
 
 
 //= Structures
-AreaMap :: struct {
+Zone :: struct {
 	name      : string,
+
 	width     : f32,
 	height    : f32,
+
 	position  : raylib.Vector3,
+
 	outskirts : string,
-	tilesls   : [dynamic][dynamic]tiles.Tile,
+
+	tiles     : [dynamic][dynamic]tiles.Tile,
+	//entities  : [dynamic]entity.Entity,
 }

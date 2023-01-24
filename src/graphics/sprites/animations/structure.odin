@@ -2,7 +2,6 @@ package animations
 
 
 //= Imports
-import "vendor:raylib"
 
 
 //= Structures
