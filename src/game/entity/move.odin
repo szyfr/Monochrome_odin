@@ -4,14 +4,15 @@ package entity
 //= Imports
 import "vendor:raylib"
 
+import "../../game"
 import "../tiles"
 import "../zone"
 
 
 //= Procedures
 move_entity :: proc(
-	direction :  Direction,
-	entity    : ^Entity,
+	direction :  game.Direction,
+	entity    : ^game.Entity,
 ) {
 	if !entity.isMoving {
 		entity.direction = direction
@@ -28,9 +29,14 @@ move_entity :: proc(
 		//* Get tile
 		tile : ^tiles.Tile = &zone.zones["New Bark Town"].tiles[int(target.z)][int(target.x)]
 		diff :  f32        = tile.pos.y - entity.position.y
-		if  tile.solid ||
-			(!entity.isSurfing && tile.surf) ||
-			(diff > 0.5 || diff < -0.75)
+		ent  : bool        = false
+		for entity in zone.zones["New Bark Town"].entities {
+			if entity.position == target do ent = true
+		}
+		if  tile.solid ||                       //? Tile is solid
+			(!entity.isSurfing && tile.surf) || //? Tile is surfable and playing isn't surfing
+			(diff > 0.5 || diff < -0.75) ||     //? Height difference is too extreme
+			ent                                 //? There is currently an entity there
 		{
 			//TODO Thump noise
 			//TODO Slow walking animation?

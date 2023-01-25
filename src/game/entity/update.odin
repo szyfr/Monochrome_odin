@@ -2,13 +2,14 @@ package entity
 
 
 //= Imports
+import "../../game"
 import "../../graphics/sprites/animations"
 import "../../utilities/mathz"
 
 
 //= Procedures
 update :: proc(
-	entity : ^Entity,
+	entity : ^game.Entity,
 ) {
 	//* Update movement
 	if entity.isMoving {

@@ -1,10 +1,10 @@
-package entity
+package game
 
 
 //= Imports
 import "vendor:raylib"
 
-import "../../graphics/sprites"
+import "../graphics/sprites"
 
 
 //= Structures

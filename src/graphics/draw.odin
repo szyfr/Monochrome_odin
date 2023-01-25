@@ -2,6 +2,7 @@ package graphics
 
 
 //= Imports
+import "core:fmt"
 import "core:slice"
 
 import "vendor:raylib"
@@ -17,6 +18,11 @@ import "sprites"
 //= Procedures
 draw_single :: proc() {
 	//* Create a map of pointers to the entities indexed by their position
+	entities : map[raylib.Vector3]^game.Entity
+	for i:=0;i<len(zone.zones["New Bark Town"].entities);i+=1 {
+		ptr := &zone.zones["New Bark Town"].entities[i]
+		entities[ptr.position] = ptr
+	}
 
 	if game.DRAW_MAP {
 		//* First half
@@ -32,6 +38,9 @@ draw_single :: proc() {
 						{1, 1, 1},
 						raylib.WHITE,
 					)
+					if tile2.pos in entities {
+						draw_entity(entities[tile2.pos])
+					}
 				}
 			}
 		}
@@ -49,6 +58,9 @@ draw_single :: proc() {
 						{1, 1, 1},
 						raylib.WHITE,
 					)
+					if tile2.pos in entities {
+						draw_entity(entities[tile2.pos])
+					}
 				}
 			}
 			slice.reverse(tile[:])
@@ -57,7 +69,7 @@ draw_single :: proc() {
 }
 
 draw_entity :: proc(
-	entity : ^entity.Entity,
+	entity : ^game.Entity,
 ) {
-	sprites.draw(camera.data, &entity.sprite)
+	sprites.draw(camera.data, &entity.sprite, entity.position)
 }

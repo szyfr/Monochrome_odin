@@ -386,6 +386,15 @@
 		{"tile":"tile_tree_1","level":0,"solid":true,"surf":false},
 		{"tile":"tile_tree_1","level":0,"solid":true,"surf":false},
 		{"tile":"tile_tree_1","level":0,"solid":true,"surf":false}
+	],
+	"entities":[
+		{
+			"x":1,
+			"z":8,
+			"sprite":"player_1",
+			"event":"talk_1",
+			"movement":"random",
+			"direction":2
+		}
 	]
-
 }

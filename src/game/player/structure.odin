@@ -4,7 +4,7 @@ package player
 //= Imports
 import "vendor:raylib"
 
-import "../entity"
+import "../../game"
 
 
 //= Globals
@@ -13,6 +13,6 @@ data : ^Player
 
 //= Structures
 Player :: struct {
-	entity    : entity.Entity,
+	entity    : game.Entity,
 	moveTimer : u8,
 }

@@ -4,7 +4,7 @@ package camera
 //= Imports
 import "vendor:raylib"
 
-import "../entity"
+import "../../game"
 
 
 //= Globals
@@ -15,5 +15,5 @@ data : ^Camera
 Camera :: struct {
 	using data : raylib.Camera3D,
 
-	follow : ^entity.Entity,
+	follow : ^game.Entity,
 }

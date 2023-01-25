@@ -4,7 +4,7 @@ package zone
 //= Imports
 import "vendor:raylib"
 
-//import "../entity"
+import "../../game"
 import "../tiles"
 
 
@@ -24,5 +24,5 @@ Zone :: struct {
 	outskirts : string,
 
 	tiles     : [dynamic][dynamic]tiles.Tile,
-	//entities  : [dynamic]entity.Entity,
+	entities  : [dynamic]game.Entity,
 }

@@ -11,8 +11,9 @@ import "animations"
 
 //= Procedures
 draw :: proc(
-	camera : raylib.Camera3D,
-	sprite : ^Sprite,
+	camera   : raylib.Camera3D,
+	sprite   : ^Sprite,
+	position : raylib.Vector3,
 ) {
 	//* Calculate current frame
 	frameX := f32(sprite.animator.animations[sprite.animator.currentAnimation].frames[sprite.animator.frame])
@@ -28,7 +29,7 @@ draw :: proc(
 		camera,
 		sprite.texture,
 		rect,
-		camera.target,
+		position + {0.5, 0.5, 0.5},
 		{0,0.9,-0.65},
 		{1,1},
 		{0,0},

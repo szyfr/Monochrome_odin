@@ -7,7 +7,9 @@ import "core:encoding/json"
 
 import "vendor:raylib"
 
+import "../../game"
 import "../tiles"
+import "../../graphics/sprites"
 
 
 //= Procedures
@@ -51,6 +53,25 @@ init_single :: proc(
 			append(&temp, ti)
 		}
 		append(&zone.tiles, temp)
+	}
+
+	//* Load entities
+	entList := js.(json.Object)["entities"].(json.Array)
+	for ent in entList {
+		entity : game.Entity = {}
+		entity.position.x = f32(ent.(json.Object)["x"].(f64))
+		entity.position.z = f32(ent.(json.Object)["z"].(f64))
+		entity.position.y = zone.tiles[int(entity.position.z)][int(entity.position.x)].pos.y
+		entity.previous   = entity.position
+		entity.target     = entity.position
+		entity.isMoving   = false
+		entity.isSurfing  = false
+		entity.direction  = game.Direction(ent.(json.Object)["direction"].(f64))
+		entity.sprite     = sprites.create(ent.(json.Object)["sprite"].(string))^
+		//TODO Event
+		//TODO Movement for AI
+		
+		append(&zone.entities, entity)
 	}
 
 	zones[zone.name] = zone
