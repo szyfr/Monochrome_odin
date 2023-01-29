@@ -5,6 +5,7 @@ package game
 import "vendor:raylib"
 
 import "../graphics/sprites"
+import "../graphics/standee"
 
 
 //= Structures
@@ -19,6 +20,7 @@ Entity :: struct {
 	direction : Direction,
 
 	sprite    : sprites.Sprite,
+	standee   : standee.Standee,
 }
 
 Direction :: enum {
