@@ -13,6 +13,7 @@ import "../game/entity"
 import "../game/tiles"
 import "../game/zone"
 import "sprites"
+import "standee"
 
 
 //= Procedures
@@ -71,5 +72,6 @@ draw_single :: proc() {
 draw_entity :: proc(
 	entity : ^game.Entity,
 ) {
-	sprites.draw(camera.data, &entity.sprite, entity.position)
+	standee.draw(&entity.standee)
+	//sprites.draw(camera.data, &entity.sprite, entity.position)
 }

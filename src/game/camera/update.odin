@@ -4,11 +4,13 @@ package camera
 //= Imports
 import "core:fmt"
 
+import "../../game"
+
 
 //= Procedures
 update :: proc() {
-	if data.follow != nil {
-		data.target   = data.follow.position + {0.5, 0.5, 0.5}
-		data.position = data.follow.position + {0.5, 7.5, 3}
+	if game.camera.targetEntity != nil {
+		game.camera.target   = game.camera.targetEntity.position + { 0.5, 0.5, 0.5 }
+		game.camera.position = game.camera.targetEntity.position + { 0.5, 7.5, 3.0 }
 	}
 }

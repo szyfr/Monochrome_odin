@@ -14,12 +14,9 @@ import "../../graphics/sprites"
 init :: proc() {
 	data = new(Player)
 
-	data.entity.position  = {13,0,6}
-	data.entity.target    = {13,0,6}
-	data.entity.direction = .down
-	data.entity.sprite    = sprites.create("player_1")^
+	data.entity = entity.create(raylib.Vector3{13, 0, 6}, "player_1")^
 
-	data.moveTimer        = 0
+	data.moveTimer = 0
 }
 
 close :: proc() {

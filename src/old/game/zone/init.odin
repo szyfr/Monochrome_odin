@@ -8,6 +8,7 @@ import "core:encoding/json"
 import "vendor:raylib"
 
 import "../../game"
+import "../../game/entity"
 import "../tiles"
 import "../../graphics/sprites"
 
@@ -58,20 +59,30 @@ init_single :: proc(
 	//* Load entities
 	entList := js.(json.Object)["entities"].(json.Array)
 	for ent in entList {
-		entity : game.Entity = {}
-		entity.position.x = f32(ent.(json.Object)["x"].(f64))
-		entity.position.z = f32(ent.(json.Object)["z"].(f64))
-		entity.position.y = zone.tiles[int(entity.position.z)][int(entity.position.x)].pos.y
-		entity.previous   = entity.position
-		entity.target     = entity.position
-		entity.isMoving   = false
-		entity.isSurfing  = false
-		entity.direction  = game.Direction(ent.(json.Object)["direction"].(f64))
-		entity.sprite     = sprites.create(ent.(json.Object)["sprite"].(string))^
+	//	entity : game.Entity = {}
+	//	entity.position.x = f32(ent.(json.Object)["x"].(f64))
+	//	entity.position.z = f32(ent.(json.Object)["z"].(f64))
+	//	entity.position.y = zone.tiles[int(entity.position.z)][int(entity.position.x)].pos.y
+	//	entity.previous   = entity.position
+	//	entity.target     = entity.position
+	//	entity.isMoving   = false
+	//	entity.isSurfing  = false
+	//	entity.direction  = game.Direction(ent.(json.Object)["direction"].(f64))
+	//	entity.sprite     = sprites.create(ent.(json.Object)["sprite"].(string))^
+		posX := f32(ent.(json.Object)["x"].(f64))
+		posZ := f32(ent.(json.Object)["z"].(f64))
+		enti := entity.create(
+			{
+				posX,
+				zone.tiles[int(posZ)][int(posX)].pos.y,
+				posZ,
+			},
+			ent.(json.Object)["sprite"].(string),
+		)
 		//TODO Event
 		//TODO Movement for AI
 		
-		append(&zone.entities, entity)
+		append(&zone.entities, enti)
 	}
 
 	zones[zone.name] = zone

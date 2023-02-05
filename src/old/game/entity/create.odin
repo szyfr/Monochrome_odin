@@ -2,17 +2,18 @@ package entity
 
 
 //= Imports
+import "core:fmt"
+
 import "vendor:raylib"
 
 import "../../game"
-import "../../game/standee"
+import "../../graphics/standee"
 
 
 //= Procedures
 create :: proc(
+	position : raylib.Vector3 = {0, 0, 0},
 	filename : string,
-
-	position : raylib.Vector3 = { 0, 0, 0 },
 ) -> ^game.Entity {
 	data := new(game.Entity)
 
@@ -25,7 +26,7 @@ create :: proc(
 
 	data.direction = .down
 
-	data.standee   = standee.create(filename)
+	data.standee   = standee.create(filename)^
 
 	return data
 }
