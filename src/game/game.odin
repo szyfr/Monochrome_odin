@@ -8,3 +8,4 @@ package game
 
 //TODO Options
 LIMIT_FPS :: true
+DRAW_MAP  :: true

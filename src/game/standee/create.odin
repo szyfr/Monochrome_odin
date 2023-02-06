@@ -10,6 +10,7 @@ import "vendor:raylib"
 
 import "../../game"
 import "../../game/animations"
+//import "../../utilities/mathz"
 
 
 //= Constants
@@ -30,8 +31,8 @@ create :: proc(
 	standee.material = raylib.LoadMaterialDefault();
 	standee.position = {
 		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
+		0,.78,0.8,0,
+		0,-0.8,.78,0,
 		0,0,0,1,
 	}
 

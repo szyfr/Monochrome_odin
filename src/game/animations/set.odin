@@ -2,11 +2,14 @@ package animations
 
 
 //= Imports
+import "core:encoding/json"
+
+import "../../game"
 
 
 //= Procedures
 set_animation :: proc(
-	animator  : ^AnimationController,
+	animator  : ^game.StandeeAnimation,
 	animation : string,
 ) {
 	animator.currentAnimation = animation

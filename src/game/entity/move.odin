@@ -5,8 +5,6 @@ package entity
 import "vendor:raylib"
 
 import "../../game"
-import "../tiles"
-import "../zone"
 
 
 //= Procedures
@@ -20,17 +18,17 @@ move_entity :: proc(
 		//* Check if movable
 		target : raylib.Vector3
 		switch entity.direction {
-			case .up:    target = entity.position - {0,0,1}
-			case .down:  target = entity.position + {0,0,1}
-			case .left:  target = entity.position - {1,0,0}
-			case .right: target = entity.position + {1,0,0}
+			case .up:    target = entity.position - { 0, 0, 1 }
+			case .down:  target = entity.position + { 0, 0, 1 }
+			case .left:  target = entity.position - { 1, 0, 0 }
+			case .right: target = entity.position + { 1, 0, 0 }
 		}
 
 		//* Get tile
-		tile : ^tiles.Tile = &zone.zones["New Bark Town"].tiles[int(target.z)][int(target.x)]
-		diff :  f32        = tile.pos.y - entity.position.y
-		ent  : bool        = false
-		for entity in zone.zones["New Bark Town"].entities {
+		tile : ^game.Tile = &game.zones["New Bark Town"].tiles[int(target.z)][int(target.x)]
+		diff :  f32       = tile.pos.y - entity.position.y
+		ent  :  bool      = false
+		for entity in game.zones["New Bark Town"].entities {
 			if entity.position == target do ent = true
 		}
 		if  tile.solid ||                       //? Tile is solid

@@ -10,6 +10,8 @@ import "game"
 import "game/entity"
 import "game/camera"
 import "game/player"
+import "game/map/tiles"
+import "game/map/zone"
 
 
 //= Main
@@ -19,6 +21,7 @@ main_logic :: proc() {
 	camera.update()
 
 	//* Player
+	player.update()
 }
 
 main_draw :: proc() {
@@ -27,8 +30,11 @@ main_draw :: proc() {
 
 	raylib.BeginMode3D(game.camera)
 
+	//* Zones
+	zone.draw_single()
+
 	//* Player
-	entity.draw(game.player.entity)
+	//entity.draw(game.player.entity)
 
 	raylib.EndMode3D()
 	raylib.EndDrawing()
@@ -53,6 +59,13 @@ main_init :: proc() {
 
 	//* Player
 	player.init()
+
+	//* Tiles
+	tiles.init()
+
+	//* Zone
+	zone.init()
+	fmt.printf("%v\n", game.zones["New Bark Town"].entities)
 }
 main_close :: proc() {
 	//* Raylib
@@ -63,6 +76,12 @@ main_close :: proc() {
 
 	//* Player
 	player.close()
+
+	//* Tiles
+	tiles.close()
+
+	//* Zone
+	zone.close()
 }
 
 main :: proc() {

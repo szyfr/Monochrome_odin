@@ -9,6 +9,9 @@ import "vendor:raylib"
 camera : ^Camera
 player : ^Player
 
+tiles  : map[string]raylib.Model
+zones  : map[string]Zone
+
 
 //= Structures
 Camera :: struct {
@@ -57,7 +60,26 @@ Animation :: struct {
 	frames : [dynamic]u32,
 }
 
-Zone :: struct {}
+Tile :: struct {
+	model : string,
+	pos   : raylib.Vector3,
+	solid : bool,
+	surf  : bool, 
+}
+
+Zone :: struct {
+	name      : string,
+
+	width     : f32,
+	height    : f32,
+
+	position  : raylib.Vector3,
+
+	outskirts : string,
+
+	tiles     : [dynamic][dynamic]Tile,
+	entities  : [dynamic]Entity,
+}
 
 
 //= Enumerations
