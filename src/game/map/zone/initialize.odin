@@ -39,22 +39,40 @@ init_single :: proc(
 	//* Load tiles
 	tileList := js.(json.Object)["tiles"].(json.Array)
 	count := 0
-	for i:=0;i<int(zone.height);i+=1 {
+	for y:=0;y<int(zone.height);y+=1 {
 		temp := make([dynamic]game.Tile)
-		for o:=0;o<int(zone.width);o+=1 {
+		for x:=0;x<int(zone.width);x+=1 {
 			ti : game.Tile = {}
-			ti.model = tileList[(i*int(zone.width))+o].(json.Object)["tile"].(string)
+			ti.model = tileList[(y*int(zone.width))+x].(json.Object)["tile"].(string)
 			ti.pos   = {
-				f32(o),
-				f32(tileList[(i*int(zone.width))+o].(json.Object)["level"].(f64)),
-				f32(i),
+				f32(x),
+				f32(tileList[(y*int(zone.width))+x].(json.Object)["level"].(f64)),
+				f32(y),
 			}
-			ti.solid = tileList[(i*int(zone.width))+o].(json.Object)["solid"].(bool)
-			ti.surf  = tileList[(i*int(zone.width))+o].(json.Object)["surf"].(bool)
+			ti.solid = tileList[(y*int(zone.width))+x].(json.Object)["solid"].(bool)
+			ti.surf  = tileList[(y*int(zone.width))+x].(json.Object)["surf"].(bool)
 			append(&temp, ti)
 		}
 		append(&zone.tiles, temp)
 	}
+	//tileList := js.(json.Object)["tiles"].(json.Array)
+	//count := 0
+	//for y:=0;y<int(zone.height);y+=1 {
+	//	temp := make([dynamic]game.Tile)
+	//	for x:=0;x<int(zone.width);x+=1 {
+	//		ti : game.Tile = {}
+	//		ti.model = tileList[(y*int(zone.width))+x].(json.Object)["tile"].(string)
+	//		ti.pos   = {
+	//			f32(x),
+	//			f32(tileList[(y*int(zone.width))+x].(json.Object)["level"].(f64)),
+	//			f32(y),
+	//		}
+	//		ti.solid = tileList[(y*int(zone.width))+x].(json.Object)["solid"].(bool)
+	//		ti.surf  = tileList[(y*int(zone.width))+x].(json.Object)["surf"].(bool)
+	//		append(&temp, ti)
+	//	}
+	//	append(&zone.tiles, temp)
+	//}
 
 	//* Load entities
 	entList := js.(json.Object)["entities"].(json.Array)
