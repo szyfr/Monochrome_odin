@@ -55,24 +55,6 @@ init_single :: proc(
 		}
 		append(&zone.tiles, temp)
 	}
-	//tileList := js.(json.Object)["tiles"].(json.Array)
-	//count := 0
-	//for y:=0;y<int(zone.height);y+=1 {
-	//	temp := make([dynamic]game.Tile)
-	//	for x:=0;x<int(zone.width);x+=1 {
-	//		ti : game.Tile = {}
-	//		ti.model = tileList[(y*int(zone.width))+x].(json.Object)["tile"].(string)
-	//		ti.pos   = {
-	//			f32(x),
-	//			f32(tileList[(y*int(zone.width))+x].(json.Object)["level"].(f64)),
-	//			f32(y),
-	//		}
-	//		ti.solid = tileList[(y*int(zone.width))+x].(json.Object)["solid"].(bool)
-	//		ti.surf  = tileList[(y*int(zone.width))+x].(json.Object)["surf"].(bool)
-	//		append(&temp, ti)
-	//	}
-	//	append(&zone.tiles, temp)
-	//}
 
 	//* Load entities
 	entList := js.(json.Object)["entities"].(json.Array)
@@ -87,11 +69,12 @@ init_single :: proc(
 				posZ,
 			},
 		)
-		//TODO Event
 		//TODO Movement for AI
 		
 		append(&zone.entities, enti^)
 	}
+	
+	//TODO Event
 
 	game.zones[zone.name] = zone
 }
