@@ -6,11 +6,6 @@ import "vendor:raylib"
 
 
 //= Globals
-camera : ^Camera
-player : ^Player
-
-tiles  : map[string]raylib.Model
-zones  : map[string]Zone
 
 
 //= Structures
@@ -79,6 +74,17 @@ Zone :: struct {
 
 	tiles     : [dynamic][dynamic]Tile,
 	entities  : [dynamic]Entity,
+}
+
+Options :: struct {
+	//TODO Keybindings
+	screenWidth  : i32,
+	screenHeight : i32,
+
+	textSpeed    : i32,
+	fpsLimit     : i32,
+
+	language     : string,
 }
 
 

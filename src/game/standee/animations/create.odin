@@ -4,7 +4,7 @@ package animations
 //= Imports
 import "core:encoding/json"
 
-import "../../game"
+import "../../../game"
 
 
 //= Procedures

@@ -5,7 +5,7 @@ package entity
 import "core:fmt"
 
 import "../../game"
-import "../../game/animations"
+import "../standee/animations"
 import "../../utilities/mathz"
 
 

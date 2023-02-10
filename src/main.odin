@@ -10,8 +10,12 @@ import "game"
 import "game/entity"
 import "game/camera"
 import "game/player"
+import "game/options"
+import "game/localization"
 import "game/map/tiles"
 import "game/map/zone"
+
+import "debug"
 
 
 //= Main
@@ -33,39 +37,35 @@ main_draw :: proc() {
 	//* Zones
 	zone.draw_single()
 
-	//* Player
-	//entity.draw(game.player.entity)
-
 	raylib.EndMode3D()
 	raylib.EndDrawing()
 }
 
 main_init :: proc() {
+	//* Debug
+	debug.create_log()
+
+	//* Options / Localization
+	options.init()
+	localization.init()
+
 	//* Raylib
 	raylib.SetTraceLogLevel(.NONE)
-	//TODO Options
-	//TODO Localization
 	raylib.InitWindow(
-		1280,
-		720,
-		"Monochrome",
+		game.options.screenWidth,
+		game.options.screenHeight,
+		game.localization["title"],
 	)
-	//TODO Options
-	if game.LIMIT_FPS do raylib.SetTargetFPS(85)
+	if game.LIMIT_FPS do raylib.SetTargetFPS(game.options.fpsLimit)
 	raylib.SetExitKey(.NULL)
 
-	//* Camera
+	//* Game
 	camera.init()
-
-	//* Player
 	player.init()
 
-	//* Tiles
+	//* Map
 	tiles.init()
-
-	//* Zone
-	zone.init()
-	fmt.printf("%v\n", game.zones["New Bark Town"].entities)
+	zone.init() //TODO
 }
 main_close :: proc() {
 	//* Raylib
@@ -88,7 +88,7 @@ main :: proc() {
 	main_init()
 	defer main_close()
 
-	for !raylib.WindowShouldClose() {
+	for !raylib.WindowShouldClose() && game.running {
 		main_logic()
 		main_draw()
 	}

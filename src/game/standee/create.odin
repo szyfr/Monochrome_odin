@@ -9,8 +9,7 @@ import "core:os"
 import "vendor:raylib"
 
 import "../../game"
-import "../../game/animations"
-//import "../../utilities/mathz"
+import "animations"
 
 
 //= Constants
