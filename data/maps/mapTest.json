@@ -389,12 +389,28 @@
 	],
 	"entities":[
 		{
-			"x":1,
-			"z":8,
+			"location": [ 6,8 ],
 			"sprite":"player_1",
-			"event":"talk_1",
 			"movement":"random",
-			"direction":2
+			"direction":2,
+			"text": [
+				"text_0"
+			]
+		}
+	],
+	"events":[
+		{
+			"location": [ 3,3 ],
+			"type":"interact",
+			"interact": [
+				"test_1",
+				"test_2"
+			]
+		},
+		{
+			"location": [ 6,3 ],
+			"type":"warp",
+			"warp": [ 8,6 ]
 		}
 	]
 }

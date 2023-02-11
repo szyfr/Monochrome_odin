@@ -2,6 +2,7 @@ package zone
 
 
 //= Import
+import "core:fmt"
 import "core:os"
 import "core:encoding/json"
 
@@ -9,8 +10,6 @@ import "vendor:raylib"
 
 import "../../../game"
 import "../../../game/entity"
-//import "../tiles"
-//import "../../graphics/sprites"
 
 
 //= Procedures
@@ -59,22 +58,57 @@ init_single :: proc(
 	//* Load entities
 	entList := js.(json.Object)["entities"].(json.Array)
 	for ent in entList {
-		posX := f32(ent.(json.Object)["x"].(f64))
-		posZ := f32(ent.(json.Object)["z"].(f64))
+		position : raylib.Vector3 = {}
+		position.x = f32(ent.(json.Object)["location"].(json.Array)[0].(f64))
+		position.z = f32(ent.(json.Object)["location"].(json.Array)[1].(f64))
+		position.y = zone.tiles[int(position.z)][int(position.x)].pos.y
+
 		enti := entity.create(
 			ent.(json.Object)["sprite"].(string),
-			{
-				posX,
-				zone.tiles[int(posZ)][int(posX)].pos.y,
-				posZ,
-			},
+			position,
 		)
 		//TODO Movement for AI
 		
 		append(&zone.entities, enti^)
 	}
 	
-	//TODO Event
+	//TODO Events
+	evtList := js.(json.Object)["events"].(json.Array)
+	for evt in evtList {
+		event : game.Event = {}
+		switch evt.(json.Object)["type"].(string) {
+			case "warp":
+				//* Location
+				location : raylib.Vector2
+				location.x		= f32(evt.(json.Object)["location"].(json.Array)[0].(f64))
+				location.y		= f32(evt.(json.Object)["location"].(json.Array)[1].(f64))
+				event.location	= location
+
+				//* Type
+				event.type		= .warp
+
+				//* Data
+				target   : raylib.Vector2
+				target.x		= f32(evt.(json.Object)["warp"].(json.Array)[0].(f64))
+				target.y		= f32(evt.(json.Object)["warp"].(json.Array)[1].(f64))
+				event.data		= target
+
+			case "interact":
+				//* Location
+				location : raylib.Vector2
+				location.x		= f32(evt.(json.Object)["location"].(json.Array)[0].(f64))
+				location.y		= f32(evt.(json.Object)["location"].(json.Array)[1].(f64))
+				event.location	= location
+
+				//* Type
+				event.type		= .interact
+				
+				//* Data
+				//event.data			= 
+		}
+		zone.events[event.location.(raylib.Vector2)] = event
+		//append(&zone.events, event)
+	}
 
 	game.zones[zone.name] = zone
 }

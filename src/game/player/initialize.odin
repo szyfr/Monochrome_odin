@@ -13,8 +13,9 @@ import "../../game/entity"
 init :: proc() {
 	game.player = new(game.Player)
 
-	game.player.entity = entity.create( "player_1", { 13, 0, 6 } )
-	game.player.moveTimer = 0
+	game.player.entity		= entity.create( "player_1", { 13, 0, 6 } )
+	game.player.moveTimer	= 0
+	game.player.canMove		= true
 
 	game.camera.targetEntity = game.player.entity
 }

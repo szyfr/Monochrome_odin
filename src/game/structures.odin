@@ -15,8 +15,9 @@ Camera :: struct {
 }
 
 Player :: struct {
-	entity    : ^Entity,
-	moveTimer :  u8,
+	entity		: ^Entity,
+	moveTimer	:  u8,
+	canMove		:  bool,
 }
 
 Entity :: struct {
@@ -30,6 +31,26 @@ Entity :: struct {
 	direction : Direction,
 
 	standee   : ^Standee,
+}
+
+Event :: struct {
+	location : EventTarget,
+	type     : EventType,
+	data     : EventData,
+}
+EventTarget :: union {
+	raylib.Vector2,
+	Entity,
+}
+EventData :: union {
+	raylib.Vector2,		//Warp
+	[dynamic]string,	//Text
+	[dynamic]EventChain,//Chain
+	//TODO Story changes
+	//TODO Quests
+}
+EventChain :: struct {
+
 }
 
 Standee :: struct {
@@ -74,6 +95,7 @@ Zone :: struct {
 
 	tiles     : [dynamic][dynamic]Tile,
 	entities  : [dynamic]Entity,
+	events    : map[raylib.Vector2]Event,
 }
 
 Options :: struct {
@@ -95,4 +117,11 @@ Direction :: enum {
 	down,
 	left,
 	right,
+}
+
+EventType :: enum {
+	null,
+	warp,
+	trigger,
+	interact,
 }

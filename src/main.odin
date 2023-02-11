@@ -21,10 +21,8 @@ import "debug"
 //= Main
 
 main_logic :: proc() {
-	//* Camera
+	//* Overworld
 	camera.update()
-
-	//* Player
 	player.update()
 }
 
@@ -71,16 +69,12 @@ main_close :: proc() {
 	//* Raylib
 	raylib.CloseWindow()
 
-	//* Camera
+	//* Overworld
 	camera.close()
-
-	//* Player
 	player.close()
 
-	//* Tiles
+	//* Map
 	tiles.close()
-
-	//* Zone
 	zone.close()
 }
 
