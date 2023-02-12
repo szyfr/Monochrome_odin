@@ -8,7 +8,9 @@ import "../../game"
 
 
 //= Procedures
-move_entity :: proc(
+
+//* Make entity take step
+move :: proc(
 	direction :  game.Direction,
 	entity    : ^game.Entity,
 ) {
@@ -46,4 +48,14 @@ move_entity :: proc(
 		entity.isMoving = true
 		entity.target   = target
 	}
+}
+
+//* Teleport entity
+teleport :: proc(
+	entity		: ^game.Entity,
+	location	:  raylib.Vector3,
+) {
+	entity.position = location
+	entity.previous = location
+	entity.target   = location
 }

@@ -49,8 +49,10 @@ EventData :: union {
 	//TODO Story changes
 	//TODO Quests
 }
-EventChain :: struct {
-
+EventChain :: struct {}
+EventHandler :: struct {
+	currentMap	: ^Zone,
+	player		: ^Player,
 }
 
 Standee :: struct {
@@ -81,6 +83,13 @@ Tile :: struct {
 	pos   : raylib.Vector3,
 	solid : bool,
 	surf  : bool, 
+}
+
+Region :: struct {
+	size		: raylib.Vector2,
+	tiles		: map[raylib.Vector2]Tile,
+	entities	: map[raylib.Vector2]Entity,
+	events		: map[raylib.Vector2]Event,
 }
 
 Zone :: struct {

@@ -13,10 +13,11 @@ DRAW_MAP  :: true
 //= Globals
 running : bool = true
 
-camera  : ^Camera
-player  : ^Player
-options : ^Options
+camera	: ^Camera
+player	: ^Player
+options	: ^Options
 
-tiles        : map[string]raylib.Model
-zones        : map[string]Zone
-localization : map[string]cstring
+tiles			: map[string]raylib.Model
+zones			: map[string]Zone
+region			: ^Region
+localization	: map[string]cstring

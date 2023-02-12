@@ -31,7 +31,7 @@ draw_single :: proc() {
 			for x:=0;x<int(game.player.entity.position.x);x+=1 {
 				raylib.DrawModelEx(
 					game.tiles[game.zones["New Bark Town"].tiles[y][x].model],
-					game.zones["New Bark Town"].tiles[y][x].pos,
+					game.zones["New Bark Town"].tiles[y][x].pos + game.zones["New Bark Town"].position,
 					{0, 1, 0},
 					0,
 					{1, 1, 1},
@@ -48,7 +48,7 @@ draw_single :: proc() {
 			for x:=int(game.zones["New Bark Town"].width)-1;x>int(game.player.entity.position.x)-1;x-=1 {
 				raylib.DrawModelEx(
 					game.tiles[game.zones["New Bark Town"].tiles[y][x].model],
-					game.zones["New Bark Town"].tiles[y][x].pos,
+					game.zones["New Bark Town"].tiles[y][x].pos + game.zones["New Bark Town"].position,
 					{0, 1, 0},
 					0,
 					{1, 1, 1},
