@@ -66,7 +66,7 @@ main_init :: proc() {
 	//* Map
 	tiles.init()
 	region.init("data/maps/regionTest.json")
-	fmt.printf("%v\n",game.region)
+	//fmt.printf("%v\n",game.region)
 	//zone.init() //TODO
 }
 main_close :: proc() {

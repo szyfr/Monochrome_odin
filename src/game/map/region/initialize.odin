@@ -43,7 +43,7 @@ init :: proc(
 			game.region.tiles[{tile.pos.x,tile.pos.z}] = tile
 
 			//* Entities
-			if len(entityList)-1>count {
+			if len(entityList)>count {
 				position : raylib.Vector3 = {}
 				position.x = f32(entityList[count].(json.Object)["location"].(json.Array)[0].(f64))
 				position.z = f32(entityList[count].(json.Object)["location"].(json.Array)[1].(f64))
