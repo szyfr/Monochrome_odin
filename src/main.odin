@@ -40,12 +40,11 @@ main_draw :: proc() {
 
 	raylib.EndMode3D()
 
-	//proc(text: cstring, posX, posY: c.int, fontSize: c.int, color: Color)
 	builder : strings.Builder
 	cstr := strings.clone_to_cstring(fmt.sbprintf(&builder, "Previous: %v\nCurrent: %v\nTarget: %v\n\n", game.player.entity.previous, game.player.entity.position, game.player.entity.target))
 	raylib.DrawText(
 		cstr,
-		0, 0,
+		10, 10,
 		20,
 		raylib.BLACK,
 	)
