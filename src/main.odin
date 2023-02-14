@@ -3,6 +3,7 @@ package main
 
 //= Imports
 import "core:fmt"
+import "core:strings"
 
 import "vendor:raylib"
 
@@ -38,6 +39,16 @@ main_draw :: proc() {
 	region.draw()
 
 	raylib.EndMode3D()
+
+	//proc(text: cstring, posX, posY: c.int, fontSize: c.int, color: Color)
+	builder : strings.Builder
+	cstr := strings.clone_to_cstring(fmt.sbprintf(&builder, "Previous: %v\nCurrent: %v\nTarget: %v\n\n", game.player.entity.previous, game.player.entity.position, game.player.entity.target))
+	raylib.DrawText(
+		cstr,
+		0, 0,
+		20,
+		raylib.BLACK,
+	)
 	raylib.EndDrawing()
 }
 

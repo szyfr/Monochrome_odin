@@ -49,6 +49,7 @@ move :: proc(
 
 		//* Move
 		entity.isMoving = true
+		entity.previous = entity.position
 		entity.target   = target
 	}
 }

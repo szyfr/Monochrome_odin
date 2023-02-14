@@ -12,6 +12,8 @@ import "../../../game"
 
 //= Procedures
 init :: proc() {
+	game.tiles = make(map[string]raylib.Model, 1000)
+
 	count : i32 = 0
 	rawDirList := raylib.GetDirectoryFiles("data/tiles", &count)
 
