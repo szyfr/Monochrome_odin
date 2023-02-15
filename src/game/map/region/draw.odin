@@ -17,8 +17,8 @@ draw :: proc() {
 	if game.DRAW_MAP {
 	//	maxY, minY : int = int(game.region.size.y), 0
 	//	maxX, minX : int = int(game.region.size.x), 0
-		maxY, minY : int = int(game.player.entity.position.z) + 8, int(game.player.entity.position.z) - 8
-		maxX, minX : int = int(game.player.entity.position.x) + 14, int(game.player.entity.position.x) - 14
+		maxY, minY : int = int(game.camera.target.z) + 8, int(game.camera.target.z) - 8
+		maxX, minX : int = int(game.camera.target.x) + 14, int(game.camera.target.x) - 14
 		width      : int = maxX - minX
 		for y:=minY;y<maxY;y+=1 {
 			count := 0
@@ -40,7 +40,7 @@ draw :: proc() {
 				if !flip do x += 1
 				else     do x -= 1
 
-				if x >= int(game.player.entity.position.x) && !flip {
+				if x >= int(game.camera.target.x) && !flip {
 					flip = true
 					x = maxX-1
 				}
@@ -87,7 +87,6 @@ draw :: proc() {
 					raylib.WHITE,
 				)
 				position.x -= 1
-				position.x += 1
 				southTile = game.region.tiles[position]
 				if !southTile.solid do raylib.DrawModelEx(
 					game.tiles[southTile.model],

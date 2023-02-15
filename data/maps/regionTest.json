@@ -395,18 +395,56 @@
 		}
 	],
 	"events":[
-		{
+		{	 // Elm's Lab
 			"location": [ 3,3 ],
 			"type":"interact",
-			"interact": [
-				"test_1",
-				"test_2"
+			"chain": [
+				["text","test_1"],
+				["text","test_2"]
 			]
-		},
-		{
-			"location": [ 1,9 ],
-			"type":"warp",
-			"warp": [ 8,6 ]
+		}, { // Player's house
+			"location": [ 11,5 ],
+			"type":"interact",
+			"chain": [
+				["text","test_3"]
+			]
+		}, { // Elm's House
+			"location": [ 9,13 ],
+			"type":"interact",
+			"chain": [
+				["text","test_4"]
+			]
+		}, { // Town sign
+			"location": [ 8,8 ],
+			"type":"interact",
+			"chain": [
+				["text","test_5"],
+				["text","test_6"]
+			]
+		}, { // Elm's Lab Warp
+			"location": [ 6,3 ],
+			"type":"trigger",
+			"chain": [
+				["warp",[ 8,6 ]]
+			]
+		}, { // Player's house Warp
+			"location": [ 13,5 ],
+			"type":"trigger",
+			"chain": [
+				["warp",[ 8,6 ]]
+			]
+		}, { // Elm's house Warp
+			"location": [ 11,13 ],
+			"type":"trigger",
+			"chain": [
+				["warp",[ 8,6 ]]
+			]
+		}, { // Misc house Warp
+			"location": [ 3,11 ],
+			"type":"trigger",
+			"chain": [
+				["warp",[ 8,6 ]]
+			]
 		}
 	]
 }

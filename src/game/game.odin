@@ -18,6 +18,5 @@ player	: ^Player
 options	: ^Options
 
 tiles			: map[string]raylib.Model
-zones			: map[string]Zone
 region			: ^Region
 localization	: map[string]cstring

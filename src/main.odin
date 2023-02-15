@@ -14,7 +14,7 @@ import "game/player"
 import "game/options"
 import "game/localization"
 import "game/map/tiles"
-import "game/map/zone"
+//import "game/map/zone"
 import "game/map/region"
 
 import "debug"
@@ -35,7 +35,7 @@ main_draw :: proc() {
 	raylib.BeginMode3D(game.camera)
 
 	//* Zones
-	zone.draw_single()
+//	zone.draw_single()
 	region.draw()
 
 	raylib.EndMode3D()
@@ -76,8 +76,6 @@ main_init :: proc() {
 	//* Map
 	tiles.init()
 	region.init("data/maps/regionTest.json")
-	//fmt.printf("%v\n",game.region)
-	//zone.init() //TODO
 }
 main_close :: proc() {
 	//* Raylib
@@ -89,7 +87,7 @@ main_close :: proc() {
 
 	//* Map
 	tiles.close()
-	//zone.close()
+	region.close()
 }
 
 main :: proc() {

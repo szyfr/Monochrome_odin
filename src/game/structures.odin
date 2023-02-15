@@ -34,25 +34,15 @@ Entity :: struct {
 }
 
 Event :: struct {
-	location : EventTarget,
-	type     : EventType,
-	data     : EventData,
+	position : raylib.Vector3,
+	interactable : bool,
+
+	chain : [dynamic]EventChain,
 }
-EventTarget :: union {
-	raylib.Vector2,
-	Entity,
-}
-EventData :: union {
-	raylib.Vector2,		//Warp
-	[dynamic]string,	//Text
-	[dynamic]EventChain,//Chain
-	//TODO Story changes
-	//TODO Quests
-}
-EventChain :: struct {}
-EventHandler :: struct {
-	currentMap	: ^Zone,
-	player		: ^Player,
+EventChain :: union {
+	raylib.Vector3,
+	^cstring,
+	//TODO
 }
 
 Standee :: struct {
@@ -90,21 +80,6 @@ Region :: struct {
 	tiles		: map[raylib.Vector2]Tile,
 	entities	: map[raylib.Vector2]Entity,
 	events		: map[raylib.Vector2]Event,
-}
-
-Zone :: struct {
-	name      : string,
-
-	width     : f32,
-	height    : f32,
-
-	position  : raylib.Vector3,
-
-	outskirts : string,
-
-	tiles     : [dynamic][dynamic]Tile,
-	entities  : [dynamic]Entity,
-	events    : map[raylib.Vector2]Event,
 }
 
 Options :: struct {

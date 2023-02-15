@@ -27,14 +27,9 @@ move :: proc(
 		}
 
 		//* Get tile
-		//tile : ^game.Tile = &game.zones["New Bark Town"].tiles[int(target.z)][int(target.x)]
 		tile : ^game.Tile = &game.region.tiles[{target.x, target.z}]
 		diff :  f32       = tile.pos.y - entity.position.y
 		ent  :  bool      = false
-		//for entity in game.zones["New Bark Town"].entities {
-		//for entity in game.region.entities {
-		//	if entity.position == target do ent = true
-		//}
 		if game.region.entities[{target.x, target.z}].position == target do ent = true
 		if  tile.solid ||                       //? Tile is solid
 			(!entity.isSurfing && tile.surf) || //? Tile is surfable and playing isn't surfing

@@ -21,21 +21,36 @@ update :: proc() {
 	leftDown  := raylib.IsKeyDown(raylib.KeyboardKey.A)
 	rightDown := raylib.IsKeyDown(raylib.KeyboardKey.D)
 
+	interact  := raylib.IsKeyDown(.SPACE)
+
 	if !game.player.entity.isMoving && game.player.canMove {
 		test : raylib.Vector2 = {
 			game.player.entity.position.x,
 			game.player.entity.position.z,
 		}
-		if test in game.zones["New Bark Town"].events {
-			event := &game.zones["New Bark Town"].events[test]
-			#partial switch event.type {
-				case .warp:
-					position : raylib.Vector3
-					position.x = event.data.(raylib.Vector2).x
-					position.z = event.data.(raylib.Vector2).y
-					position.y = game.zones["New Bark Town"].tiles[int(position.z)][int(position.x)].pos.y
-					entity.teleport(game.player.entity, position)
-					game.player.moveTimer = 0
+		if test in game.region.events {
+			event := game.region.events[test]
+			
+			//TODO Event handler
+			if !event.interactable {
+				if type_of(event.chain[0].(raylib.Vector3)) == raylib.Vector3 {
+					entity.teleport(game.player.entity, event.chain[0].(raylib.Vector3))
+					entity.move(.up, game.player.entity)
+				}
+			}
+		}
+		if interact {
+			switch game.player.entity.direction {
+				case .up:		test -= {0,1}
+				case .down:		test += {0,1}
+				case .left:		test -= {1,0}
+				case .right:	test += {1,0}
+			}
+			event := game.region.events[test]
+
+			if event.interactable {
+				for i in event.chain do fmt.printf("%v\n",i.(^cstring)^)
+				
 			}
 		}
 
