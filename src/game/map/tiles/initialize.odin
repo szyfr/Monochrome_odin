@@ -17,17 +17,19 @@ init :: proc() {
 	count : i32 = 0
 	rawDirList := raylib.GetDirectoryFiles("data/tiles", &count)
 
-	for i:=0;i<int(count);i+=1 {
+	for i:=2;i<int(count);i+=1 {
 		strExt  := strings.clone_from_cstring(rawDirList[i])
-		str, al := strings.remove(strExt, ".obj", 1)
-		if strings.contains(str, "tile") || strings.contains(str, "struct") {
-			strConc := strings.concatenate({"data/tiles/", strExt})
-			game.tiles[str] = raylib.LoadModel(strings.clone_to_cstring(strConc))
+		strConc := strings.concatenate({"data/tiles/", strExt})
+		if strings.contains(strExt, "tile") {
+			model := raylib.LoadModel(strings.clone_to_cstring(strConc))
+
+			str, al := strings.remove(strExt, ".obj", 1)
+			game.tiles[str] = model
 		}
 	}
 	raylib.ClearDirectoryFiles()
 
-	game.tiles["null"] = raylib.LoadModelFromMesh(raylib.GenMeshCube(0,0,0))
+	//game.tiles["null"] = raylib.LoadModelFromMesh(raylib.GenMeshCube(0,0,0))
 }
 
 close :: proc() {

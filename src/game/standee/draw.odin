@@ -47,5 +47,6 @@ update_animations :: proc(
 			},
 		)
 		standee.material.maps[0].texture = raylib.LoadTextureFromImage(frame)
+		raylib.UnloadImage(frame)
 	}
 }

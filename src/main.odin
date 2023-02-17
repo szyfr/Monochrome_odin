@@ -31,11 +31,9 @@ main_logic :: proc() {
 main_draw :: proc() {
 	raylib.BeginDrawing()
 	raylib.ClearBackground(raylib.RAYWHITE)
-
 	raylib.BeginMode3D(game.camera)
 
-	//* Zones
-//	zone.draw_single()
+	//* Region
 	region.draw()
 
 	raylib.EndMode3D()
@@ -48,6 +46,8 @@ main_draw :: proc() {
 		20,
 		raylib.BLACK,
 	)
+	delete(cstr)
+	strings.builder_destroy(&builder)
 	raylib.EndDrawing()
 }
 
@@ -86,7 +86,7 @@ main_close :: proc() {
 	player.close()
 
 	//* Map
-	tiles.close()
+	//tiles.close()
 	region.close()
 }
 
