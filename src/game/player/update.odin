@@ -21,7 +21,7 @@ update :: proc() {
 	leftDown  := raylib.IsKeyDown(raylib.KeyboardKey.A)
 	rightDown := raylib.IsKeyDown(raylib.KeyboardKey.D)
 
-	interact  := raylib.IsKeyDown(.SPACE)
+	interact  := raylib.IsKeyPressed(.SPACE)
 
 	if !game.player.entity.isMoving && game.player.canMove {
 		test : raylib.Vector2 = {
@@ -46,11 +46,10 @@ update :: proc() {
 				case .left:		test -= {1,0}
 				case .right:	test += {1,0}
 			}
-			event := game.region.events[test]
 
-			if event.interactable {
-				for i in event.chain do fmt.printf("%v\n",i.(^cstring)^)
-				
+			if game.region.events[test].interactable {
+				game.player.canMove = false
+				game.eventmanager.currentEvent = &game.region.events[test]
 			}
 		}
 

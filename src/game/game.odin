@@ -17,6 +17,12 @@ camera	: ^Camera
 player	: ^Player
 options	: ^Options
 
-tiles			: map[string]raylib.Model
+//* Graphics
+box_ui			: raylib.Texture2D
+box_ui_npatch	: raylib.NPatchInfo
+font			: raylib.Font
+
+tiles			:  map[string]raylib.Model
 region			: ^Region
-localization	: map[string]cstring
+localization	:  map[string]cstring
+eventmanager	: ^EventManager

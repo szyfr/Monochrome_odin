@@ -13,8 +13,10 @@ import "game/camera"
 import "game/player"
 import "game/options"
 import "game/localization"
+import "game/graphics"
+import "game/textbox"
+import "game/events"
 import "game/map/tiles"
-//import "game/map/zone"
 import "game/map/region"
 
 import "debug"
@@ -26,6 +28,11 @@ main_logic :: proc() {
 	//* Overworld
 	camera.update()
 	player.update()
+	events.update()
+
+	if raylib.IsKeyPressed(.O) {
+		for ev in game.region.events do fmt.printf("%v\n", ev)
+	}
 }
 
 main_draw :: proc() {
@@ -37,6 +44,8 @@ main_draw :: proc() {
 	region.draw()
 
 	raylib.EndMode3D()
+
+	textbox.draw()
 
 	builder : strings.Builder
 	cstr := strings.clone_to_cstring(fmt.sbprintf(&builder, "Previous: %v\nCurrent: %v\nTarget: %v\n\n", game.player.entity.previous, game.player.entity.position, game.player.entity.target))
@@ -76,6 +85,12 @@ main_init :: proc() {
 	//* Map
 	tiles.init()
 	region.init("data/maps/regionTest.json")
+
+	//* Graphics
+	graphics.init()
+
+	//* Temp
+	game.eventmanager = new(game.EventManager)
 }
 main_close :: proc() {
 	//* Raylib
@@ -86,8 +101,11 @@ main_close :: proc() {
 	player.close()
 
 	//* Map
-	//tiles.close()
+	tiles.close()
 	region.close()
+
+	//* Graphics
+	graphics.close()
 }
 
 main :: proc() {

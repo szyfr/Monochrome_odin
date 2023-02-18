@@ -74,12 +74,25 @@ Tile :: struct {
 	solid : bool,
 	surf  : bool, 
 }
-
 Region :: struct {
 	size		: raylib.Vector2,
 	tiles		: map[raylib.Vector2]Tile,
 	entities	: map[raylib.Vector2]Entity,
 	events		: map[raylib.Vector2]Event,
+}
+
+EventManager :: struct {
+	currentEvent	: ^Event,
+	textbox			:  Textbox,
+	currentChain	:  int,
+}
+Textbox :: struct {
+	state		: TextboxState,
+	currentText	: string,
+	targetText	: string,
+	timer		: int,
+	pause		: int,
+	position	: int,
 }
 
 Options :: struct {
@@ -95,7 +108,6 @@ Options :: struct {
 
 
 //= Enumerations
-
 Direction :: enum {
 	up,
 	down,
@@ -108,4 +120,11 @@ EventType :: enum {
 	warp,
 	trigger,
 	interact,
+}
+
+TextboxState :: enum {
+	inactive,
+	active,
+	finished,
+	reset,
 }
