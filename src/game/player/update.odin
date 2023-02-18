@@ -30,6 +30,7 @@ update :: proc() {
 			if !game.region.events[test].interactable {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[test]
+				return
 			}
 		}
 		if interact {
@@ -58,22 +59,22 @@ update :: proc() {
 		}
 
 		if upDown {
-			if game.player.moveTimer > MOVE_WAIT do entity.move(.up, game.player.entity)
+			if game.player.moveTimer > MOVE_WAIT do entity.move(game.player.entity, .up)
 			else do game.player.entity.direction = .up
 			game.player.moveTimer += 1
 		}
 		if downDown  {
-			if game.player.moveTimer > MOVE_WAIT do entity.move(.down, game.player.entity)
+			if game.player.moveTimer > MOVE_WAIT do entity.move(game.player.entity, .down)
 			else do game.player.entity.direction = .down
 			game.player.moveTimer += 1
 		}
 		if leftDown {
-			if game.player.moveTimer > MOVE_WAIT do entity.move(.left, game.player.entity)
+			if game.player.moveTimer > MOVE_WAIT do entity.move(game.player.entity, .left)
 			else do game.player.entity.direction = .left
 			game.player.moveTimer += 1
 		}
 		if rightDown {
-			if game.player.moveTimer > MOVE_WAIT do entity.move(.right, game.player.entity)
+			if game.player.moveTimer > MOVE_WAIT do entity.move(game.player.entity, .right)
 			else do game.player.entity.direction = .right
 			game.player.moveTimer += 1
 		}

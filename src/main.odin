@@ -28,7 +28,7 @@ main_logic :: proc() {
 	//* Overworld
 	camera.update()
 	player.update()
-	events.update()
+	region.update()
 
 	if raylib.IsKeyPressed(.O) {
 		for ev in game.region.events do fmt.printf("%v\n", ev)

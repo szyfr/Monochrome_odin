@@ -2,6 +2,8 @@ package entity
 
 
 //= Imports
+import "core:fmt"
+
 import "vendor:raylib"
 
 import "../../game"
@@ -12,8 +14,8 @@ import "../../game/standee/animations"
 
 //* Make entity take step
 move :: proc(
-	direction :  game.Direction,
 	entity    : ^game.Entity,
+	direction :  game.Direction,
 ) {
 	if !entity.isMoving {
 		entity.direction = direction
@@ -47,6 +49,17 @@ move :: proc(
 		entity.isMoving = true
 		entity.previous = entity.position
 		entity.target   = target
+		
+		if game.player.entity != entity {
+			value := entity^
+			position : raylib.Vector2
+			position.x = value.previous.x
+			position.y = value.previous.z
+			delete_key(&game.region.entities, position)
+			position.x = value.target.x
+			position.y = value.target.z
+			game.region.entities[position] = value
+		}
 	}
 }
 
@@ -64,11 +77,11 @@ turn :: proc(
 	entity		: ^game.Entity,
 	direction	:  game.Direction,
 ) {
-	
 	switch direction {
 		case .up:		animations.set_animation(&entity.standee.animator, "idle_up")
 		case .down:		animations.set_animation(&entity.standee.animator, "idle_down")
 		case .left:		animations.set_animation(&entity.standee.animator, "idle_left")
 		case .right:	animations.set_animation(&entity.standee.animator, "idle_right")
 	}
+	entity.direction = direction
 }

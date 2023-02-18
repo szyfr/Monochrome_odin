@@ -76,13 +76,55 @@ init :: proc(
 					chn : game.EventChain
 					switch chain[i].(json.Array)[0].(string) {
 						case "text":
-							chn = &game.localization[chain[i].(json.Array)[1].(string)]
+							//chn = &game.localization[chain[i].(json.Array)[1].(string)]
+							chn = game.TextEvent{&game.localization[chain[i].(json.Array)[1].(string)]}
+
 						case "warp":
-							chn = raylib.Vector3{
-								f32(chain[i].(json.Array)[1].(json.Array)[0].(f64)),
-								0,
-								f32(chain[i].(json.Array)[1].(json.Array)[1].(f64)),
+							//chn = raylib.Vector3{
+							//	f32(chain[i].(json.Array)[1].(json.Array)[0].(f64)),
+							//	0,
+							//	f32(chain[i].(json.Array)[1].(json.Array)[1].(f64)),
+							//}
+							chn = game.WarpEvent{
+								entityid = chain[i].(json.Array)[1].(string),
+								position = {
+									f32(chain[i].(json.Array)[2].(json.Array)[0].(f64)),
+									0,
+									f32(chain[i].(json.Array)[2].(json.Array)[1].(f64)),
+								},
+								move = chain[i].(json.Array)[3].(bool),
 							}
+
+						case "turn":
+							direct : game.Direction
+							switch chain[i].(json.Array)[2].(string) {
+								case "up":		direct = .up
+								case "down":	direct = .down
+								case "left":	direct = .left
+								case "right":	direct = .right
+							}
+							chn = game.TurnEvent{
+								entityid	= chain[i].(json.Array)[1].(string),
+								direction	= direct,
+							}
+
+						case "move":
+							direction : game.Direction = .down
+							switch chain[i].(json.Array)[2].(string) {
+								case "up":		direction = .up
+								case "down":	direction = .down
+								case "left":	direction = .left
+								case "right":	direction = .right
+							}
+							chn = game.MoveEvent{
+								entityid	= chain[i].(json.Array)[1].(string),
+								direction	= direction,
+								times		= int(chain[i].(json.Array)[3].(f64)),
+								simul		= chain[i].(json.Array)[4].(bool),
+							}
+
+						case "wait":
+							chn = game.WaitEvent{ int(chain[i].(json.Array)[1].(f64)) }
 					}
 					append(&evt.chain, chn)
 				}
@@ -103,6 +145,15 @@ init :: proc(
 					f32(entityList[count].(json.Object)["event"].(json.Array)[0].(f64)),
 					f32(entityList[count].(json.Object)["event"].(json.Array)[1].(f64)),
 				}
+				ent.id = entityList[count].(json.Object)["id"].(string)
+				direction : game.Direction
+				switch entityList[count].(json.Object)["direction"].(string) {
+					case "up":		direction = .up
+					case "down":	direction = .down
+					case "left":	direction = .left
+					case "right":	direction = .right
+				}
+				entity.turn(ent, direction)
 				//TODO Movement for AI
 				game.region.entities[{ent.position.x,ent.position.z}] = ent^
 			}

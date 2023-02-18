@@ -21,16 +21,18 @@ Player :: struct {
 }
 
 Entity :: struct {
-	previous  : raylib.Vector3,
-	position  : raylib.Vector3,
-	target    : raylib.Vector3,
+	previous	: raylib.Vector3,
+	position	: raylib.Vector3,
+	target		: raylib.Vector3,
 
-	isMoving  : bool,
-	isSurfing : bool,
+	id			: string,
 
-	direction : Direction,
+	isMoving	: bool,
+	isSurfing	: bool,
 
-	standee   : ^Standee,
+	direction	: Direction,
+
+	standee		: ^Standee,
 
 	interactionEvent : raylib.Vector2,
 }
@@ -42,9 +44,32 @@ Event :: struct {
 	chain : [dynamic]EventChain,
 }
 EventChain :: union {
-	raylib.Vector3,
-	^cstring,
-	//TODO
+	WarpEvent,
+	TextEvent,
+	TurnEvent,
+	MoveEvent,
+	WaitEvent,
+}
+WarpEvent :: struct {
+	entityid	: string,
+	position	: raylib.Vector3,
+	move		: bool,
+}
+TextEvent :: struct {
+	text		: ^cstring,
+}
+MoveEvent :: struct {
+	entityid	: string,
+	direction	: Direction,
+	times		: int,
+	simul		: bool,
+}
+TurnEvent :: struct {
+	entityid	: string,
+	direction	: Direction,
+}
+WaitEvent :: struct {
+	time : int,
 }
 
 Standee :: struct {
@@ -87,6 +112,7 @@ EventManager :: struct {
 	currentEvent	: ^Event,
 	textbox			:  Textbox,
 	currentChain	:  int,
+	uses			:  int,
 }
 Textbox :: struct {
 	state		: TextboxState,

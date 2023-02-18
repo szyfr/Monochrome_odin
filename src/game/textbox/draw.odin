@@ -59,7 +59,7 @@ draw :: proc() {
 				}
 		}
 
-		if raylib.IsKeyPressed(.SPACE) && game.eventmanager.textbox.pause >= 5 {
+		if raylib.IsKeyPressed(.SPACE) && game.eventmanager.textbox.pause >= 2 {
 			if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) {
 				game.eventmanager.textbox.state = .finished
 			} else {
