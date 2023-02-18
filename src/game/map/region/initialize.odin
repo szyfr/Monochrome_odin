@@ -61,21 +61,7 @@ init :: proc(
 			tile.surf  = tileList[count].(json.Object)["surf"].(bool)
 			game.region.tiles[{tile.pos.x,tile.pos.z}] = tile
 
-			//* Entities
-			if len(entityList)>count {
-				position : raylib.Vector3 = {}
-				position.x = f32(entityList[count].(json.Object)["location"].(json.Array)[0].(f64))
-				position.z = f32(entityList[count].(json.Object)["location"].(json.Array)[1].(f64))
-				position.y = tile.pos.y //TODO
-				ent := entity.create(
-					entityList[count].(json.Object)["sprite"].(string),
-					position,
-				)
-				//TODO Movement for AI
-				game.region.entities[{ent.position.x,ent.position.z}] = ent^
-			}
-
-			//* Events //TODO
+			//* Events
 			if len(eventList)>count {
 				position : raylib.Vector3 = {}
 				position.x = f32(eventList[count].(json.Object)["location"].(json.Array)[0].(f64))
@@ -101,6 +87,24 @@ init :: proc(
 					append(&evt.chain, chn)
 				}
 				game.region.events[{evt.position.x,evt.position.z}] = evt
+			}
+
+			//* Entities
+			if len(entityList)>count {
+				position : raylib.Vector3 = {}
+				position.x = f32(entityList[count].(json.Object)["location"].(json.Array)[0].(f64))
+				position.z = f32(entityList[count].(json.Object)["location"].(json.Array)[1].(f64))
+				position.y = tile.pos.y //TODO
+				ent := entity.create(
+					entityList[count].(json.Object)["sprite"].(string),
+					position,
+				)
+				ent.interactionEvent = {
+					f32(entityList[count].(json.Object)["event"].(json.Array)[0].(f64)),
+					f32(entityList[count].(json.Object)["event"].(json.Array)[1].(f64)),
+				}
+				//TODO Movement for AI
+				game.region.entities[{ent.position.x,ent.position.z}] = ent^
 			}
 		}
 	}

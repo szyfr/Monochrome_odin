@@ -8,6 +8,7 @@ import "core:strings"
 import "vendor:raylib"
 
 import "../../game"
+import "../../game/entity"
 import "../../game/textbox"
 
 
@@ -46,7 +47,9 @@ update :: proc() {
 				}
 
 			case raylib.Vector3:
-				
+				game.eventmanager.currentChain += 1
+				entity.teleport(game.player.entity, curChain.(raylib.Vector3))
+				entity.move(game.player.entity.direction, game.player.entity)
 		}
 	}
 }

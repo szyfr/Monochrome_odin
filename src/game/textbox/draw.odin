@@ -112,6 +112,4 @@ open_textbox :: proc(
 	textbox.timer = 0
 	textbox.position = 0
 	textbox.pause = 0
-
-	fmt.printf("%v\n",textbox)
 }

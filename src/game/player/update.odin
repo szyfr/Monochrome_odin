@@ -24,19 +24,12 @@ update :: proc() {
 	interact  := raylib.IsKeyPressed(.SPACE)
 
 	if !game.player.entity.isMoving && game.player.canMove {
-		test : raylib.Vector2 = {
-			game.player.entity.position.x,
-			game.player.entity.position.z,
-		}
+		//* Events
+		test : raylib.Vector2 = { game.player.entity.position.x, game.player.entity.position.z }
 		if test in game.region.events {
-			event := game.region.events[test]
-			
-			//TODO Event handler
-			if !event.interactable {
-				if type_of(event.chain[0].(raylib.Vector3)) == raylib.Vector3 {
-					entity.teleport(game.player.entity, event.chain[0].(raylib.Vector3))
-					entity.move(.up, game.player.entity)
-				}
+			if !game.region.events[test].interactable {
+				game.player.canMove = false
+				game.eventmanager.currentEvent = &game.region.events[test]
 			}
 		}
 		if interact {
@@ -50,6 +43,17 @@ update :: proc() {
 			if game.region.events[test].interactable {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[test]
+			}
+			ent := &game.region.entities[test]
+			if ent != nil {
+				game.player.canMove = false
+				game.eventmanager.currentEvent = &game.region.events[ent.interactionEvent]
+				switch game.player.entity.direction {
+					case .up:		entity.turn(ent, .down)
+					case .down:		entity.turn(ent, .up)
+					case .left:		entity.turn(ent, .right)
+					case .right:	entity.turn(ent, .left)
+				}
 			}
 		}
 

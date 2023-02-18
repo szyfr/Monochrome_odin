@@ -31,6 +31,8 @@ Entity :: struct {
 	direction : Direction,
 
 	standee   : ^Standee,
+
+	interactionEvent : raylib.Vector2,
 }
 
 Event :: struct {

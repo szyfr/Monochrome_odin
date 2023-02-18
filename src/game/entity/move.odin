@@ -5,6 +5,7 @@ package entity
 import "vendor:raylib"
 
 import "../../game"
+import "../../game/standee/animations"
 
 
 //= Procedures
@@ -57,4 +58,17 @@ teleport :: proc(
 	entity.position = location
 	entity.previous = location
 	entity.target   = location
+}
+
+turn :: proc(
+	entity		: ^game.Entity,
+	direction	:  game.Direction,
+) {
+	
+	switch direction {
+		case .up:		animations.set_animation(&entity.standee.animator, "idle_up")
+		case .down:		animations.set_animation(&entity.standee.animator, "idle_down")
+		case .left:		animations.set_animation(&entity.standee.animator, "idle_left")
+		case .right:	animations.set_animation(&entity.standee.animator, "idle_right")
+	}
 }
