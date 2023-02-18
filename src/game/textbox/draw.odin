@@ -36,28 +36,23 @@ draw :: proc() {
 		delete(text)
 
 		game.eventmanager.textbox.timer += 1
-		fmt.printf("%v\n",game.eventmanager.textbox.position)
 
 		switch game.options.textSpeed {
 			case 0: // Instant
-				fmt.printf("instant")
 				game.eventmanager.textbox.position = len(game.eventmanager.textbox.targetText)
 				game.eventmanager.textbox.currentText = game.eventmanager.textbox.targetText
 			
 			case 1: // Fast
-				fmt.printf("fast")
 				if game.eventmanager.textbox.timer >= 4 {
 					if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) do break
 					progress_textbox()
 				}
 			case 2: // Medium
-				fmt.printf("medium")
 				if game.eventmanager.textbox.timer >= 8 {
 					if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) do break
 					progress_textbox()
 				}
 			case 3: // Slow
-				fmt.printf("slow")
 				if game.eventmanager.textbox.timer >= 12 {
 					if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) do break
 					progress_textbox()
