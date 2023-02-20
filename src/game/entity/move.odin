@@ -3,6 +3,7 @@ package entity
 
 //= Imports
 import "core:fmt"
+import "core:math"
 
 import "vendor:raylib"
 

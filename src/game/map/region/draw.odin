@@ -52,51 +52,11 @@ draw :: proc() {
 			for x:=0;x<int(game.region.size.x);x+=1 {
 				ent, err := game.region.entities[{f32(x),f32(y)}]
 				if err do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
-
-				/* //? NOTE:
-					This code is fucked up, but it works.
-					Basically; It renders the three tiles that are +1 z from the player as long as its not solid.
-
-					This exists because otherwise the player's transparency overrides the texture of the tile as they walk northward.
-					If i can figure out a better way of doing this, i'll implement it. but otherwise i'm just happy it looks fine now.
-
-					There is currently one problem with it. That being walking north/south next to a solid tile will make them slightly overlap the ground.
-				*/
+				ent, err  = game.region.entities[{f32(x),f32(y-1)}]
+				if err do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
+				
 				ply := game.player.entity
-				position : raylib.Vector2 = {
-					ply.target.x-1,
-					ply.target.z+1,
-				}
-				southTile := game.region.tiles[position]
-				if !southTile.solid do raylib.DrawModelEx(
-					game.tiles[southTile.model],
-					southTile.pos,
-					{0, 1, 0},
-					0,
-					{1, 1, 1},
-					raylib.WHITE,
-				)
-				position.x += 2
-				southTile = game.region.tiles[position]
-				if !southTile.solid do raylib.DrawModelEx(
-					game.tiles[southTile.model],
-					southTile.pos,
-					{0, 1, 0},
-					0,
-					{1, 1, 1},
-					raylib.WHITE,
-				)
-				position.x -= 1
-				southTile = game.region.tiles[position]
-				if !southTile.solid do raylib.DrawModelEx(
-					game.tiles[southTile.model],
-					southTile.pos,
-					{0, 1, 0},
-					0,
-					{1, 1, 1},
-					raylib.WHITE,
-				)
-				if test_entity(f32(x), f32(y), ply, true) do entity.draw(ply)
+				if test_entity(f32(x), f32(y), ply, false) do entity.draw(ply)
 			}
 
 		}
@@ -108,5 +68,12 @@ test_entity :: proc(
 	entity	: ^game.Entity,
 	notPrev	: bool,
 ) -> bool {
-	return entity.target.x == x && entity.target.z == y
+	if notPrev {
+		//posZ := y
+		posZ := math.ceil(entity.target.z)
+		if math.ceil(entity.target.z) < entity.position.z do posZ += 1
+		return math.round(entity.target.x) == x && posZ == y
+		//return math.round(entity.target.x) == x && math.ceil(entity.target.z) == posZ
+	}
+	else		do return math.round(entity.position.x) == x && math.ceil(entity.position.z) == y
 }
