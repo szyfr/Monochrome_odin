@@ -25,6 +25,9 @@ Entity :: struct {
 	position	: raylib.Vector3,
 	target		: raylib.Vector3,
 
+	visibleVar	: string,
+	visible		: bool,
+
 	id			: string,
 
 	isMoving	: bool,
@@ -38,8 +41,11 @@ Entity :: struct {
 }
 
 Event :: struct {
-	position : raylib.Vector3,
-	interactable : bool,
+	position		: raylib.Vector3,
+	interactable	: bool,
+
+	visibleVar		: string,
+	visible			: bool,
 
 	chain : [dynamic]EventChain,
 }
@@ -49,6 +55,10 @@ EventChain :: union {
 	TurnEvent,
 	MoveEvent,
 	WaitEvent,
+	EmoteEvent,
+	ConditionalEvent,
+	SetConditionalEvent,
+	SetTileEvent,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -70,6 +80,32 @@ TurnEvent :: struct {
 }
 WaitEvent :: struct {
 	time : int,
+}
+EmoteEvent :: struct {
+	entityid	: string,
+	emote		: Emote,
+	multiplier	: f32,
+}
+ConditionalEvent :: struct {
+	variableName	: string,
+	value			: bool,
+	event			: raylib.Vector2,
+}
+SetConditionalEvent :: struct {
+	variableName	: string,
+	value			: bool,
+}
+SetTileEvent :: struct {
+	position	: raylib.Vector2,
+	value		: string,
+	solid, surf	: bool,
+}
+
+EmoteStruct :: struct {
+	src, dest	: raylib.Rectangle,
+	duration	: int,
+	maxDuration : int,
+	player		: bool,
 }
 
 Standee :: struct {
@@ -113,6 +149,8 @@ EventManager :: struct {
 	textbox			:  Textbox,
 	currentChain	:  int,
 	uses			:  int,
+
+	eventVariables	: map[string]bool,
 }
 Textbox :: struct {
 	state		: TextboxState,
@@ -155,4 +193,10 @@ TextboxState :: enum {
 	active,
 	finished,
 	reset,
+}
+
+Emote :: enum {
+	shocked,
+	confused,
+	sad,
 }

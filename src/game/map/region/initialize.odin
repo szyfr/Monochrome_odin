@@ -70,21 +70,21 @@ init :: proc(
 				evt : game.Event = {}
 				evt.position		= position
 				evt.interactable	= ("interact" == eventList[count].(json.Object)["type"].(string))
+
+				arr := eventList[count].(json.Object)["conditional"].(json.Array)
+				if len(arr) > 0 {
+					evt.visibleVar		= arr[0].(string)
+					evt.visible			= arr[1].(bool)
+				}
 				
 				chain := eventList[count].(json.Object)["chain"].(json.Array)
 				for i:=0;i<len(chain);i+=1 {
 					chn : game.EventChain
 					switch chain[i].(json.Array)[0].(string) {
 						case "text":
-							//chn = &game.localization[chain[i].(json.Array)[1].(string)]
 							chn = game.TextEvent{&game.localization[chain[i].(json.Array)[1].(string)]}
 
 						case "warp":
-							//chn = raylib.Vector3{
-							//	f32(chain[i].(json.Array)[1].(json.Array)[0].(f64)),
-							//	0,
-							//	f32(chain[i].(json.Array)[1].(json.Array)[1].(f64)),
-							//}
 							chn = game.WarpEvent{
 								entityid = chain[i].(json.Array)[1].(string),
 								position = {
@@ -125,6 +125,46 @@ init :: proc(
 
 						case "wait":
 							chn = game.WaitEvent{ int(chain[i].(json.Array)[1].(f64)) }
+
+						case "emote":
+							emote : game.Emote
+							switch chain[i].(json.Array)[2].(string) {
+								case "shocked":		emote = .shocked
+								case "confused":	emote = .confused
+								case "sad":			emote = .sad
+							}
+							chn = game.EmoteEvent{
+								entityid	= chain[i].(json.Array)[1].(string),
+								emote		= emote,
+								multiplier	= f32(chain[i].(json.Array)[3].(f64)),
+							}
+
+						case "conditional":
+							chn = game.ConditionalEvent{
+								variableName	= chain[i].(json.Array)[1].(string),
+								value			= chain[i].(json.Array)[2].(bool),
+								event			= {
+									f32(chain[i].(json.Array)[3].(json.Array)[0].(f64)),
+									f32(chain[i].(json.Array)[3].(json.Array)[1].(f64)),
+								},
+							}
+						
+						case "setcon":
+							chn = game.SetConditionalEvent{
+								variableName	= chain[i].(json.Array)[1].(string),
+								value			= chain[i].(json.Array)[2].(bool),
+							}
+
+						case "settile":
+							chn = game.SetTileEvent{
+								position	= {
+									f32(chain[i].(json.Array)[1].(json.Array)[0].(f64)),
+									f32(chain[i].(json.Array)[1].(json.Array)[1].(f64)),
+								},
+								value		= chain[i].(json.Array)[2].(string),
+								solid		= chain[i].(json.Array)[3].(bool),
+								surf		= chain[i].(json.Array)[4].(bool),
+							}
 					}
 					append(&evt.chain, chn)
 				}
@@ -147,6 +187,13 @@ init :: proc(
 				}
 				ent.id = entityList[count].(json.Object)["id"].(string)
 				direction : game.Direction
+
+				arr := entityList[count].(json.Object)["conditional"].(json.Array)
+				if len(arr) > 0 {
+					ent.visibleVar		= arr[0].(string)
+					ent.visible			= arr[1].(bool)
+				}
+
 				switch entityList[count].(json.Object)["direction"].(string) {
 					case "up":		direction = .up
 					case "down":	direction = .down

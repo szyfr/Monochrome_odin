@@ -391,12 +391,14 @@
 			"movement":"random",
 			"direction":"right",
 			"event":[0,0],
+			"conditional":["rival_battle_1",true],
 		}
 	],
 	"events":[
 		{	 // Elm's Lab
 			"location": [ 3,3 ],
 			"type":"interact",
+			"conditional":[],
 			"chain": [
 				["text","test_1"],
 				["text","test_2"],
@@ -404,18 +406,21 @@
 		}, { // Player's house
 			"location": [ 11,5 ],
 			"type":"interact",
+			"conditional":[],
 			"chain": [
 				["text","test_3"],
 			]
 		}, { // Elm's House
 			"location": [ 9,13 ],
 			"type":"interact",
+			"conditional":[],
 			"chain": [
 				["text","test_4"],
 			]
 		}, { // Town sign
 			"location": [ 8,8 ],
 			"type":"interact",
+			"conditional":[],
 			"chain": [
 				["text","test_5"],
 				["text","test_6"],
@@ -423,53 +428,69 @@
 		}, { // Elm's Lab Warp
 			"location": [ 6,3 ],
 			"type":"trigger",
+			"conditional":[],
 			"chain": [
 				["warp","player",[ 8,6 ],true],
 			]
 		}, { // Player's house Warp
 			"location": [ 13,5 ],
 			"type":"trigger",
+			"conditional":[],
 			"chain": [
 				["warp","player",[ 8,6 ],true],
 			]
 		}, { // Elm's house Warp
 			"location": [ 11,13 ],
 			"type":"trigger",
+			"conditional":[],
 			"chain": [
 				["warp","player",[ 8,6 ],true],
 			]
 		}, { // Misc house Warp
 			"location": [ 3,11 ],
 			"type":"trigger",
+			"conditional":[],
 			"chain": [
 				["warp","player",[ 8,6 ],true],
 			]
 		}, { // Talking to silver
 			"location": [ 0,0 ],
 			"type":"interact",
+			"conditional":[],
 			"chain": [
 				["turn","ent_1","right"],
 				["text","event_0_1"],
 				["text","event_0_2"],
 				["turn","ent_1","left"],
+				["emote","ent_1","shocked",1.0],
+			//	["conditional","variable_1",true,[ 11,5 ]],
+			//	["setcon","variable_1",true],
+			//	["settile",[ 4,4 ],"tile_flower_bottom",true,false],
 				["text","event_0_3"],
 				["move","player","down",1,true],
 				["move","ent_1","left",1,true],
 				["turn","ent_1","down"],
 				["move","player","down",2,false],
 				["move","ent_1","right",1,false],
+			//	["setcon","rival_battle_1",true],
 			]
-		}, {
+		}, { // Leaving map
 			"location": [ 1,8 ],
 			"type":"trigger",
+			"conditional":[],
 			"chain": [
+				["wait",50],
+				["emote","player","sad",1.5],
 				["text","event_1_1"],
 				["move","player","right",1,true],
 			]
 		}, {
 			"location": [ 1,9 ],
 			"type":"trigger",
+			"conditional":[],
 			"chain": [
+				["wait",50],
+				["emote","player","sad",1.5],
 				["text","event_1_1"],
 				["move","player","right",1,true],
 			]

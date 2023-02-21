@@ -31,14 +31,14 @@ move :: proc(
 		}
 
 		//* Get tile
-		tile : ^game.Tile = &game.region.tiles[{target.x, target.z}]
-		diff :  f32       = tile.pos.y - entity.position.y
-		ent  :  bool      = false
-		if game.region.entities[{target.x, target.z}].position == target do ent = true
-		if  tile.solid ||                       //? Tile is solid
-			(!entity.isSurfing && tile.surf) || //? Tile is surfable and playing isn't surfing
-			(diff > 0.5 || diff < -0.75) ||     //? Height difference is too extreme
-			ent                                 //? There is currently an entity there
+		tile : ^game.Tile	 = &game.region.tiles[{target.x, target.z}]
+		diff :  f32			 = tile.pos.y - entity.position.y
+		ent, res			:= game.region.entities[{target.x, target.z}]
+		var, resu			:= game.eventmanager.eventVariables[ent.visibleVar]
+		if  tile.solid ||                      		//? Tile is solid
+			(!entity.isSurfing && tile.surf) ||		//? Tile is surfable and playing isn't surfing
+			(diff > 0.5 || diff < -0.75) ||    		//? Height difference is too extreme
+			(res && (resu && ent.visible != var))	//? There is currently an entity there
 		{
 			//TODO Thump noise
 			//TODO Slow walking animation?

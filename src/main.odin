@@ -45,6 +45,7 @@ main_draw :: proc() {
 
 	raylib.EndMode3D()
 
+	entity.draw_emotes()
 	textbox.draw()
 
 	builder : strings.Builder
@@ -97,6 +98,8 @@ main_init :: proc() {
 
 	//* Temp
 	game.eventmanager = new(game.EventManager)
+	game.eventmanager.eventVariables["variable_1"] = false
+	game.eventmanager.eventVariables["rival_battle_1"] = false
 }
 main_close :: proc() {
 	//* Raylib

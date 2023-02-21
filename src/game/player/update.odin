@@ -45,15 +45,16 @@ update :: proc() {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[test]
 			}
-			ent := &game.region.entities[test]
-			if ent != nil {
+			ent, resu := game.region.entities[test]
+			var, res := game.eventmanager.eventVariables[ent.visibleVar]
+			if resu && (res && var != ent.visible) {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[ent.interactionEvent]
 				switch game.player.entity.direction {
-					case .up:		entity.turn(ent, .down)
-					case .down:		entity.turn(ent, .up)
-					case .left:		entity.turn(ent, .right)
-					case .right:	entity.turn(ent, .left)
+					case .up:		entity.turn(&ent, .down)
+					case .down:		entity.turn(&ent, .up)
+					case .left:		entity.turn(&ent, .right)
+					case .right:	entity.turn(&ent, .left)
 				}
 			}
 		}

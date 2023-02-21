@@ -21,6 +21,8 @@ init :: proc() {
 		.NINE_PATCH,
 	}
 
+	game.emotes = raylib.LoadTexture("data/sprites/spr_emotes.png")
+
 	game.font = raylib.LoadFont("data/sprites/ui/font.ttf")
 }
 close :: proc() {

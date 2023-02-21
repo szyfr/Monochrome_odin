@@ -12,6 +12,10 @@ import "../../game/entity"
 import "../../game/textbox"
 
 
+//= Constants
+EMOTE_DURATION :: 50
+
+
 //= Procedures
 update :: proc() {
 	if game.eventmanager.currentEvent != nil {
@@ -88,7 +92,68 @@ update :: proc() {
 					game.eventmanager.uses += 1
 				} else {
 					game.eventmanager.currentChain += 1
+					game.eventmanager.uses = 0
 				}
+			
+			case game.EmoteEvent:
+				emotingEnt : ^game.Entity
+				for ent in game.region.entities do if game.region.entities[ent].id == curChain.(game.EmoteEvent).entityid do emotingEnt = &game.region.entities[ent]
+				if curChain.(game.EmoteEvent).entityid == "player" do emotingEnt = game.player.entity
+				
+				if game.eventmanager.uses == 0 && emotingEnt != nil {
+					position : raylib.Vector2 = raylib.GetWorldToScreen(emotingEnt.position + {0,2.25,0}, game.camera)
+					src : raylib.Rectangle = {
+						16 * f32(curChain.(game.EmoteEvent).emote),
+						0,
+						16,16,
+					}
+					dest : raylib.Rectangle = {
+						position.x,
+						position.y,
+						80,80,
+					}
+					strc : game.EmoteStruct = {
+						src			= src,
+						dest		= dest,
+						duration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
+						maxDuration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
+					}
+					if curChain.(game.EmoteEvent).entityid == "player" do strc.player = true
+					append(&game.emoteList, strc)
+					//TODO Noise
+					
+					game.eventmanager.uses += 1
+				} else if game.eventmanager.uses < int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier) && emotingEnt != nil {
+					game.eventmanager.uses += 1
+				} else {
+					game.eventmanager.uses = 0
+					game.eventmanager.currentChain += 1
+				}
+			
+			case game.ConditionalEvent:
+				if game.check_variable(curChain.(game.ConditionalEvent)) {
+					evt, res := game.region.events[curChain.(game.ConditionalEvent).event]
+					if !res {
+						game.eventmanager.currentChain += 1
+						return
+					}
+
+					game.eventmanager.currentChain = 0
+					game.eventmanager.currentEvent = &game.region.events[curChain.(game.ConditionalEvent).event]
+				} else {
+					game.eventmanager.currentChain += 1
+				}
+
+			case game.SetConditionalEvent:
+				game.eventmanager.eventVariables[curChain.(game.SetConditionalEvent).variableName] = curChain.(game.SetConditionalEvent).value
+				game.eventmanager.currentChain += 1
+
+			case game.SetTileEvent:
+				tile := &game.region.tiles[curChain.(game.SetTileEvent).position]
+				tile.model = curChain.(game.SetTileEvent).value
+				tile.solid = curChain.(game.SetTileEvent).solid
+				tile.surf  = curChain.(game.SetTileEvent).surf
+				game.eventmanager.currentChain += 1
 		}
 	}
 }

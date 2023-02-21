@@ -51,9 +51,9 @@ draw :: proc() {
 			x = 0
 			for x:=0;x<int(game.region.size.x);x+=1 {
 				ent, err := game.region.entities[{f32(x),f32(y)}]
-				if err do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
+				if err && game.check_variable(ent.visibleVar, ent.visible) do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
 				ent, err  = game.region.entities[{f32(x),f32(y-1)}]
-				if err do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
+				if err && game.check_variable(ent.visibleVar, ent.visible) do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
 				
 				ply := game.player.entity
 				if test_entity(f32(x), f32(y), ply, false) do entity.draw(ply)
