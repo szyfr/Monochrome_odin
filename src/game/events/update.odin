@@ -10,6 +10,7 @@ import "vendor:raylib"
 import "../../game"
 import "../../game/entity"
 import "../../game/textbox"
+import "../../game/monsters"
 
 
 //= Constants
@@ -153,6 +154,13 @@ update :: proc() {
 				tile.model = curChain.(game.SetTileEvent).value
 				tile.solid = curChain.(game.SetTileEvent).solid
 				tile.surf  = curChain.(game.SetTileEvent).surf
+				game.eventmanager.currentChain += 1
+
+			case game.GetPokemonEvent:
+				monsters.add_to_team(monsters.create(
+					curChain.(game.GetPokemonEvent).species,
+					curChain.(game.GetPokemonEvent).level,
+				))
 				game.eventmanager.currentChain += 1
 		}
 	}

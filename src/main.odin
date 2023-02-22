@@ -31,7 +31,7 @@ main_logic :: proc() {
 	region.update()
 
 	if raylib.IsKeyPressed(.O) {
-		for ev in game.region.events do fmt.printf("%v\n", ev)
+		for pkmn in game.player.pokemon do fmt.printf("%v\n",pkmn)
 	}
 }
 

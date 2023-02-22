@@ -5,6 +5,7 @@ package region
 import "core:fmt"
 import "core:os"
 import "core:encoding/json"
+import "core:reflect"
 
 import "vendor:raylib"
 
@@ -164,6 +165,20 @@ init :: proc(
 								value		= chain[i].(json.Array)[2].(string),
 								solid		= chain[i].(json.Array)[3].(bool),
 								surf		= chain[i].(json.Array)[4].(bool),
+							}
+						
+						case "getpokemon":
+							pokemon, res := reflect.enum_from_name(game.PokemonSpecies, chain[i].(json.Array)[1].(string))
+							if res {
+								chn = game.GetPokemonEvent{
+									species	= pokemon,
+									level	= int(chain[i].(json.Array)[2].(f64)),
+								}
+							} else {
+								chn = game.GetPokemonEvent{
+									species	= .empty,
+									level	= 0,
+								}
 							}
 					}
 					append(&evt.chain, chn)

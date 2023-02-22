@@ -18,6 +18,8 @@ Player :: struct {
 	entity		: ^Entity,
 	moveTimer	:  u8,
 	canMove		:  bool,
+
+	pokemon		: [4]Pokemon,
 }
 
 Entity :: struct {
@@ -59,6 +61,7 @@ EventChain :: union {
 	ConditionalEvent,
 	SetConditionalEvent,
 	SetTileEvent,
+	GetPokemonEvent,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -99,6 +102,10 @@ SetTileEvent :: struct {
 	position	: raylib.Vector2,
 	value		: string,
 	solid, surf	: bool,
+}
+GetPokemonEvent :: struct {
+	species : PokemonSpecies,
+	level	: int,
 }
 
 EmoteStruct :: struct {
@@ -172,6 +179,15 @@ Options :: struct {
 	language     : string,
 }
 
+Pokemon :: struct {
+	species : PokemonSpecies,
+
+	evAtk, evDef, evSpAtk, evSpDef, evSpd : int,
+	experience : int,
+
+	attacks : [4]PokemonAttacks,
+}
+
 
 //= Enumerations
 Direction :: enum {
@@ -199,4 +215,34 @@ Emote :: enum {
 	shocked,
 	confused,
 	sad,
+}
+
+PokemonSpecies :: enum {
+	empty,
+
+	chikorita,
+	bayleef,
+	meganium,
+
+	cyndaquil,
+	quilava,
+	typhlosion,
+
+	totodile,
+	croconaw,
+	feraligatr,
+}
+
+PokemonAttacks :: enum {
+	empty,
+
+	tackle,
+	scratch,
+
+	growl,
+	leer,
+
+	leafage,
+	ember,
+	watergun,
 }
