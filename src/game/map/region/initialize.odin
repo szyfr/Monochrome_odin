@@ -86,6 +86,7 @@ init :: proc(
 							chn = game.TextEvent{&game.localization[chain[i].(json.Array)[1].(string)]}
 
 						case "warp":
+							direction, res := reflect.enum_from_name(game.Direction, chain[i].(json.Array)[4].(string))
 							chn = game.WarpEvent{
 								entityid = chain[i].(json.Array)[1].(string),
 								position = {
@@ -93,6 +94,7 @@ init :: proc(
 									0,
 									f32(chain[i].(json.Array)[2].(json.Array)[1].(f64)),
 								},
+								direction = direction,
 								move = chain[i].(json.Array)[3].(bool),
 							}
 

@@ -66,6 +66,7 @@ EventChain :: union {
 WarpEvent :: struct {
 	entityid	: string,
 	position	: raylib.Vector3,
+	direction	: Direction,
 	move		: bool,
 }
 TextEvent :: struct {

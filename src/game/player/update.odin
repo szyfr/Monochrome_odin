@@ -27,7 +27,7 @@ update :: proc() {
 		//* Events
 		test : raylib.Vector2 = { game.player.entity.position.x, game.player.entity.position.z }
 		if test in game.region.events {
-			if !game.region.events[test].interactable {
+			if !game.region.events[test].interactable && game.player.canMove {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[test]
 				return

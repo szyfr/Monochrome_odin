@@ -17,8 +17,8 @@ draw :: proc() {
 	if game.DRAW_MAP {
 	//	maxY, minY : int = int(game.region.size.y), 0
 	//	maxX, minX : int = int(game.region.size.x), 0
-		maxY, minY : int = int(game.camera.target.z) + 8, int(game.camera.target.z) - 8
-		maxX, minX : int = int(game.camera.target.x) + 14, int(game.camera.target.x) - 14
+		maxY, minY : int = int(game.camera.target.z) + 10, int(game.camera.target.z) - 10
+		maxX, minX : int = int(game.camera.target.x) + 16, int(game.camera.target.x) - 16
 		width      : int = maxX - minX
 		for y:=minY;y<maxY;y+=1 {
 			count := 0

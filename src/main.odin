@@ -37,7 +37,7 @@ main_logic :: proc() {
 
 main_draw :: proc() {
 	raylib.BeginDrawing()
-	raylib.ClearBackground(raylib.RAYWHITE)
+	raylib.ClearBackground({57,57,57,255})
 	raylib.BeginMode3D(game.camera)
 
 	//* Region
