@@ -62,6 +62,7 @@ EventChain :: union {
 	SetConditionalEvent,
 	SetTileEvent,
 	GetPokemonEvent,
+	StartBattleEvent,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -108,6 +109,17 @@ GetPokemonEvent :: struct {
 	species : PokemonSpecies,
 	level	: int,
 }
+StartBattleEvent :: struct {
+	id			: string,
+}
+
+BattleData :: struct {
+	id				: string,
+	trainerName		: string,
+	arena			: Arena,
+	pokemonNormal	: [4]Pokemon,
+	pokemonHard		: [4]Pokemon,
+}
 
 EmoteStruct :: struct {
 	src, dest	: raylib.Rectangle,
@@ -117,11 +129,11 @@ EmoteStruct :: struct {
 }
 
 Standee :: struct {
-	animator : StandeeAnimation,
+	animator	: StandeeAnimation,
 
-	mesh     : raylib.Mesh,
-	material : raylib.Material,
-	position : raylib.Matrix,
+	mesh		: raylib.Mesh,
+	material	: raylib.Material,
+	position	: raylib.Matrix,
 }
 
 StandeeAnimation :: struct {
@@ -184,9 +196,29 @@ Pokemon :: struct {
 	species : PokemonSpecies,
 
 	evAtk, evDef, evSpAtk, evSpDef, evSpd : int,
+	spd : int,
 	experience : int,
+	//TODO Nature
 
 	attacks : [4]PokemonAttacks,
+}
+
+BattleStructure :: struct {
+	arena		: Arena,
+
+	playerPokemon	: BattleEntity,
+	enemyPokemon	: BattleEntity,
+	enemyPokemonList: [4]Pokemon,
+
+}
+BattleEntity :: struct {
+	position	: raylib.Vector3,
+	isMoving	: bool,
+	direction	: Direction,
+
+	standee		: ^Standee,
+
+	pokemonInfo	: ^Pokemon,
 }
 
 
@@ -246,4 +278,14 @@ PokemonAttacks :: enum {
 	leafage,
 	ember,
 	watergun,
+}
+
+Arena :: enum {
+	empty,
+	grass,
+	forest,
+	building,
+	city,
+	beach,
+	water,
 }

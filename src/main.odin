@@ -16,6 +16,8 @@ import "game/localization"
 import "game/graphics"
 import "game/textbox"
 import "game/events"
+import "game/battle"
+import "game/monsters"
 import "game/map/tiles"
 import "game/map/region"
 
@@ -29,6 +31,7 @@ main_logic :: proc() {
 	camera.update()
 	player.update()
 	region.update()
+	if game.battleStruct != nil do battle.update()
 
 	if raylib.IsKeyPressed(.O) {
 		for pkmn in game.player.pokemon do fmt.printf("%v\n",pkmn)
@@ -42,6 +45,7 @@ main_draw :: proc() {
 
 	//* Region
 	region.draw()
+	if game.battleStruct != nil do battle.draw()
 
 	raylib.EndMode3D()
 
@@ -49,19 +53,23 @@ main_draw :: proc() {
 	textbox.draw()
 
 	builder : strings.Builder
+	last : raylib.Vector3 = {}
+	if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
 	cstr := strings.clone_to_cstring(fmt.sbprintf(
 		&builder,
-		"Previous: %v\nCurrent: %v\nTarget: %v\n\n",
+		"Previous: %v\nCurrent: %v\nTarget: %v\n\nPokemon:%v\n",
 		game.player.entity.previous,
 		game.player.entity.position,
 		game.player.entity.target,
+		last,
 	))
 	raylib.DrawText(
 		cstr,
-		10, 10,
+		10, 30,
 		20,
 		raylib.BLACK,
 	)
+	raylib.DrawFPS(10,10)
 	delete(cstr)
 	strings.builder_destroy(&builder)
 	raylib.EndDrawing()
@@ -100,6 +108,7 @@ main_init :: proc() {
 	game.eventmanager = new(game.EventManager)
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
+	game.player.pokemon[0] = monsters.create(.chikorita, 5)
 }
 main_close :: proc() {
 	//* Raylib

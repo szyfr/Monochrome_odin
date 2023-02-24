@@ -23,7 +23,7 @@ update :: proc() {
 
 	interact  := raylib.IsKeyPressed(.SPACE)
 
-	if !game.player.entity.isMoving && game.player.canMove {
+	if !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil {
 		//* Events
 		test : raylib.Vector2 = { game.player.entity.position.x, game.player.entity.position.z }
 		if test in game.region.events {

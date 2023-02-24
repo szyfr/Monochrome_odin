@@ -21,6 +21,7 @@ create :: proc(
 	//TODO Maybe have this in a file?
 	#partial switch species {
 		case .chikorita:
+			pkmn.spd = 10
 			if level == 5 {
 				pkmn.attacks[0] = .tackle
 				pkmn.attacks[1] = .growl

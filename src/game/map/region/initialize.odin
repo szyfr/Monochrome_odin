@@ -6,6 +6,7 @@ import "core:fmt"
 import "core:os"
 import "core:encoding/json"
 import "core:reflect"
+import "core:math"
 
 import "vendor:raylib"
 
@@ -46,6 +47,7 @@ init :: proc(
 	tileList	:= jsonfile.(json.Object)["tiles"].(json.Array)
 	entityList	:= jsonfile.(json.Object)["entities"].(json.Array)
 	eventList	:= jsonfile.(json.Object)["events"].(json.Array)
+	battleList	:= jsonfile.(json.Object)["battles"].(json.Array)
 	for y:=0;y<int(game.region.size.y);y+=1 {
 		for x:=0;x<int(game.region.size.x);x+=1 {
 			count := (y*int(game.region.size.x))+x
@@ -182,6 +184,11 @@ init :: proc(
 									level	= 0,
 								}
 							}
+						
+						case "startbattle":
+							chn = game.StartBattleEvent{
+								id = chain[i].(json.Array)[1].(string),
+							}
 					}
 					append(&evt.chain, chn)
 				}
@@ -221,6 +228,19 @@ init :: proc(
 				//TODO Movement for AI
 				game.region.entities[{ent.position.x,ent.position.z}] = ent^
 			}
+
+			//* Battles
+			if len(battleList)>count {
+				arena, res := reflect.enum_from_name(game.Arena, battleList[count].(json.Object)["arena"].(string))
+
+				btl : game.BattleData	= {}
+				btl.id				= battleList[count].(json.Object)["id"].(string)
+				btl.trainerName		= battleList[count].(json.Object)["trainer"].(string)
+				btl.arena			= arena
+				btl.pokemonNormal	= load_pokemon(battleList[count].(json.Object)["mon_normal"].(json.Array))
+				btl.pokemonHard		= load_pokemon(battleList[count].(json.Object)["mon_hard"].(json.Array))
+				game.battles[btl.id] = btl
+			}
 		}
 	}
 }
@@ -230,4 +250,25 @@ close :: proc() {
 	delete(game.region.entities)
 	delete(game.region.events)
 	free(game.region)
+}
+
+load_pokemon :: proc(
+	input : json.Array,
+) -> [4]game.Pokemon {
+	output : [4]game.Pokemon
+	for i in 0..<4 {
+		pokemon, res := reflect.enum_from_name(game.PokemonSpecies, input[i].(json.Array)[0].(string))
+		if pokemon == .empty do break
+
+		pkmn : game.Pokemon = {}
+		pkmn.species = pokemon
+		pkmn.experience = int(math.pow(input[i].(json.Array)[1].(f64), 3))
+		for o in 0..<4 {
+			attack, resu := reflect.enum_from_name(game.PokemonAttacks, input[i].(json.Array)[3+o].(string))
+			pkmn.attacks[o] = attack
+		}
+		output[i] = pkmn
+	}
+
+	return output
 }

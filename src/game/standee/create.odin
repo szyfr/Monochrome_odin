@@ -21,18 +21,19 @@ ANI_FILETYPE :: ".json"
 
 //= Procedures
 create :: proc(
-	filename : string,
+	filename	: string,
+	size		: f32 = 1,
 ) -> ^game.Standee {
 	standee := new(game.Standee)
 
 	//* Mesh, Material, and Matrix
-	standee.mesh     = raylib.GenMeshPlane(1,1,1,1)
+	standee.mesh     = raylib.GenMeshPlane(size,size,1,1)
 	standee.material = raylib.LoadMaterialDefault();
 	standee.position = {
-		1,0,0,0,
-		0,.78,0.8,0,
-		0,-0.8,.78,0,
-		0,0,0,1,
+		1.00,  0.00, 0.00, 0.00,
+		0.00,  0.78, 0.80, 0.00,
+		0.00, -0.80, 0.78, 0.00,
+		0.00,  0.00, 0.00, 1.00,
 	}
 
 	//* Get filenames

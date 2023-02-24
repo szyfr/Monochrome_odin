@@ -11,6 +11,7 @@ import "../../game"
 import "../../game/entity"
 import "../../game/textbox"
 import "../../game/monsters"
+import "../../game/battle"
 
 
 //= Constants
@@ -161,6 +162,11 @@ update :: proc() {
 					curChain.(game.GetPokemonEvent).species,
 					curChain.(game.GetPokemonEvent).level,
 				))
+				game.eventmanager.currentChain += 1
+			
+			case game.StartBattleEvent:
+				//TODO Run check for if the player doesn't have a pokemon
+				battle.init(game.battles[curChain.(game.StartBattleEvent).id])
 				game.eventmanager.currentChain += 1
 		}
 	}

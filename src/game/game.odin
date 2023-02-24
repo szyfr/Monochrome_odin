@@ -29,6 +29,9 @@ tiles			:  map[string]raylib.Model
 region			: ^Region
 localization	:  map[string]cstring
 eventmanager	: ^EventManager
+battles			:  map[string]BattleData
+battleStruct	: ^BattleStructure
+lastBattleOutcome : bool = false
 
 
 //= Procedures
