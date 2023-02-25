@@ -7,18 +7,19 @@ import "core:strings"
 
 import "vendor:raylib"
 
-import "../../game"
+import "../../../game"
+import "../../../game/settings"
 
 
 //= Procedures
 draw :: proc() {
 	if game.eventmanager.textbox.state != .inactive {
-		posX := f32(game.options.screenWidth) / 4
-		posY := f32(game.options.screenHeight) - (f32(game.options.screenHeight) / 4)
+		posX := f32(game.settings.screenWidth) / 4
+		posY := f32(game.settings.screenHeight) - (f32(game.settings.screenHeight) / 4)
 		raylib.DrawTextureNPatch(
 			game.box_ui,
 			game.box_ui_npatch,
-			{posX, posY, f32(game.options.screenWidth) / 2, f32(game.options.screenHeight) / 4},
+			{posX, posY, f32(game.settings.screenWidth) / 2, f32(game.settings.screenHeight) / 4},
 			{0,0},
 			0,
 			raylib.WHITE,
@@ -37,7 +38,7 @@ draw :: proc() {
 
 		game.eventmanager.textbox.timer += 1
 
-		switch game.options.textSpeed {
+		switch game.settings.textSpeed {
 			case 0: // Instant
 				game.eventmanager.textbox.position = len(game.eventmanager.textbox.targetText)
 				game.eventmanager.textbox.currentText = game.eventmanager.textbox.targetText
@@ -59,7 +60,7 @@ draw :: proc() {
 				}
 		}
 
-		if raylib.IsKeyPressed(.SPACE) && game.eventmanager.textbox.pause >= 2 {
+		if settings.is_key_pressed("interact") && game.eventmanager.textbox.pause >= 2 {
 			if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) {
 				game.eventmanager.textbox.state = .finished
 			} else {

@@ -181,23 +181,44 @@ Textbox :: struct {
 	position	: int,
 }
 
-Options :: struct {
-	//TODO Keybindings
-	screenWidth  : i32,
-	screenHeight : i32,
+Settings :: struct {
+	screenWidth		: i32,
+	screenHeight	: i32,
 
-	textSpeed    : i32,
-	fpsLimit     : i32,
+	textSpeed		: i32,
+	fpsLimit		: i32,
 
-	language     : string,
+	language		: string,
+
+	keybindings		: map[string]Keybinding,
+}
+Keybinding :: struct {
+	origin : u8,
+		// 0 - Keyboard
+		// 1 - Mouse
+		// 2 - MouseWheel
+		// 3 - Gamepad Button
+		// 4 - Gamepad Axis
+	key    : u32,
 }
 
 Pokemon :: struct {
 	species : PokemonSpecies,
 
-	evAtk, evDef, evSpAtk, evSpDef, evSpd : int,
-	spd : int,
-	experience : int,
+	iv : [6]int,
+	ev : [6]int,
+
+	hpMax	: int,
+	hpCur	: int,
+
+	atk		: int,
+	def		: int,
+	spAtk	: int,
+	spDef	: int,
+	spd		: int,
+
+	experience	: int,
+	level		: int,
 	//TODO Nature
 
 	attacks : [4]PokemonAttacks,
@@ -210,10 +231,14 @@ BattleStructure :: struct {
 	enemyPokemon	: BattleEntity,
 	enemyPokemonList: [4]Pokemon,
 
+	playerHPBar		: raylib.Texture,
+	playerEXPBar	: raylib.Texture,
+	enemyHPBar		: raylib.Texture,
 }
 BattleEntity :: struct {
 	position	: raylib.Vector3,
 	isMoving	: bool,
+	canMove		: bool,
 	direction	: Direction,
 
 	standee		: ^Standee,

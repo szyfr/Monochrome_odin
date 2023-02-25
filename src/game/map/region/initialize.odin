@@ -12,6 +12,7 @@ import "vendor:raylib"
 
 import "../../../game"
 import "../../../game/entity"
+import "../../../game/monsters"
 
 import "../../../debug"
 
@@ -260,9 +261,8 @@ load_pokemon :: proc(
 		pokemon, res := reflect.enum_from_name(game.PokemonSpecies, input[i].(json.Array)[0].(string))
 		if pokemon == .empty do break
 
-		pkmn : game.Pokemon = {}
-		pkmn.species = pokemon
-		pkmn.experience = int(math.pow(input[i].(json.Array)[1].(f64), 3))
+		pkmn : game.Pokemon = monsters.create(pokemon, int(input[i].(json.Array)[1].(f64)))
+		//pkmn.experience = int(math.pow(input[i].(json.Array)[1].(f64), 3))
 		for o in 0..<4 {
 			attack, resu := reflect.enum_from_name(game.PokemonAttacks, input[i].(json.Array)[3+o].(string))
 			pkmn.attacks[o] = attack

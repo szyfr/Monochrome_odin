@@ -8,6 +8,7 @@ import "vendor:raylib"
 
 import "../../game"
 import "../../game/entity"
+import "../../game/settings"
 
 
 //= Constants
@@ -16,12 +17,12 @@ MOVE_WAIT :: 6
 
 //= Procedure
 update :: proc() {
-	upDown    := raylib.IsKeyDown(raylib.KeyboardKey.W)
-	downDown  := raylib.IsKeyDown(raylib.KeyboardKey.S)
-	leftDown  := raylib.IsKeyDown(raylib.KeyboardKey.A)
-	rightDown := raylib.IsKeyDown(raylib.KeyboardKey.D)
+	upDown    := settings.is_key_down("up")
+	downDown  := settings.is_key_down("down")
+	leftDown  := settings.is_key_down("left")
+	rightDown := settings.is_key_down("right")
 
-	interact  := raylib.IsKeyPressed(.SPACE)
+	interact  := settings.is_key_pressed("interact")
 
 	if !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil {
 		//* Events

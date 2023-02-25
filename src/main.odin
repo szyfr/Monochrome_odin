@@ -11,15 +11,16 @@ import "game"
 import "game/entity"
 import "game/camera"
 import "game/player"
-import "game/options"
+import "game/settings"
 import "game/localization"
 import "game/graphics"
-import "game/textbox"
 import "game/events"
 import "game/battle"
 import "game/monsters"
 import "game/map/tiles"
 import "game/map/region"
+import "game/ui"
+import "game/ui/textbox"
 
 import "debug"
 
@@ -33,7 +34,7 @@ main_logic :: proc() {
 	region.update()
 	if game.battleStruct != nil do battle.update()
 
-	if raylib.IsKeyPressed(.O) {
+	if settings.is_key_pressed("debug") {
 		for pkmn in game.player.pokemon do fmt.printf("%v\n",pkmn)
 	}
 }
@@ -52,6 +53,8 @@ main_draw :: proc() {
 	entity.draw_emotes()
 	textbox.draw()
 
+	if game.battleStruct != nil do ui.draw_battle()
+
 	builder : strings.Builder
 	last : raylib.Vector3 = {}
 	if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
@@ -65,13 +68,14 @@ main_draw :: proc() {
 	))
 	raylib.DrawText(
 		cstr,
-		10, 30,
+		10, 430,
 		20,
 		raylib.BLACK,
 	)
-	raylib.DrawFPS(10,10)
 	delete(cstr)
 	strings.builder_destroy(&builder)
+	raylib.DrawFPS(10,400)
+
 	raylib.EndDrawing()
 }
 
@@ -79,18 +83,18 @@ main_init :: proc() {
 	//* Debug
 	debug.create_log()
 
-	//* Options / Localization
-	options.init()
+	//* Settings / Localization
+	settings.init()
 	localization.init()
 
 	//* Raylib
 	raylib.SetTraceLogLevel(.NONE)
 	raylib.InitWindow(
-		game.options.screenWidth,
-		game.options.screenHeight,
+		game.settings.screenWidth,
+		game.settings.screenHeight,
 		game.localization["title"],
 	)
-	if game.LIMIT_FPS do raylib.SetTargetFPS(game.options.fpsLimit)
+	if game.LIMIT_FPS do raylib.SetTargetFPS(game.settings.fpsLimit)
 	raylib.SetExitKey(.NULL)
 
 	//* Game

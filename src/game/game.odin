@@ -13,9 +13,9 @@ DRAW_MAP  :: true
 //= Globals
 running : bool = true
 
-camera	: ^Camera
-player	: ^Player
-options	: ^Options
+camera		: ^Camera
+player		: ^Player
+settings	: ^Settings
 
 //* Graphics
 box_ui			: raylib.Texture2D

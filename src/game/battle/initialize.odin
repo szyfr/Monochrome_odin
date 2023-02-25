@@ -11,7 +11,7 @@ import "../../game/standee"
 
 //= Procedures
 init :: proc(
-	event : game.BattleData,
+	event : ^game.BattleData,
 ) {
 	game.battleStruct = new(game.BattleStructure)
 	game.battleStruct.arena		= event.arena
@@ -38,8 +38,9 @@ configure_player_battle_entity :: proc() {
 	game.battleStruct.playerPokemon.pokemonInfo	= &game.player.pokemon[0]
 }
 configure_enemy_battle_entity :: proc(
-	event : game.BattleData,
+	event : ^game.BattleData,
 ) {
-	//* Set pokemon with event
-	//* Configure entity
+	game.battleStruct.enemyPokemon.position	= {18,0,60}
+	game.battleStruct.enemyPokemon.standee		= standee.create("chikorita", 2)
+	game.battleStruct.enemyPokemon.pokemonInfo	= &event.pokemonNormal[0]
 }

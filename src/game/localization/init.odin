@@ -29,7 +29,7 @@ LOCALIZATION_ERROR_FILE_CRIT :: "[ERROR][CRITICAL]\t- Failed to locate localizat
 //= Procedures
 init :: proc() {
 	game.localization = make(map[string]cstring, 1000)
-	fileLocation := strings.concatenate({LOCALIZATION_FILENAME, game.options.language, LOCALIZATION_EXT})
+	fileLocation := strings.concatenate({LOCALIZATION_FILENAME, game.settings.language, LOCALIZATION_EXT})
 
 	if !os.exists(fileLocation) {
 		debug.add_to_log(LOCALIZATION_ERROR_FILE)

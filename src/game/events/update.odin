@@ -9,9 +9,9 @@ import "vendor:raylib"
 
 import "../../game"
 import "../../game/entity"
-import "../../game/textbox"
 import "../../game/monsters"
 import "../../game/battle"
+import "../../game/ui/textbox"
 
 
 //= Constants
@@ -166,7 +166,7 @@ update :: proc() {
 			
 			case game.StartBattleEvent:
 				//TODO Run check for if the player doesn't have a pokemon
-				battle.init(game.battles[curChain.(game.StartBattleEvent).id])
+				battle.init(&game.battles[curChain.(game.StartBattleEvent).id])
 				game.eventmanager.currentChain += 1
 		}
 	}
