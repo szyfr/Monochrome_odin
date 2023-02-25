@@ -264,8 +264,8 @@ load_pokemon :: proc(
 		pkmn : game.Pokemon = monsters.create(pokemon, int(input[i].(json.Array)[1].(f64)))
 		//pkmn.experience = int(math.pow(input[i].(json.Array)[1].(f64), 3))
 		for o in 0..<4 {
-			attack, resu := reflect.enum_from_name(game.PokemonAttacks, input[i].(json.Array)[3+o].(string))
-			pkmn.attacks[o] = attack
+			attack, resu := reflect.enum_from_name(game.PokemonAttack, input[i].(json.Array)[3+o].(string))
+			pkmn.attacks[o] = {attack, 0}
 		}
 		output[i] = pkmn
 	}

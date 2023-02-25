@@ -36,10 +36,13 @@ create :: proc(
 			pkmn.spAtk	= calculate_stat(49, pkmn.ev[3], pkmn.iv[3], pkmn.level)
 			pkmn.spDef	= calculate_stat(65, pkmn.ev[4], pkmn.iv[4], pkmn.level)
 			pkmn.spd	= calculate_stat(45, pkmn.ev[5], pkmn.iv[5], pkmn.level)
+
+			pkmn.size = .small
+
 			if level == 5 {
-				pkmn.attacks[0] = .tackle
-				pkmn.attacks[1] = .growl
-				pkmn.attacks[2] = .leafage
+				pkmn.attacks[0] = {.tackle, 0}
+				pkmn.attacks[1] = {.growl, 0}
+				pkmn.attacks[2] = {.leafage, 0}
 			}
 			
 		case .cyndaquil:
@@ -50,14 +53,16 @@ create :: proc(
 			pkmn.spAtk	= calculate_stat(60, pkmn.ev[3], pkmn.iv[3], pkmn.level)
 			pkmn.spDef	= calculate_stat(50, pkmn.ev[4], pkmn.iv[4], pkmn.level)
 			pkmn.spd	= calculate_stat(65, pkmn.ev[5], pkmn.iv[5], pkmn.level)
+
+			pkmn.size = .small
+
 			if level == 5 {
-				pkmn.attacks[0] = .tackle
-				pkmn.attacks[1] = .leer
-				pkmn.attacks[2] = .ember
+				pkmn.attacks[0] = {.tackle, 0}
+				pkmn.attacks[1] = {.leer, 0}
+				pkmn.attacks[2] = {.ember, 0}
 			}
 			
 		case .totodile:
-			if level == 5 {
 			pkmn.hpMax	= calculate_hp(  50, pkmn.ev[0], pkmn.iv[0], pkmn.level)
 			pkmn.hpCur	= pkmn.hpMax
 			pkmn.atk	= calculate_stat(65, pkmn.ev[1], pkmn.iv[1], pkmn.level)
@@ -65,9 +70,13 @@ create :: proc(
 			pkmn.spAtk	= calculate_stat(44, pkmn.ev[3], pkmn.iv[3], pkmn.level)
 			pkmn.spDef	= calculate_stat(48, pkmn.ev[4], pkmn.iv[4], pkmn.level)
 			pkmn.spd	= calculate_stat(43, pkmn.ev[5], pkmn.iv[5], pkmn.level)
-				pkmn.attacks[0] = .scratch
-				pkmn.attacks[1] = .growl
-				pkmn.attacks[2] = .watergun
+
+			pkmn.size = .small
+
+			if level == 5 {
+				pkmn.attacks[0] = {.scratch, 0}
+				pkmn.attacks[1] = {.growl, 0}
+				pkmn.attacks[2] = {.watergun, 0}
 			}
 	}
 

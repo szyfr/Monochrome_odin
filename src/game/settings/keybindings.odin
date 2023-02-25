@@ -20,7 +20,7 @@ is_key_down :: proc(
 			if raylib.IsKeyDown(raylib.KeyboardKey(key.key)) do return true
 		case 1: //* Mouse
 			if raylib.IsMouseButtonDown(raylib.MouseButton(key.key)) do return true
-		case 2: //* Controller
+		case 3: //* Controller
 			if raylib.IsGamepadButtonDown(0, raylib.GamepadButton(key.key)) do return true
 	}
 	return false
@@ -38,7 +38,7 @@ is_key_pressed :: proc(
 			if raylib.IsKeyPressed(raylib.KeyboardKey(key.key)) do return true
 		case 1: //* Mouse
 			if raylib.IsMouseButtonPressed(raylib.MouseButton(key.key)) do return true
-		case 2: //* Controller
+		case 3: //* Controller
 			if raylib.IsGamepadButtonPressed(0, raylib.GamepadButton(key.key)) do return true
 	}
 	return false
@@ -56,7 +56,7 @@ is_key_released :: proc(
 			if raylib.IsKeyReleased(raylib.KeyboardKey(key.key)) do return true
 		case 1: //* Mouse
 			if raylib.IsMouseButtonReleased(raylib.MouseButton(key.key)) do return true
-		case 2: //* Controller
+		case 3: //* Controller
 			if raylib.IsGamepadButtonReleased(0, raylib.GamepadButton(key.key)) do return true
 	}
 	return false
@@ -74,7 +74,7 @@ is_key_up :: proc(
 			if raylib.IsKeyUp(raylib.KeyboardKey(key.key)) do return true
 		case 1: //* Mouse
 			if raylib.IsMouseButtonUp(raylib.MouseButton(key.key)) do return true
-		case 2: //* Controller
+		case 3: //* Controller
 			if raylib.IsGamepadButtonUp(0, raylib.GamepadButton(key.key)) do return true
 	}
 	return false

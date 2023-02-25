@@ -20,6 +20,8 @@ STATUS_HEIGHT :: 200
 
 //= Procedures
 draw_battle :: proc() {
+	player	:= &game.battleStruct.playerPokemon
+	enemy	:= &game.battleStruct.enemyPokemon
 	builder : strings.Builder
 
 	//* Player
@@ -31,10 +33,11 @@ draw_battle :: proc() {
 		0,
 		raylib.WHITE,
 	)
-	str := strings.to_pascal_case(reflect.enum_string(game.battleStruct.playerPokemon.pokemonInfo.species))
+	str		:= strings.to_pascal_case(reflect.enum_string(player.pokemonInfo.species))
+	cstr	:= strings.clone_to_cstring(str)
 	raylib.DrawTextEx(
 		game.font,
-		strings.clone_to_cstring(str),
+		cstr,
 		{STATUS_WIDTH / 2 - (f32(len(str)) * 20) / 2, 45},
 		20,
 		1,
@@ -42,7 +45,7 @@ draw_battle :: proc() {
 	)
 
 	img		:= raylib.GenImageColor(100, 1, raylib.WHITE)
-	percent	:= (f32(game.battleStruct.playerPokemon.pokemonInfo.hpCur) / f32(game.battleStruct.playerPokemon.pokemonInfo.hpMax)) * 100
+	percent	:= (f32(player.pokemonInfo.hpCur) / f32(player.pokemonInfo.hpMax)) * 100
 	raylib.ImageDrawLineV(&img, {0,0}, {percent,0}, raylib.GREEN)
 	raylib.UnloadTexture(game.battleStruct.playerHPBar)
 	game.battleStruct.playerHPBar = raylib.LoadTextureFromImage(img)
@@ -56,10 +59,13 @@ draw_battle :: proc() {
 		raylib.WHITE,
 	)
 
-	fmt.sbprintf(&builder, "%v/%v",game.battleStruct.playerPokemon.pokemonInfo.hpCur, game.battleStruct.playerPokemon.pokemonInfo.hpMax)
+	fmt.sbprintf(&builder, "%v/%v", player.pokemonInfo.hpCur, player.pokemonInfo.hpMax)
+	delete(cstr)
+	str		= strings.to_string(builder)
+	cstr	= strings.clone_to_cstring(str)
 	raylib.DrawTextEx(
 		game.font,
-		strings.clone_to_cstring(strings.to_string(builder)),
+		cstr,
 		{STATUS_WIDTH / 2 - (f32(len(builder.buf)) * 20) / 2, 105},
 		20,
 		1,
@@ -68,7 +74,7 @@ draw_battle :: proc() {
 	strings.builder_reset(&builder)
 
 	img		= raylib.GenImageColor(100, 1, raylib.WHITE)
-	percent	= math.floor(monsters.exp_ratio(game.battleStruct.playerPokemon.pokemonInfo.experience, game.battleStruct.playerPokemon.pokemonInfo.level) * 100)
+	percent	= math.floor(monsters.exp_ratio(player.pokemonInfo.experience, player.pokemonInfo.level) * 100)
 	raylib.ImageDrawLineV(&img, {0,0}, {percent,0}, raylib.BLUE)
 	raylib.UnloadTexture(game.battleStruct.playerEXPBar)
 	game.battleStruct.playerEXPBar = raylib.LoadTextureFromImage(img)
@@ -95,10 +101,12 @@ draw_battle :: proc() {
 		0,
 		raylib.WHITE,
 	)
-	str = strings.to_pascal_case(reflect.enum_string(game.battleStruct.enemyPokemon.pokemonInfo.species))
+	delete(cstr)
+	str		= strings.to_pascal_case(reflect.enum_string(enemy.pokemonInfo.species))
+	cstr	= strings.clone_to_cstring(str)
 	raylib.DrawTextEx(
 		game.font,
-		strings.clone_to_cstring(str),
+		cstr,
 		{
 			screenWidth - (20 * f32(len(str))) / 2 - STATUS_WIDTH / 2,
 			45,
@@ -109,7 +117,7 @@ draw_battle :: proc() {
 	)
 
 	img		= raylib.GenImageColor(100, 1, raylib.WHITE)
-	percent	= (f32(game.battleStruct.enemyPokemon.pokemonInfo.hpCur) / f32(game.battleStruct.enemyPokemon.pokemonInfo.hpMax)) * 100
+	percent	= (f32(enemy.pokemonInfo.hpCur) / f32(enemy.pokemonInfo.hpMax)) * 100
 	raylib.ImageDrawLineV(&img, {0,0}, {percent,0}, raylib.GREEN)
 	raylib.UnloadTexture(game.battleStruct.enemyHPBar)
 	game.battleStruct.enemyHPBar = raylib.LoadTextureFromImage(img)
@@ -126,10 +134,13 @@ draw_battle :: proc() {
 		raylib.WHITE,
 	)
 
-	fmt.sbprintf(&builder, "%v/%v",game.battleStruct.enemyPokemon.pokemonInfo.hpCur, game.battleStruct.enemyPokemon.pokemonInfo.hpMax)
+	fmt.sbprintf(&builder, "%v/%v", enemy.pokemonInfo.hpCur, enemy.pokemonInfo.hpMax)
+	delete(cstr)
+	str		= strings.to_string(builder)
+	cstr	= strings.clone_to_cstring(str)
 	raylib.DrawTextEx(
 		game.font,
-		strings.clone_to_cstring(strings.to_string(builder)),
+		cstr,
 		{
 			screenWidth - (20 * f32(len(builder.buf))) / 2 - STATUS_WIDTH / 2,
 			105,
@@ -139,4 +150,113 @@ draw_battle :: proc() {
 		raylib.BLACK,
 	)
 	strings.builder_reset(&builder)
+
+	//* Attack UI
+	count := monsters.number_attacks(player.pokemonInfo.attacks)
+	switch count {
+		case 1:
+			raylib.DrawTextureNPatch(
+				game.box_ui,
+				game.box_ui_npatch,
+				{
+					0, f32(game.settings.screenHeight),
+					400, 100,
+				},
+				{-50, 120},
+				game.battleStruct.playerAttackRot,
+				raylib.WHITE,
+			)
+			delete(cstr)
+			str		= reflect.enum_string(player.pokemonInfo.attacks[0].type)
+			cstr	= strings.clone_to_cstring(str)
+			raylib.DrawTextPro(
+				game.font,
+				cstr,
+				{0, f32(game.settings.screenHeight)},
+				{-80, 75},
+				game.battleStruct.playerAttackRot,
+				20, 1,
+				raylib.BLACK,
+			)
+		case 2:
+			for atk in 0..<count {
+				raylib.DrawTextureNPatch(
+					game.box_ui,
+					game.box_ui_npatch,
+					{
+						0, f32(game.settings.screenHeight),
+						400, 100,
+					},
+					{-50, 120},
+					game.battleStruct.playerAttackRot + f32(atk * 180),
+					raylib.WHITE,
+				)
+				delete(cstr)
+				str		= reflect.enum_string(player.pokemonInfo.attacks[atk].type)
+				cstr	= strings.clone_to_cstring(str)
+				raylib.DrawTextPro(
+					game.font,
+					cstr,
+					{0, f32(game.settings.screenHeight)},
+					{-80, 75},
+					game.battleStruct.playerAttackRot + f32(atk * 180),
+					20, 1,
+					raylib.BLACK,
+				)
+			}
+		case 3:
+			for atk in 0..<count {
+				raylib.DrawTextureNPatch(
+					game.box_ui,
+					game.box_ui_npatch,
+					{
+						0, f32(game.settings.screenHeight),
+						400, 100,
+					},
+					{-50, 120},
+					game.battleStruct.playerAttackRot + f32(atk * 120),
+					//game.battleStruct.playerAttackRot + f32(atk * -120),
+					raylib.WHITE,
+				)
+				delete(cstr)
+				str		= reflect.enum_string(player.pokemonInfo.attacks[atk].type)
+				cstr	= strings.clone_to_cstring(str)
+				raylib.DrawTextPro(
+					game.font,
+					cstr,
+					{0, f32(game.settings.screenHeight)},
+					{-80, 75},
+					game.battleStruct.playerAttackRot + f32(atk * 120),
+					//game.battleStruct.playerAttackRot + f32(atk * -120),
+					20, 1,
+					raylib.BLACK,
+				)
+			}
+		case 4:
+			for atk in 0..<count {
+				raylib.DrawTextureNPatch(
+					game.box_ui,
+					game.box_ui_npatch,
+					{
+						0, f32(game.settings.screenHeight),
+						400, 100,
+					},
+					{-50, 120},
+					game.battleStruct.playerAttackRot + f32(atk * 90),
+					raylib.WHITE,
+				)
+				delete(cstr)
+				str		= reflect.enum_string(player.pokemonInfo.attacks[atk].type)
+				cstr	= strings.clone_to_cstring(str)
+				raylib.DrawTextPro(
+					game.font,
+					cstr,
+					{0, f32(game.settings.screenHeight)},
+					{-80, 75},
+					game.battleStruct.playerAttackRot + f32(atk * 90),
+					20, 1,
+					raylib.BLACK,
+				)
+			}
+	}
 }

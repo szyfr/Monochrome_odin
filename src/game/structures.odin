@@ -217,11 +217,17 @@ Pokemon :: struct {
 	spDef	: int,
 	spd		: int,
 
+	size	: Size,
+
 	experience	: int,
 	level		: int,
 	//TODO Nature
 
-	attacks : [4]PokemonAttacks,
+	attacks : [4]Attack,
+}
+Attack :: struct {
+	type : PokemonAttack,
+	cooldown : int,
 }
 
 BattleStructure :: struct {
@@ -234,12 +240,19 @@ BattleStructure :: struct {
 	playerHPBar		: raylib.Texture,
 	playerEXPBar	: raylib.Texture,
 	enemyHPBar		: raylib.Texture,
+	playerAttackRot	: f32,
+	rotationDirect	: bool,
+
+	playerTarget	: raylib.Vector3,
+	enemyTarget		: raylib.Vector3,
 }
 BattleEntity :: struct {
 	position	: raylib.Vector3,
 	isMoving	: bool,
 	canMove		: bool,
 	direction	: Direction,
+	bounds		: raylib.BoundingBox,
+	selectedAtk	: int,
 
 	standee		: ^Standee,
 
@@ -291,7 +304,7 @@ PokemonSpecies :: enum {
 	feraligatr,
 }
 
-PokemonAttacks :: enum {
+PokemonAttack :: enum {
 	empty,
 
 	tackle,
@@ -303,6 +316,12 @@ PokemonAttacks :: enum {
 	leafage,
 	ember,
 	watergun,
+}
+
+Size :: enum {
+	small,
+	medium,
+	large,
 }
 
 Arena :: enum {

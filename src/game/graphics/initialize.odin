@@ -21,7 +21,11 @@ init :: proc() {
 		.NINE_PATCH,
 	}
 
-	game.emotes = raylib.LoadTexture("data/sprites/spr_emotes.png")
+	game.emotes	= raylib.LoadTexture("data/sprites/spr_emotes.png")
+	trgTex	:= raylib.LoadTexture("data/sprites/spr_targeter.png")
+	mesh	:= raylib.GenMeshPlane(1,1,1,1)
+	game.targeter = raylib.LoadModelFromMesh(mesh)
+	game.targeter.materials[0].maps[0].texture = trgTex
 
 	game.font = raylib.LoadFont("data/sprites/ui/font.ttf")
 }

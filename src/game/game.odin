@@ -21,6 +21,7 @@ settings	: ^Settings
 box_ui			: raylib.Texture2D
 box_ui_npatch	: raylib.NPatchInfo
 emotes			: raylib.Texture2D
+targeter		: raylib.Model
 font			: raylib.Font
 
 emoteList		: [dynamic]EmoteStruct

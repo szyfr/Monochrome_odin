@@ -4,6 +4,8 @@ package monsters
 //= Imports
 import "core:math"
 
+import "../../game"
+
 
 //= Procedures
 exp_needed :: proc(
@@ -26,4 +28,14 @@ exp_ratio :: proc(
 	curExp	:= f32(total) - forCur
 
 	return f32(curExp) / f32(needed)
+}
+
+number_attacks :: proc(
+	attackList : [4]game.Attack,
+) -> int {
+	res := 0
+	for i in attackList {
+		if i.type != .empty do res += 1
+	}
+	return res
 }
