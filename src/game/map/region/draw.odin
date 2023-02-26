@@ -20,6 +20,7 @@ draw :: proc() {
 		maxY, minY : int = int(game.camera.target.z) + 10, int(game.camera.target.z) - 10
 		maxX, minX : int = int(game.camera.target.x) + 16, int(game.camera.target.x) - 16
 		width      : int = maxX - minX
+		col : raylib.Color = {0,0,0,255}
 		for y:=minY;y<maxY;y+=1 {
 			count := 0
 			x     := minX
@@ -35,7 +36,10 @@ draw :: proc() {
 					{0, 1, 0},
 					0,
 					{1, 1, 1},
-					raylib.WHITE,
+					//{200,255,255,255},
+					//{200,200,200,255},
+					//{150,150,170,255},
+					{255,255,255,255},
 				)
 				if !flip do x += 1
 				else     do x -= 1

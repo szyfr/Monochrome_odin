@@ -3333,7 +3333,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
-				["wait",50],
+				["wait",100],
 				["emote","player","sad",1.5],
 				["text","event_1_1"],
 				["move","player","right",1,true],
@@ -3343,7 +3343,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
-				["wait",50],
+				["wait",100],
 				["emote","player","sad",1.5],
 				["text","event_1_1"],
 				["move","player","right",1,true],

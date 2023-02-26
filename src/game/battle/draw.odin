@@ -3,6 +3,7 @@ package battle
 
 //= Imports
 import "core:fmt"
+import "core:math"
 
 import "vendor:raylib"
 
@@ -10,10 +11,15 @@ import "../../game"
 import "../../game/camera"
 import "../../game/standee"
 import "../../game/ui"
+import "../../game/settings"
 
 
 //= Procedures
 draw :: proc() {
+	player	:= &game.battleStruct.playerPokemon
+	enemy	:= &game.battleStruct.enemyPokemon
+
+	//* Targeter
 	ray := raylib.GetMouseRay(raylib.GetMousePosition(), game.camera)
 	col := raylib.GetRayCollisionBox(ray, {{8,0,56}, {24,0,64}})
 	game.battleStruct.playerTarget = col.point
@@ -28,31 +34,58 @@ draw :: proc() {
 		color,
 	)
 
-	if game.battleStruct.playerPokemon.position.z >= game.battleStruct.enemyPokemon.position.z {
-		game.battleStruct.enemyPokemon.standee.position[3,0] = game.battleStruct.enemyPokemon.position.x + 0.5
-		game.battleStruct.enemyPokemon.standee.position[3,1] = game.battleStruct.enemyPokemon.position.y + 1.0
-		game.battleStruct.enemyPokemon.standee.position[3,2] = game.battleStruct.enemyPokemon.position.z + 0.5
-		raylib.DrawBoundingBox(game.battleStruct.enemyPokemon.bounds, raylib.PURPLE)
-		standee.draw(game.battleStruct.enemyPokemon.standee)
-
-		game.battleStruct.playerPokemon.standee.position[3,0] = game.battleStruct.playerPokemon.position.x + 0.5
-		game.battleStruct.playerPokemon.standee.position[3,1] = game.battleStruct.playerPokemon.position.y + 1.0
-		game.battleStruct.playerPokemon.standee.position[3,2] = game.battleStruct.playerPokemon.position.z + 0.5
-		raylib.DrawBoundingBox(game.battleStruct.playerPokemon.bounds, raylib.PURPLE)
-		standee.draw(game.battleStruct.playerPokemon.standee)
+	//* Drawing attack overlay
+	if settings.is_key_down("show_overlay") {
+		overlay := &game.attackOverlays[player.pokemonInfo.attacks[player.selectedAtk].type]
+		switch in overlay {
+			case game.AttackOverlayGeneral:
+				rot		:= -math.atan2(
+					(game.battleStruct.playerTarget.z - 1) - player.position.z,
+					(game.battleStruct.playerTarget.x - 0.5) - player.position.x,
+				) * (180 / math.PI)
+				raylib.DrawModelEx(
+					overlay.(game.AttackOverlayGeneral).model,
+					player.position + {0.5,0.03,1},
+					{0,1,0},
+					rot,
+					{1,1,1},
+					{255,255,255,100},
+				)
+		}
 	}
 
-	if game.battleStruct.playerPokemon.position.z < game.battleStruct.enemyPokemon.position.z {
-		game.battleStruct.playerPokemon.standee.position[3,0] = game.battleStruct.playerPokemon.position.x + 0.5
-		game.battleStruct.playerPokemon.standee.position[3,1] = game.battleStruct.playerPokemon.position.y + 1.0
-		game.battleStruct.playerPokemon.standee.position[3,2] = game.battleStruct.playerPokemon.position.z + 0.5
-		raylib.DrawBoundingBox(game.battleStruct.playerPokemon.bounds, raylib.PURPLE)
-		standee.draw(game.battleStruct.playerPokemon.standee)
+	//* Drawing battlers
+	if player.position.z >= enemy.position.z {
+		enemy.standee.position[3,0] = enemy.position.x + 0.5
+		enemy.standee.position[3,1] = enemy.position.y + 1.0
+		enemy.standee.position[3,2] = enemy.position.z + 0.5
+		raylib.DrawBoundingBox(enemy.bounds, raylib.PURPLE)
+		standee.draw(enemy.standee)
 
-		game.battleStruct.enemyPokemon.standee.position[3,0] = game.battleStruct.enemyPokemon.position.x + 0.5
-		game.battleStruct.enemyPokemon.standee.position[3,1] = game.battleStruct.enemyPokemon.position.y + 1.0
-		game.battleStruct.enemyPokemon.standee.position[3,2] = game.battleStruct.enemyPokemon.position.z + 0.5
-		raylib.DrawBoundingBox(game.battleStruct.enemyPokemon.bounds, raylib.PURPLE)
-		standee.draw(game.battleStruct.enemyPokemon.standee)
+		player.standee.position[3,0] = player.position.x + 0.5
+		player.standee.position[3,1] = player.position.y + 1.0
+		player.standee.position[3,2] = player.position.z + 0.5
+		raylib.DrawBoundingBox(player.bounds, raylib.PURPLE)
+		standee.draw(player.standee)
+	}
+	if player.position.z < enemy.position.z {
+		player.standee.position[3,0] = player.position.x + 0.5
+		player.standee.position[3,1] = player.position.y + 1.0
+		player.standee.position[3,2] = player.position.z + 0.5
+		raylib.DrawBoundingBox(player.bounds, raylib.PURPLE)
+		standee.draw(player.standee)
+
+		enemy.standee.position[3,0] = enemy.position.x + 0.5
+		enemy.standee.position[3,1] = enemy.position.y + 1.0
+		enemy.standee.position[3,2] = enemy.position.z + 0.5
+		raylib.DrawBoundingBox(enemy.bounds, raylib.PURPLE)
+		standee.draw(enemy.standee)
+	}
+
+	for i in game.battleStruct.attackEntities {
+		switch in i {
+			case game.AttackFollow:
+				raylib.DrawBoundingBox(i.(game.AttackFollow).bounds, raylib.RED)
+		}
 	}
 }

@@ -243,6 +243,8 @@ BattleStructure :: struct {
 	playerAttackRot	: f32,
 	rotationDirect	: bool,
 
+	attackEntities	: [dynamic]AttackEntity,
+
 	playerTarget	: raylib.Vector3,
 	enemyTarget		: raylib.Vector3,
 }
@@ -250,13 +252,38 @@ BattleEntity :: struct {
 	position	: raylib.Vector3,
 	isMoving	: bool,
 	canMove		: bool,
+	timer		: int,
 	direction	: Direction,
 	bounds		: raylib.BoundingBox,
 	selectedAtk	: int,
 
+	forcedMove			: bool,
+	forcedMoveTarget	: raylib.Vector3,
+	forcedMoveStart		: raylib.Vector3,
+
 	standee		: ^Standee,
 
 	pokemonInfo	: ^Pokemon,
+}
+
+AttackEntity :: union {
+	AttackFollow,
+}
+AttackFollow :: struct {
+	target	: ^BattleEntity,
+	bounds	: raylib.BoundingBox,
+	life	: int,
+	player	: bool,
+}
+
+AttackOverlay :: union {
+	AttackOverlayGeneral,
+}
+AttackOverlayGeneral :: struct {
+	origin	: raylib.Vector3,
+	mesh	: raylib.Mesh,
+	model	: raylib.Model,
+	texture	: raylib.Texture,
 }
 
 

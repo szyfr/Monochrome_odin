@@ -36,6 +36,7 @@ configure_player_battle_entity :: proc() {
 	game.battleStruct.playerPokemon.position	= {14,0,60}
 	game.battleStruct.playerPokemon.standee		= standee.create("chikorita", 2)
 	game.battleStruct.playerPokemon.pokemonInfo	= &game.player.pokemon[0]
+	game.battleStruct.playerPokemon.canMove		= true
 }
 configure_enemy_battle_entity :: proc(
 	event : ^game.BattleData,
@@ -43,4 +44,5 @@ configure_enemy_battle_entity :: proc(
 	game.battleStruct.enemyPokemon.position	= {18,0,60}
 	game.battleStruct.enemyPokemon.standee		= standee.create("chikorita", 2)
 	game.battleStruct.enemyPokemon.pokemonInfo	= &event.pokemonNormal[0]
+	game.battleStruct.enemyPokemon.canMove		= true
 }

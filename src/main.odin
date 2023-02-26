@@ -35,7 +35,7 @@ main_logic :: proc() {
 	if game.battleStruct != nil do battle.update()
 
 	if settings.is_key_pressed("debug") {
-		for pkmn in game.player.pokemon do fmt.printf("%v\n",pkmn)
+		//for pkmn in game.player.pokemon do fmt.printf("%v\n",pkmn)
 	}
 }
 
@@ -112,7 +112,7 @@ main_init :: proc() {
 	game.eventmanager = new(game.EventManager)
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
-	game.player.pokemon[0] = monsters.create(.chikorita, 5)
+	game.player.pokemon[0] = monsters.create(.cyndaquil, 5)
 }
 main_close :: proc() {
 	//* Raylib

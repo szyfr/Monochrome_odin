@@ -167,11 +167,12 @@ draw_battle :: proc() {
 				raylib.WHITE,
 			)
 			delete(cstr)
-			str		= reflect.enum_string(player.pokemonInfo.attacks[0].type)
-			cstr	= strings.clone_to_cstring(str)
+			str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[0].type),"_name"})
+			//cstr	= strings.clone_to_cstring(str)
 			raylib.DrawTextPro(
 				game.font,
-				cstr,
+				//cstr,
+				game.localization[str],
 				{0, f32(game.settings.screenHeight)},
 				{-80, 75},
 				game.battleStruct.playerAttackRot,
@@ -192,11 +193,12 @@ draw_battle :: proc() {
 					raylib.WHITE,
 				)
 				delete(cstr)
-				str		= reflect.enum_string(player.pokemonInfo.attacks[atk].type)
-				cstr	= strings.clone_to_cstring(str)
+				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
+				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
-					cstr,
+					//cstr,
+					game.localization[str],
 					{0, f32(game.settings.screenHeight)},
 					{-80, 75},
 					game.battleStruct.playerAttackRot + f32(atk * 180),
@@ -219,15 +221,15 @@ draw_battle :: proc() {
 					raylib.WHITE,
 				)
 				delete(cstr)
-				str		= reflect.enum_string(player.pokemonInfo.attacks[atk].type)
-				cstr	= strings.clone_to_cstring(str)
+				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
+				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
-					cstr,
+					//cstr,
+					game.localization[str],
 					{0, f32(game.settings.screenHeight)},
 					{-80, 75},
 					game.battleStruct.playerAttackRot + f32(atk * 120),
-					//game.battleStruct.playerAttackRot + f32(atk * -120),
 					20, 1,
 					raylib.BLACK,
 				)
@@ -246,11 +248,12 @@ draw_battle :: proc() {
 					raylib.WHITE,
 				)
 				delete(cstr)
-				str		= reflect.enum_string(player.pokemonInfo.attacks[atk].type)
-				cstr	= strings.clone_to_cstring(str)
+				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
+				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
-					cstr,
+					//cstr,
+					game.localization[str],
 					{0, f32(game.settings.screenHeight)},
 					{-80, 75},
 					game.battleStruct.playerAttackRot + f32(atk * 90),

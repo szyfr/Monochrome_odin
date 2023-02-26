@@ -23,6 +23,7 @@ box_ui_npatch	: raylib.NPatchInfo
 emotes			: raylib.Texture2D
 targeter		: raylib.Model
 font			: raylib.Font
+attackOverlays	: map[PokemonAttack]AttackOverlay
 
 emoteList		: [dynamic]EmoteStruct
 

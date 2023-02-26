@@ -13,7 +13,8 @@
 
 		["attack",1,0],
 		["switch_attack_left",0,81],
-		["switch_attack_right",0,69],
+		["switch_attack_right",1,1],
+		["show_overlay",0,340]
 
 		["interact",0,32],
 		["cancel",0,256],
