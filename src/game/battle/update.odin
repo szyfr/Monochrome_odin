@@ -10,11 +10,11 @@ import "core:math/linalg"
 import "vendor:raylib"
 
 import "../../game"
-import "../../game/camera"
-import "../../game/standee"
-import "../../game/monsters"
-import "../../game/settings"
-import "../../game/standee/animations"
+import "../../game/general/camera"
+import "../../game/overworld/standee"
+import "../../game/battle/monsters"
+import "../../game/general/settings"
+import "../../game/general/graphics/animations"
 
 
 //= Constants

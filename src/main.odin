@@ -8,19 +8,22 @@ import "core:strings"
 import "vendor:raylib"
 
 import "game"
-import "game/entity"
-import "game/camera"
-import "game/player"
-import "game/settings"
-import "game/localization"
-import "game/graphics"
-import "game/events"
+
+import "game/general/camera"
+import "game/general/settings"
+import "game/general/localization"
+import "game/general/graphics"
+import "game/general/graphics/ui"
+import "game/general/graphics/ui/textbox"
+
+import "game/overworld/map/tiles"
+import "game/overworld/map/region"
+import "game/overworld/entity"
+import "game/overworld/player"
+import "game/overworld/events"
+
 import "game/battle"
-import "game/monsters"
-import "game/map/tiles"
-import "game/map/region"
-import "game/ui"
-import "game/ui/textbox"
+import "game/battle/monsters"
 
 import "debug"
 
@@ -90,11 +93,11 @@ main_init :: proc() {
 	//* Raylib
 	raylib.SetTraceLogLevel(.NONE)
 	raylib.InitWindow(
-		game.settings.screenWidth,
-		game.settings.screenHeight,
+		game.screenWidth,
+		game.screenHeight,
 		game.localization["title"],
 	)
-	if game.LIMIT_FPS do raylib.SetTargetFPS(game.settings.fpsLimit)
+	if game.LIMIT_FPS do raylib.SetTargetFPS(game.fpsLimit)
 	raylib.SetExitKey(.NULL)
 
 	//* Game

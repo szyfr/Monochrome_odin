@@ -5,8 +5,8 @@ package battle
 import "core:fmt"
 
 import "../../game"
-import "../../game/camera"
-import "../../game/standee"
+import "../general/camera"
+import "../overworld/standee"
 
 
 //= Procedures

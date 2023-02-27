@@ -8,10 +8,10 @@ import "core:math"
 import "vendor:raylib"
 
 import "../../game"
-import "../../game/camera"
-import "../../game/standee"
-import "../../game/ui"
-import "../../game/settings"
+import "../general/camera"
+import "../general/graphics/ui"
+import "../general/settings"
+import "../overworld/standee"
 
 
 //= Procedures

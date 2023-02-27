@@ -15,7 +15,17 @@ running : bool = true
 
 camera		: ^Camera
 player		: ^Player
-settings	: ^Settings
+
+//settings	: ^Settings
+//* Settings
+screenWidth, screenHeight : i32
+textSpeed : i32
+fpsLimit : i32
+
+language : string
+
+keybindings : map[string]Keybinding
+
 
 //* Graphics
 box_ui			: raylib.Texture2D
