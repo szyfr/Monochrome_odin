@@ -24,7 +24,7 @@ init :: proc() {
 		return
 	}
 
-	//* PArsing JSON5
+	//* Parsing JSON5
 	jsonFile, jsResult := json.parse(rawFile)
 	if jsResult != .None {
 		debug.add_to_log("[ERROR]\t\t- Settings file invalid.")
@@ -38,6 +38,7 @@ init :: proc() {
 	game.textSpeed    = i32(jsonFile.(json.Object)["textspeed"].(f64))
 	game.fpsLimit     = i32(jsonFile.(json.Object)["fpslimit"].(f64))
 	game.language     = jsonFile.(json.Object)["language"].(string)
+	game.masterVolume = f32(jsonFile.(json.Object)["mastervolume"].(f64)) / 100
 
 	kebindingJson := jsonFile.(json.Object)["keybindings"].(json.Array)
 	for mem in kebindingJson {

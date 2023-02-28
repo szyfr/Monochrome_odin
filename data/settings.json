@@ -4,6 +4,7 @@
 	"textspeed":1,
 	"fpslimit":85,
 	"language":"english",
+	"mastervolume":10,
 
 	"keybindings": [
 		["up",0,87],

@@ -5,6 +5,7 @@ package battle
 import "core:fmt"
 import "core:reflect"
 import "core:strings"
+import "core:math"
 import "core:math/linalg"
 
 import "vendor:raylib"
@@ -29,8 +30,8 @@ update :: proc() {
 	enemy	:= &game.battleStruct.enemyPokemon
 	pkmn	:=  game.battleStruct.playerPokemon.pokemonInfo
 	
+	//* Player movement
 	if player.canMove {
-		//* Player Position
 		upDown    := settings.is_key_down("up")
 		downDown  := settings.is_key_down("down")
 		leftDown  := settings.is_key_down("left")
@@ -57,12 +58,28 @@ update :: proc() {
 			animations.set_animation(&player.standee.animator, strings.concatenate({"walk_", dir}))
 		}
 	} else if player.forcedMove {
-		player.position += (linalg.vector_normalize((player.forcedMoveTarget - player.forcedMoveStart)) * 0.1) * {1,0,1}
+		player.position += lerp(player.forcedMoveStart, player.forcedMoveTarget, 0.1, {1,0,1})
 	}
 	if player.position.x > ARENA_MAX_X do player.position.x = ARENA_MAX_X
 	if player.position.x < ARENA_MIN_X do player.position.x = ARENA_MIN_X
 	if player.position.z > ARENA_MAX_Z do player.position.z = ARENA_MAX_Z
 	if player.position.z < ARENA_MIN_Z do player.position.z = ARENA_MIN_Z
+
+	//* Enemy movement
+	if enemy.forcedMove {
+		enemy.position += lerp(enemy.forcedMoveStart, enemy.forcedMoveTarget, 0.1, {1,0,1})
+	}
+	if enemy.position.x > ARENA_MAX_X do enemy.position.x = ARENA_MAX_X
+	if enemy.position.x < ARENA_MIN_X do enemy.position.x = ARENA_MIN_X
+	if enemy.position.z > ARENA_MAX_Z do enemy.position.z = ARENA_MAX_Z
+	if enemy.position.z < ARENA_MIN_Z do enemy.position.z = ARENA_MIN_Z
+
+	if enemy.timer < 0 {
+		enemy.canMove		= true
+		enemy.forcedMove	= false
+	} else {
+		enemy.timer -= 1
+	}
 
 
 	//* Attack UI
@@ -98,12 +115,29 @@ update :: proc() {
 						player.forcedMoveTarget	= game.battleStruct.playerTarget
 						player.forcedMoveStart	= player.position + {0.5,0.02,1}
 
+						angle : f32 = -math.atan2(
+							(player.forcedMoveTarget.z - 1) - player.forcedMoveStart.z,
+							(player.forcedMoveTarget.x - 0.5) - player.forcedMoveStart.x,
+						) * (180 / math.PI)
+						if angle <=  120 && angle >   60 do player.direction = .up
+						if angle <=   60 && angle >  -60 do player.direction = .right
+						if angle <=  -60 && angle > -120 do player.direction = .down
+						if (angle <= -120 && angle > -180) || (angle <= 180 && angle > 120) do player.direction = .left
+						dir := reflect.enum_string(player.direction)
+						animations.set_animation(&player.standee.animator, strings.concatenate({"walk_", dir}))
+
 						player.pokemonInfo.attacks[player.selectedAtk].cooldown = 100
 
 						ent : game.AttackFollow = {
 							player,
 							player.bounds,
+
+							.physical,
+							.normal,
+							40,
+
 							15,
+							player.pokemonInfo,
 							true,
 						}
 						append(&game.battleStruct.attackEntities, ent)
@@ -141,20 +175,44 @@ update :: proc() {
 				}
 				//* Enemy
 				if raylib.CheckCollisionBoxes(enemy.bounds, get_bounds(&game.battleStruct.attackEntities[i])) && follow.player {
-					fmt.printf("enemy hit by player\n")
-					//Knockback
-					enemy.canMove = false
-					enemy.timer = 10
+					enemy.canMove			= false
+					enemy.timer				= 10
+					enemy.forcedMove		= true
+					enemy.forcedMoveStart	= enemy.position
+					enemy.forcedMoveTarget	= enemy.position + (enemy.position - follow.target.position)
+					
+					damage : f32
+					switch follow.attackType {
+						case .physical:
+							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.pokemonInfo.def))) / 50) + 2)
+							if	follow.elementalType == follow.user.elementalType1 || follow.elementalType == follow.user.elementalType2 do damage *= 1.5
+						case .special:
+						case .other:
+					}
+					
+					damage = math.ceil(damage)
+					enemy.pokemonInfo.hpCur -= int(damage)
+					fmt.printf("Enemy hit for %v damage\n", damage)
 				}
 		} 
 		
-
-		
-
 		if update_attack_entity(&game.battleStruct.attackEntities[i]) do append(&temp, game.battleStruct.attackEntities[i])
 	}
 	delete(game.battleStruct.attackEntities)
 	game.battleStruct.attackEntities = temp
+
+	if enemy.pokemonInfo.hpCur <= 0 {
+		//switch
+		game.lastBattleOutcome = true
+		close()
+		return
+	}
+	if player.pokemonInfo.hpCur <= 0 {
+		//switch
+		game.lastBattleOutcome = false
+		close()
+		return
+	}
 	
 
 	if settings.is_key_pressed("debug") {
@@ -243,4 +301,12 @@ get_bounds_attack_entity :: proc(
 			bounds = ent.(game.AttackFollow).bounds
 	}
 	return bounds
+}
+
+lerp :: proc(
+	start, end	: raylib.Vector3,
+	percentage	: f32 = 0.1,
+	scale		: raylib.Vector3 = {1,1,1},
+) -> raylib.Vector3 {
+	return (linalg.vector_normalize((end - start)) * percentage) * scale
 }

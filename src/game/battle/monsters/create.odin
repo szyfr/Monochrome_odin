@@ -2,10 +2,15 @@ package monsters
 
 
 //= Imports
+import "core:fmt"
+import "core:encoding/json"
+import "core:os"
 import "core:math"
 import "core:math/rand"
+import "core:reflect"
 
 import "../../../game"
+import "../../../debug"
 
 
 //= Procedures
@@ -27,59 +32,45 @@ create :: proc(
 
 	//TODO All of this in the long run
 	//TODO Maybe have this in a file?
-	#partial switch species {
-		case .chikorita:
-			pkmn.hpMax	= calculate_hp(  45, pkmn.ev[0], pkmn.iv[0], pkmn.level)
-			pkmn.hpCur	= pkmn.hpMax
-			pkmn.atk	= calculate_stat(49, pkmn.ev[1], pkmn.iv[1], pkmn.level)
-			pkmn.def	= calculate_stat(65, pkmn.ev[2], pkmn.iv[2], pkmn.level)
-			pkmn.spAtk	= calculate_stat(49, pkmn.ev[3], pkmn.iv[3], pkmn.level)
-			pkmn.spDef	= calculate_stat(65, pkmn.ev[4], pkmn.iv[4], pkmn.level)
-			pkmn.spd	= calculate_stat(45, pkmn.ev[5], pkmn.iv[5], pkmn.level)
 
-			pkmn.size = .small
-
-			if level == 5 {
-				pkmn.attacks[0] = {.tackle, 0}
-				pkmn.attacks[1] = {.growl, 0}
-				pkmn.attacks[2] = {.leafage, 0}
-			}
-			
-		case .cyndaquil:
-			pkmn.hpMax	= calculate_hp(  39, pkmn.ev[0], pkmn.iv[0], pkmn.level)
-			pkmn.hpCur	= pkmn.hpMax
-			pkmn.atk	= calculate_stat(52, pkmn.ev[1], pkmn.iv[1], pkmn.level)
-			pkmn.def	= calculate_stat(43, pkmn.ev[2], pkmn.iv[2], pkmn.level)
-			pkmn.spAtk	= calculate_stat(60, pkmn.ev[3], pkmn.iv[3], pkmn.level)
-			pkmn.spDef	= calculate_stat(50, pkmn.ev[4], pkmn.iv[4], pkmn.level)
-			pkmn.spd	= calculate_stat(65, pkmn.ev[5], pkmn.iv[5], pkmn.level)
-
-			pkmn.size = .small
-
-			if level == 5 {
-				pkmn.attacks[0] = {.tackle, 0}
-				pkmn.attacks[1] = {.leer, 0}
-				pkmn.attacks[2] = {.ember, 0}
-			}
-			
-		case .totodile:
-			pkmn.hpMax	= calculate_hp(  50, pkmn.ev[0], pkmn.iv[0], pkmn.level)
-			pkmn.hpCur	= pkmn.hpMax
-			pkmn.atk	= calculate_stat(65, pkmn.ev[1], pkmn.iv[1], pkmn.level)
-			pkmn.def	= calculate_stat(64, pkmn.ev[2], pkmn.iv[2], pkmn.level)
-			pkmn.spAtk	= calculate_stat(44, pkmn.ev[3], pkmn.iv[3], pkmn.level)
-			pkmn.spDef	= calculate_stat(48, pkmn.ev[4], pkmn.iv[4], pkmn.level)
-			pkmn.spd	= calculate_stat(43, pkmn.ev[5], pkmn.iv[5], pkmn.level)
-
-			pkmn.size = .small
-
-			if level == 5 {
-				pkmn.attacks[0] = {.scratch, 0}
-				pkmn.attacks[1] = {.growl, 0}
-				pkmn.attacks[2] = {.watergun, 0}
-			}
+	//* Loading file
+	rawFile,  rwResult := os.read_entire_file_from_filename("data/pokemon.json")
+	if !rwResult {
+		debug.add_to_log("[ERROR]\t\t- Failed to locate Pokemon file.")
+		return {}
 	}
 
+	//* Parsing JSON5
+	jsonFile, jsResult := json.parse(rawFile)
+	if jsResult != .None {
+		debug.add_to_log("[ERROR]\t\t- Pokemon file invalid.")
+		return {}
+	}
+
+	pokemonData := jsonFile.(json.Object)["list"].(json.Array)[int(species)].(json.Array)
+	pkmn.elementalType1, _ = reflect.enum_from_name(game.ElementalType, pokemonData[0].(string))
+	pkmn.elementalType2, _ = reflect.enum_from_name(game.ElementalType, pokemonData[1].(string))
+	pkmn.hpMax	= calculate_hp(  int(pokemonData[2].(f64)), pkmn.ev[0], pkmn.iv[0], pkmn.level)
+	pkmn.hpCur	= pkmn.hpMax
+	pkmn.atk	= calculate_stat(int(pokemonData[3].(f64)), pkmn.ev[1], pkmn.iv[1], pkmn.level)
+	pkmn.def	= calculate_stat(int(pokemonData[4].(f64)), pkmn.ev[2], pkmn.iv[2], pkmn.level)
+	pkmn.spAtk	= calculate_stat(int(pokemonData[5].(f64)), pkmn.ev[3], pkmn.iv[3], pkmn.level)
+	pkmn.spDef	= calculate_stat(int(pokemonData[6].(f64)), pkmn.ev[4], pkmn.iv[4], pkmn.level)
+	pkmn.spd	= calculate_stat(int(pokemonData[7].(f64)), pkmn.ev[5], pkmn.iv[5], pkmn.level)
+
+	pkmn.size, _ = reflect.enum_from_name(game.Size, pokemonData[8].(string))
+
+	for atk in pokemonData[9].(json.Array) {
+		if level >= int(atk.(json.Array)[0].(f64)) {
+			attack, _ := reflect.enum_from_name(game.PokemonAttack, atk.(json.Array)[1].(string))
+			add_attack(
+				&pkmn.attacks,
+				attack,
+			)
+		}
+	}
+
+	delete(rawFile)
 	return pkmn
 }
 
@@ -105,3 +96,33 @@ calculate_stat_base :: proc(
 	basef, evf, ivf, levelf := f32(base), f32(ev), f32(iv), f32(level)
 	return int(math.floor(((2 * basef + ivf + math.floor(evf / 4)) * levelf) / 100) + 5)
 }
+
+add_attack :: proc(
+	atkList : ^[4]game.Attack,
+	atk		:  game.PokemonAttack,
+) {
+	//* Find end
+	end := 0
+	for i in atkList {
+		if i.type == .empty do break
+		end += 1
+	}
+
+	//* Check if full
+	if end > 4 {
+		atkList[0].type = atkList[1].type
+		atkList[0].cooldown = atkList[1].cooldown
+		atkList[1].type = atkList[2].type
+		atkList[1].cooldown = atkList[2].cooldown
+		atkList[2].type = atkList[3].type
+		atkList[2].cooldown = atkList[3].cooldown
+		atkList[3].type = atk
+		atkList[3].cooldown = 0
+	} else do atkList[end].type = atk
+}
+
+reset :: proc(
+	monster : ^game.Pokemon,
+) {
+	monster.hpCur = monster.hpMax
+}  

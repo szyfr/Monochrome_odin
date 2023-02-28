@@ -16,15 +16,18 @@ running : bool = true
 camera		: ^Camera
 player		: ^Player
 
-//settings	: ^Settings
+
 //* Settings
-screenWidth, screenHeight : i32
-textSpeed : i32
-fpsLimit : i32
+screenWidth		: i32
+screenHeight	: i32
+textSpeed		: i32
+fpsLimit		: i32
 
-language : string
+language		: string
 
-keybindings : map[string]Keybinding
+masterVolume	: f32
+
+keybindings		: map[string]Keybinding
 
 
 //* Graphics
@@ -35,10 +38,16 @@ targeter		: raylib.Model
 font			: raylib.Font
 attackOverlays	: map[PokemonAttack]AttackOverlay
 
-emoteList		: [dynamic]EmoteStruct
 
+//* Audio
+currentTrack	: string
+music			: map[string]raylib.Sound
+
+
+//* Data
 tiles			:  map[string]raylib.Model
 region			: ^Region
+emoteList		: [dynamic]EmoteStruct
 localization	:  map[string]cstring
 eventmanager	: ^EventManager
 battles			:  map[string]BattleData

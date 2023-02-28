@@ -19,7 +19,7 @@ update :: proc() {
 
 	interact  := settings.is_key_pressed("interact")
 
-	if player_can_move() {
+	if can_move() {
 		//* Events
 		eventPosition := mathz.to_v2(game.player.entity.position)
 
@@ -83,6 +83,6 @@ update :: proc() {
 	entity.update(game.player.entity)
 }
 
-player_can_move :: proc() -> bool {
+can_move :: proc() -> bool {
 	return !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil
 }

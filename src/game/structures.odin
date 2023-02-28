@@ -204,6 +204,8 @@ Keybinding :: struct {
 
 Pokemon :: struct {
 	species : PokemonSpecies,
+	elementalType1	: ElementalType,
+	elementalType2	: ElementalType,
 
 	iv : [6]int,
 	ev : [6]int,
@@ -235,7 +237,7 @@ BattleStructure :: struct {
 
 	playerPokemon	: BattleEntity,
 	enemyPokemon	: BattleEntity,
-	enemyPokemonList: [4]Pokemon,
+	enemyPokemonList: [4]^Pokemon,
 
 	playerHPBar		: raylib.Texture,
 	playerEXPBar	: raylib.Texture,
@@ -272,7 +274,13 @@ AttackEntity :: union {
 AttackFollow :: struct {
 	target	: ^BattleEntity,
 	bounds	: raylib.BoundingBox,
+
+	attackType		: AttackType,
+	elementalType	: ElementalType,
+	power			: f32,
+
 	life	: int,
+	user	: ^Pokemon,
 	player	: bool,
 }
 
@@ -343,6 +351,18 @@ PokemonAttack :: enum {
 	leafage,
 	ember,
 	watergun,
+}
+AttackType :: enum {
+	physical,
+	special,
+	other,
+}
+ElementalType :: enum {
+	none,
+	normal,
+	water,
+	fire,
+	grass,
 }
 
 Size :: enum {
