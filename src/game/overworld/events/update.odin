@@ -11,7 +11,7 @@ import "../../../game"
 import "../entity"
 import "../../battle/monsters"
 import "../../battle"
-import "../../general/graphics/ui/textbox"
+import "../../general/graphics/ui"
 
 
 //= Constants
@@ -36,19 +36,19 @@ update :: proc() {
 			case game.TextEvent:
 				if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
 					str := strings.clone_from_cstring(curChain.(game.TextEvent).text^)
-					textbox.open_textbox(str)
+					ui.open_textbox(str)
 				}
 				if game.eventmanager.textbox.state == .finished {
 					game.eventmanager.currentChain += 1
 					if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
 						v, ok := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
 						if ok {
-							textbox.reset_textbox()
+							ui.reset_textbox()
 						} else {
-							textbox.close_textbox()
+							ui.close_textbox()
 						}
 					} else {
-						textbox.close_textbox()
+						ui.close_textbox()
 					}
 				}
 

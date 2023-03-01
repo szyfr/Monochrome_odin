@@ -14,7 +14,6 @@ import "game/general/settings"
 import "game/general/localization"
 import "game/general/graphics"
 import "game/general/graphics/ui"
-import "game/general/graphics/ui/textbox"
 
 import "game/overworld/map/tiles"
 import "game/overworld/map/region"
@@ -54,7 +53,8 @@ main_draw :: proc() {
 	raylib.EndMode3D()
 
 	entity.draw_emotes()
-	textbox.draw()
+	ui.draw_pause_menu()
+	ui.draw_textbox()
 
 	if game.battleStruct != nil do ui.draw_battle()
 
@@ -102,11 +102,10 @@ main_init :: proc() {
 	raylib.InitAudioDevice()
 	raylib.SetMasterVolume(game.masterVolume)
 
-	//* Game
+	//* Data
 	camera.init()
 	player.init()
-
-	//* Map
+	monsters.init()
 	tiles.init()
 	region.init("data/maps/regionTest.json")
 

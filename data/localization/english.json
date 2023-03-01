@@ -2,6 +2,13 @@
 
 	"title":"Monochrome",
 
+	"pokedex": "Pokedex",
+	"pokemon": "Pokemon",
+	"inventory": "Bag",
+	"player": "Player",
+	"options": "Options",
+	"quit": "Quit",
+
 	"test_0": "Man, isn't technology amazing?!",
 	"test_1": "Elm Laboratory",
 	"test_2": "Specializing in Pokethology",

@@ -38,8 +38,8 @@ draw_battle :: proc() {
 	raylib.DrawTextEx(
 		game.font,
 		cstr,
-		{STATUS_WIDTH / 2 - (f32(len(str)) * 20) / 2, 45},
-		20,
+		{STATUS_WIDTH / 2 - (f32(len(str)) * 16) / 2, 45},
+		16,
 		1,
 		raylib.BLACK,
 	)
@@ -66,8 +66,28 @@ draw_battle :: proc() {
 	raylib.DrawTextEx(
 		game.font,
 		cstr,
-		{STATUS_WIDTH / 2 - (f32(len(builder.buf)) * 20) / 2, 105},
-		20,
+		{
+			STATUS_WIDTH / 2 - (f32(len(builder.buf)) * 16) / 2,
+			100,
+		},
+		16,
+		1,
+		raylib.BLACK,
+	)
+	strings.builder_reset(&builder)
+
+	fmt.sbprintf(&builder, "lv%v", player.pokemonInfo.level)
+	delete(cstr)
+	str		= strings.to_string(builder)
+	cstr	= strings.clone_to_cstring(str)
+	raylib.DrawTextEx(
+		game.font,
+		cstr,
+		{
+			STATUS_WIDTH / 2 - (f32(len(builder.buf)) * 16) / 2,
+			130,
+		},
+		16,
 		1,
 		raylib.BLACK,
 	)
@@ -108,10 +128,10 @@ draw_battle :: proc() {
 		game.font,
 		cstr,
 		{
-			screenWidth - (20 * f32(len(str))) / 2 - STATUS_WIDTH / 2,
+			screenWidth - (16 * f32(len(str))) / 2 - STATUS_WIDTH / 2,
 			45,
 		},
-		20,
+		16,
 		1,
 		raylib.BLACK,
 	)
@@ -142,10 +162,27 @@ draw_battle :: proc() {
 		game.font,
 		cstr,
 		{
-			screenWidth - (20 * f32(len(builder.buf))) / 2 - STATUS_WIDTH / 2,
+			screenWidth - (16 * f32(len(builder.buf))) / 2 - STATUS_WIDTH / 2,
 			105,
 		},
-		20,
+		16,
+		1,
+		raylib.BLACK,
+	)
+	strings.builder_reset(&builder)
+
+	fmt.sbprintf(&builder, "lv%v", enemy.pokemonInfo.level)
+	delete(cstr)
+	str		= strings.to_string(builder)
+	cstr	= strings.clone_to_cstring(str)
+	raylib.DrawTextEx(
+		game.font,
+		cstr,
+		{
+			screenWidth - (16 * f32(len(builder.buf))) / 2 - STATUS_WIDTH / 2,
+			125,
+		},
+		16,
 		1,
 		raylib.BLACK,
 	)
@@ -168,15 +205,13 @@ draw_battle :: proc() {
 			)
 			delete(cstr)
 			str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[0].type),"_name"})
-			//cstr	= strings.clone_to_cstring(str)
 			raylib.DrawTextPro(
 				game.font,
-				//cstr,
 				game.localization[str],
 				{0, f32(game.screenHeight)},
 				{-80, 75},
 				game.battleStruct.playerAttackRot,
-				20, 1,
+				16, 1,
 				raylib.BLACK,
 			)
 		case 2:
@@ -194,15 +229,13 @@ draw_battle :: proc() {
 				)
 				delete(cstr)
 				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
-				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
-					//cstr,
 					game.localization[str],
 					{0, f32(game.screenHeight)},
 					{-80, 75},
 					game.battleStruct.playerAttackRot + f32(atk * 180),
-					20, 1,
+					16, 1,
 					raylib.BLACK,
 				)
 			}
@@ -217,7 +250,6 @@ draw_battle :: proc() {
 					},
 					{-50, 120},
 					game.battleStruct.playerAttackRot + f32(atk * 120),
-					//game.battleStruct.playerAttackRot + f32(atk * -120),
 					raylib.WHITE,
 				)
 				delete(cstr)
@@ -225,12 +257,11 @@ draw_battle :: proc() {
 				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
-					//cstr,
 					game.localization[str],
 					{0, f32(game.screenHeight)},
 					{-80, 75},
 					game.battleStruct.playerAttackRot + f32(atk * 120),
-					20, 1,
+					16, 1,
 					raylib.BLACK,
 				)
 			}
@@ -249,15 +280,13 @@ draw_battle :: proc() {
 				)
 				delete(cstr)
 				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
-				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
-					//cstr,
 					game.localization[str],
 					{0, f32(game.screenHeight)},
 					{-80, 75},
 					game.battleStruct.playerAttackRot + f32(atk * 90),
-					20, 1,
+					16, 1,
 					raylib.BLACK,
 				)
 			}

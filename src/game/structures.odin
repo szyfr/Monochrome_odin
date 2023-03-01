@@ -18,6 +18,8 @@ Player :: struct {
 	entity		: ^Entity,
 	moveTimer	:  u8,
 	canMove		:  bool,
+	pauseMenu	:  bool,
+	pauseMenuSel:  u8,
 
 	pokemon		: [4]Pokemon,
 }
@@ -258,6 +260,8 @@ BattleEntity :: struct {
 	direction	: Direction,
 	bounds		: raylib.BoundingBox,
 	selectedAtk	: int,
+
+	wild		: bool,
 
 	forcedMove			: bool,
 	forcedMoveTarget	: raylib.Vector3,

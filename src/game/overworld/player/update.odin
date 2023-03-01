@@ -17,7 +17,8 @@ update :: proc() {
 	vertical	:= settings.get_axis("vertical")
 	horizontal	:= settings.get_axis("horizontal")
 
-	interact  := settings.is_key_pressed("interact")
+	interact	:= settings.is_key_pressed("interact")
+	pause		:= settings.is_key_pressed("pause")
 
 	if can_move() {
 		//* Events
@@ -80,9 +81,14 @@ update :: proc() {
 	}
 	if vertical == 0 && horizontal == 0 do game.player.moveTimer = 0
 
+	//* Pause menu
+	if pause {
+		game.player.pauseMenu = !game.player.pauseMenu
+	}
+
 	entity.update(game.player.entity)
 }
 
 can_move :: proc() -> bool {
-	return !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil
+	return !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil && !game.player.pauseMenu
 }

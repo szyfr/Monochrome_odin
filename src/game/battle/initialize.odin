@@ -14,7 +14,8 @@ import "monsters"
 
 //= Procedures
 init :: proc(
-	event : ^game.BattleData,
+	event	: ^game.BattleData,
+	wild	: bool = false,
 ) {
 	game.battleStruct = new(game.BattleStructure)
 	game.battleStruct.arena		= event.arena
@@ -31,7 +32,7 @@ init :: proc(
 	
 
 	configure_player_battle_entity()
-	configure_enemy_battle_entity(event)
+	configure_enemy_battle_entity(event, wild)
 }
 
 close :: proc() {
@@ -62,11 +63,13 @@ configure_player_battle_entity :: proc() {
 	game.battleStruct.playerPokemon.canMove		= true
 }
 configure_enemy_battle_entity :: proc(
-	event : ^game.BattleData,
+	event	: ^game.BattleData,
+	wild	: bool,
 ) {
 	game.battleStruct.enemyPokemon.position	= {18,0,60}
 	game.battleStruct.enemyPokemon.standee		= standee.create("chikorita", 2)
 	game.battleStruct.enemyPokemon.canMove		= true
+	game.battleStruct.enemyPokemon.wild			= wild
 
 	game.battleStruct.enemyPokemonList[0] = &event.pokemonNormal[0]
 	game.battleStruct.enemyPokemonList[1] = &event.pokemonNormal[1]

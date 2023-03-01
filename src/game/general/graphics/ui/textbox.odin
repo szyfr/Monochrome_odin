@@ -1,4 +1,4 @@
-package textbox
+package ui
 
 
 //= Imports
@@ -7,12 +7,12 @@ import "core:strings"
 
 import "vendor:raylib"
 
-import "../../../../../game"
-import "../../../../../game/general/settings"
+import "../../../../game"
+import "../../../../game/general/settings"
 
 
 //= Procedures
-draw :: proc() {
+draw_textbox :: proc() {
 	if game.eventmanager.textbox.state != .inactive {
 		posX := f32(game.screenWidth) / 4
 		posY := f32(game.screenHeight) - (f32(game.screenHeight) / 4)

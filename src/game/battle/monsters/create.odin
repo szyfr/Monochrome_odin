@@ -21,7 +21,7 @@ create :: proc(
 	pkmn : game.Pokemon = {}
 	pkmn.species	= species
 	pkmn.level		= level
-	pkmn.experience = int(math.pow(f32(level), 3))
+	pkmn.experience = exp_needed(level-1)//int(math.pow(f32(level), 3))
 
 	pkmn.iv[0]		= int(rand.int31_max(30))
 	pkmn.iv[1]		= int(rand.int31_max(30))
@@ -30,24 +30,7 @@ create :: proc(
 	pkmn.iv[4]		= int(rand.int31_max(30))
 	pkmn.iv[5]		= int(rand.int31_max(30))
 
-	//TODO All of this in the long run
-	//TODO Maybe have this in a file?
-
-	//* Loading file
-	rawFile,  rwResult := os.read_entire_file_from_filename("data/pokemon.json")
-	if !rwResult {
-		debug.add_to_log("[ERROR]\t\t- Failed to locate Pokemon file.")
-		return {}
-	}
-
-	//* Parsing JSON5
-	jsonFile, jsResult := json.parse(rawFile)
-	if jsResult != .None {
-		debug.add_to_log("[ERROR]\t\t- Pokemon file invalid.")
-		return {}
-	}
-
-	pokemonData := jsonFile.(json.Object)["list"].(json.Array)[int(species)].(json.Array)
+	pokemonData := game.pokemonData[int(species)].(json.Array)
 	pkmn.elementalType1, _ = reflect.enum_from_name(game.ElementalType, pokemonData[0].(string))
 	pkmn.elementalType2, _ = reflect.enum_from_name(game.ElementalType, pokemonData[1].(string))
 	pkmn.hpMax	= calculate_hp(  int(pokemonData[2].(f64)), pkmn.ev[0], pkmn.iv[0], pkmn.level)
@@ -70,7 +53,7 @@ create :: proc(
 		}
 	}
 
-	delete(rawFile)
+	//delete(rawFile)
 	return pkmn
 }
 
@@ -82,7 +65,7 @@ calculate_hp_base :: proc(
 	level	: int,
 ) -> int {
 	basef, evf, ivf, levelf := f32(base), f32(ev), f32(iv), f32(level)
-	return int(math.floor(((2 * basef + ivf + math.floor(evf / 4)) * levelf) / 100) + levelf + 10)
+	return int(math.floor(((4 * basef + ivf + math.floor(evf / 4)) * levelf) / 100) + levelf + 10)
 }
 
 calculate_stat :: proc{ calculate_stat_base }

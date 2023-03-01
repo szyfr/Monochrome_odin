@@ -176,7 +176,7 @@ update :: proc() {
 				//* Enemy
 				if raylib.CheckCollisionBoxes(enemy.bounds, get_bounds(&game.battleStruct.attackEntities[i])) && follow.player {
 					enemy.canMove			= false
-					enemy.timer				= 10
+					enemy.timer				= 20
 					enemy.forcedMove		= true
 					enemy.forcedMoveStart	= enemy.position
 					enemy.forcedMoveTarget	= enemy.position + (enemy.position - follow.target.position)
@@ -202,6 +202,14 @@ update :: proc() {
 	game.battleStruct.attackEntities = temp
 
 	if enemy.pokemonInfo.hpCur <= 0 {
+		//experience := ((monsters.get_exp_yield(enemy.pokemonInfo.species) * f32(enemy.pokemonInfo.level)) / 5) * math.pow(((2 * f32(enemy.pokemonInfo.level) + 10) / (f32(enemy.pokemonInfo.level) + f32(player.pokemonInfo.level) + 10)), 2.5) + 1
+		experience := ((monsters.get_exp_yield(enemy.pokemonInfo.species) * f32(enemy.pokemonInfo.level)) / 5)
+		if !enemy.wild do experience = f32(experience) * 1.5
+		//EXP share
+		//Traded
+		//Lucky Egg
+		//Can evolve by level already
+		monsters.give_experience(player.pokemonInfo, int(experience))
 		//switch
 		game.lastBattleOutcome = true
 		close()
@@ -216,9 +224,7 @@ update :: proc() {
 	
 
 	if settings.is_key_pressed("debug") {
-		for i in game.battleStruct.attackEntities {
-			fmt.printf("%v\n",i)
-		}
+		fmt.printf("%v/%v\n",player.pokemonInfo.experience,monsters.exp_needed(player.pokemonInfo.level))
 	}
 }
 

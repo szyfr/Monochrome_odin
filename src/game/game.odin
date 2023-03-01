@@ -2,6 +2,8 @@ package game
 
 
 //= Imports
+import  "core:encoding/json"
+
 import "vendor:raylib"
 
 
@@ -53,6 +55,7 @@ eventmanager	: ^EventManager
 battles			:  map[string]BattleData
 battleStruct	: ^BattleStructure
 lastBattleOutcome : bool = false
+pokemonData		: json.Array
 
 
 //= Procedures
