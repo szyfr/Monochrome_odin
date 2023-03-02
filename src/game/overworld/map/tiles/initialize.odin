@@ -25,11 +25,21 @@ init :: proc() {
 
 			str, al := strings.remove(strExt, ".obj", 1)
 			game.tiles[str] = model
+			game.tilesTest[str] = model.meshes[0]
 		}
 	}
-	raylib.ClearDirectoryFiles()
+	game.tilesMaterial		= raylib.LoadMaterialDefault()
+	game.tilesTexture[0]	= raylib.LoadTexture("data/tiles/texture_0.png")
+	game.tilesTexture[1]	= raylib.LoadTexture("data/tiles/texture_1.png")
+	game.tilesTexture[2]	= raylib.LoadTexture("data/tiles/texture_2.png")
+	game.tilesTexture[3]	= raylib.LoadTexture("data/tiles/texture_3.png")
+	game.tilesTexture[4]	= raylib.LoadTexture("data/tiles/texture_4.png")
+	game.tilesTexture[5]	= raylib.LoadTexture("data/tiles/texture_5.png")
+	game.tilesTexture[6]	= raylib.LoadTexture("data/tiles/texture_6.png")
+	game.tilesTexture[7]	= raylib.LoadTexture("data/tiles/texture_7.png")
+	raylib.SetMaterialTexture(&game.tilesMaterial, .ALBEDO, game.tilesTexture[0])
 
-	//game.tiles["null"] = raylib.LoadModelFromMesh(raylib.GenMeshCube(0,0,0))
+	raylib.ClearDirectoryFiles()
 }
 
 close :: proc() {

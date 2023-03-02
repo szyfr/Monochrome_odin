@@ -76,3 +76,16 @@ mat_add_trans :: proc(
 
 	return mat_mult(mat,mod)
 }
+
+mat_trans :: proc(
+	vec : linalg.Vector3f32,
+) -> linalg.Matrix4x4f32 {
+	mod : linalg.Matrix4x4f32 = {
+		    1,     0,     0, 0,
+		    0,     1,     0, 0,
+		    0,     0,     1, 0,
+		vec.x, vec.y, vec.z, 1,
+	}
+
+	return mod
+}

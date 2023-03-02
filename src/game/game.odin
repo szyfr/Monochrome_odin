@@ -47,6 +47,10 @@ music			: map[string]raylib.Sound
 
 
 //* Data
+tilesTest		:  map[string]raylib.Mesh
+tilesMaterial	:  raylib.Material
+tilesTexture	:  [8]raylib.Texture
+
 tiles			:  map[string]raylib.Model
 region			: ^Region
 emoteList		: [dynamic]EmoteStruct

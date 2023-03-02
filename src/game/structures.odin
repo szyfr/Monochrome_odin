@@ -164,6 +164,8 @@ Region :: struct {
 	tiles		: map[raylib.Vector2]Tile,
 	entities	: map[raylib.Vector2]Entity,
 	events		: map[raylib.Vector2]Event,
+	aniTimer	: int,
+	frame		: int,
 }
 
 EventManager :: struct {

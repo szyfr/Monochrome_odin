@@ -9,6 +9,7 @@ import "core:slice"
 import "vendor:raylib"
 
 import "../../../../game"
+import "../../../../utilities/mathz"
 import "../../entity"
 
 
@@ -30,16 +31,18 @@ draw :: proc() {
 					f32(x),
 					f32(y),
 				}
-				raylib.DrawModelEx(
-					game.tiles[game.region.tiles[position].model],
-					game.region.tiles[position].pos,
-					{0, 1, 0},
-					0,
-					{1, 1, 1},
-					//{200,255,255,255},
-					//{200,200,200,255},
-					//{150,150,170,255},
-					{255,255,255,255},
+				//raylib.DrawModelEx(
+				//	game.tiles[game.region.tiles[position].model],
+				//	game.region.tiles[position].pos,
+				//	{0, 1, 0},
+				//	0,
+				//	{1, 1, 1},
+				//	{255,255,255,255},
+				//)
+				raylib.DrawMesh(
+					game.tilesTest[game.region.tiles[position].model],
+					game.tilesMaterial,
+					mathz.mat_trans(game.region.tiles[position].pos),
 				)
 				if !flip do x += 1
 				else     do x -= 1
@@ -65,6 +68,13 @@ draw :: proc() {
 
 		}
 	}
+
+	if game.region.aniTimer >= 50 {
+		game.region.aniTimer = 0
+		game.region.frame += 1
+		if game.region.frame >= len(game.tilesTexture) do game.region.frame = 0
+		raylib.SetMaterialTexture(&game.tilesMaterial, .ALBEDO, game.tilesTexture[game.region.frame])
+	} else do game.region.aniTimer += 1
 }
 
 test_entity :: proc(
