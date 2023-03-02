@@ -5,6 +5,7 @@ package standee
 import "core:encoding/json"
 import "core:strings"
 import "core:os"
+import "core:fmt"
 
 import "vendor:raylib"
 
@@ -21,7 +22,8 @@ ANI_FILETYPE :: ".json"
 
 //= Procedures
 create :: proc(
-	filename	: string,
+	filenameI	: string,
+	filenameA	: string = "",
 	size		: f32 = 1,
 ) -> ^game.Standee {
 	standee := new(game.Standee)
@@ -37,8 +39,11 @@ create :: proc(
 	}
 
 	//* Get filenames
-	fullpath_image     := strings.clone_to_cstring(strings.concatenate({SPR_LOCATION, filename, SPR_FILETYPE}))
-	fullpath_animation := strings.concatenate({ANI_LOCATION, filename, ANI_FILETYPE})
+	fullpath_animation : string
+	fmt.printf("%v\n",strings.concatenate({ANI_LOCATION, filenameA, ANI_FILETYPE}))
+	fullpath_image     := strings.clone_to_cstring(strings.concatenate({SPR_LOCATION, filenameI, SPR_FILETYPE}))
+	if filenameA != "" do fullpath_animation = strings.concatenate({ANI_LOCATION, filenameA, ANI_FILETYPE})
+	else do fullpath_animation = strings.concatenate({ANI_LOCATION, filenameI, ANI_FILETYPE})
 
 	//* Animatior
 	standee.animator.rawImage = raylib.LoadImage(fullpath_image)

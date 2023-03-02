@@ -3,6 +3,7 @@ package battle
 
 //= Imports
 import "core:fmt"
+import "core:reflect"
 
 import "vendor:raylib"
 
@@ -58,7 +59,7 @@ close :: proc() {
 
 configure_player_battle_entity :: proc() {
 	game.battleStruct.playerPokemon.position	= {14,0,60}
-	game.battleStruct.playerPokemon.standee		= standee.create("chikorita", 2)
+	game.battleStruct.playerPokemon.standee		= standee.create(reflect.enum_string(game.player.pokemon[0].species), "pokemon", 2)
 	game.battleStruct.playerPokemon.pokemonInfo	= &game.player.pokemon[0]
 	game.battleStruct.playerPokemon.canMove		= true
 }
@@ -67,7 +68,7 @@ configure_enemy_battle_entity :: proc(
 	wild	: bool,
 ) {
 	game.battleStruct.enemyPokemon.position	= {18,0,60}
-	game.battleStruct.enemyPokemon.standee		= standee.create("chikorita", 2)
+	game.battleStruct.enemyPokemon.standee		= standee.create("chikorita", "pokemon", 2)
 	game.battleStruct.enemyPokemon.canMove		= true
 	game.battleStruct.enemyPokemon.wild			= wild
 

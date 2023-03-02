@@ -116,7 +116,7 @@ main_init :: proc() {
 	game.eventmanager = new(game.EventManager)
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
-	game.player.pokemon[0] = monsters.create(.chikorita, 5)
+	game.player.pokemon[0] = monsters.create(.totodile, 5)
 
 	game.currentTrack = "new_bark_town"
 	game.music["new_bark_town"]		= raylib.LoadSound("data/audio/aud_new_bark_town.wav")
