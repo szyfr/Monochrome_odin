@@ -13,7 +13,7 @@ DRAW_MAP  :: true
 
 
 //= Globals
-running : bool = true
+running		: bool = true
 
 camera		: ^Camera
 player		: ^Player
@@ -24,20 +24,22 @@ screenWidth		: i32
 screenHeight	: i32
 textSpeed		: i32
 fpsLimit		: i32
-
 language		: string
-
 masterVolume	: f32
-
 keybindings		: map[string]Keybinding
 
 
 //* Graphics
-box_ui			: raylib.Texture2D
+box_ui			: raylib.Texture
 box_ui_npatch	: raylib.NPatchInfo
-emotes			: raylib.Texture2D
-targeter		: raylib.Model
+pointer			: raylib.Texture
+
 font			: raylib.Font
+
+pokemonSprites	: map[PokemonSpecies]raylib.Texture
+
+emotes			: raylib.Texture
+targeter		: raylib.Model
 attackOverlays	: map[PokemonAttack]AttackOverlay
 
 

@@ -53,7 +53,7 @@ main_draw :: proc() {
 	raylib.EndMode3D()
 
 	entity.draw_emotes()
-	ui.draw_pause_menu()
+	ui.draw_menus()
 	ui.draw_textbox()
 
 	if game.battleStruct != nil do ui.draw_battle()

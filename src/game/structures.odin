@@ -18,8 +18,9 @@ Player :: struct {
 	entity		: ^Entity,
 	moveTimer	:  u8,
 	canMove		:  bool,
-	pauseMenu	:  bool,
-	pauseMenuSel:  u8,
+	menu		:  MenuState,
+	menuSel		:  u8,
+	pokeSel		:  u8,
 
 	pokemon		: [4]Pokemon,
 }
@@ -185,17 +186,6 @@ Textbox :: struct {
 	position	: int,
 }
 
-Settings :: struct {
-	screenWidth		: i32,
-	screenHeight	: i32,
-
-	textSpeed		: i32,
-	fpsLimit		: i32,
-
-	language		: string,
-
-	keybindings		: map[string]Keybinding,
-}
 Keybinding :: struct {
 	origin : u8,
 		// 0 - Keyboard
@@ -211,8 +201,10 @@ Pokemon :: struct {
 	elementalType1	: ElementalType,
 	elementalType2	: ElementalType,
 
-	iv : [6]int,
-	ev : [6]int,
+	nickname: cstring,
+
+	iv		: [6]int,
+	ev		: [6]int,
 
 	hpMax	: int,
 	hpCur	: int,
@@ -385,4 +377,14 @@ Arena :: enum {
 	city,
 	beach,
 	water,
+}
+
+MenuState :: enum {
+	none,
+	pause,
+	pokedex,
+	pokemon,
+	bag,
+	player,
+	options,
 }

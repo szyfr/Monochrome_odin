@@ -23,6 +23,8 @@ create :: proc(
 	pkmn.level		= level
 	pkmn.experience = exp_needed(level-1)//int(math.pow(f32(level), 3))
 
+	pkmn.nickname = "FUCK"
+
 	pkmn.iv[0]		= int(rand.int31_max(30))
 	pkmn.iv[1]		= int(rand.int31_max(30))
 	pkmn.iv[2]		= int(rand.int31_max(30))

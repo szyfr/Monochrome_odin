@@ -27,6 +27,13 @@ init :: proc() {
 		.NINE_PATCH,
 	}
 
+	game.pointer = raylib.LoadTexture("data/sprites/ui/spr_pointer.png")
+
+	for pk in game.PokemonSpecies {
+		str := reflect.enum_string(pk)
+		game.pokemonSprites[pk] = raylib.LoadTexture(strings.clone_to_cstring(strings.concatenate({"data/sprites/pokemon/pk_",str,".png"})))
+	}
+
 	game.emotes	= raylib.LoadTexture("data/sprites/spr_emotes.png")
 
 	trgTex	:= raylib.LoadTexture("data/sprites/spr_targeter.png")

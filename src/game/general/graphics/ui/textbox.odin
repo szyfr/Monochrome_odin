@@ -32,7 +32,7 @@ draw_textbox :: proc() {
 			{posX + 50, posY + 60},
 			24,
 			5,
-			raylib.BLACK,
+			{56,56,56,255},
 		)
 		delete(text)
 

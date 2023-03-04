@@ -23,6 +23,17 @@
 
 	"event_1_1": "I can't leave town\n\nwithout a Pokemon...",
 
+	// Pokemon
+	"chikorita":"Chikorita",
+	"bayleaf":"Bayleaf",
+	"meganium":"Meganium",
+	"cyndaquil":"Cyndaquil",
+	"quilava":"Quilava",
+	"typhlosian":"Typhlosian",
+	"totodile":"Totodile",
+	"croconaw":"Croconaw",
+	"feraligatr":"Feraligatr",
+
 	// Attacks
 	"tackle_name":"Tackle",
 	"tackle_desc":"The user throws their body into the enemy.",

@@ -2,6 +2,8 @@ package player
 
 
 //= Imports
+import "core:fmt"
+
 import "../../../game"
 import "../../../utilities/mathz"
 import "../../overworld/entity"
@@ -83,12 +85,13 @@ update :: proc() {
 
 	//* Pause menu
 	if pause {
-		game.player.pauseMenu = !game.player.pauseMenu
+		if game.player.menu != .pause do game.player.menu = .pause
+		else if game.player.menu == .pause do game.player.menu = .none
 	}
 
 	entity.update(game.player.entity)
 }
 
 can_move :: proc() -> bool {
-	return !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil && !game.player.pauseMenu
+	return !game.player.entity.isMoving && game.player.canMove && game.battleStruct == nil && game.player.menu == .none
 }
