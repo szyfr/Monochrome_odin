@@ -9,7 +9,8 @@ import "core:reflect"
 import "vendor:raylib"
 
 import "../../../../game"
-import "../../../../game/general/settings"
+import "../../../general/settings"
+import "../../../battle/monsters"
 
 
 //= Procedures
@@ -32,6 +33,8 @@ draw_pause_menu :: proc() {
 		raylib.WHITE,
 	)
 
+	col : raylib.Color
+
 	raylib.DrawTextEx(
 		game.font,
 		game.localization["pokedex"],
@@ -42,13 +45,15 @@ draw_pause_menu :: proc() {
 		{247,82,49,255},
 	)
 
+	col = raylib.Color{56,56,56,255}
+	if game.player.pokemon[0].species == .empty do col = {247,82,49,255}
 	raylib.DrawTextEx(
 		game.font,
 		game.localization["pokemon"],
 		{posX + 100, 120},
 		24,
 		5,
-		{56,56,56,255},
+		col,
 	)
 
 	raylib.DrawTextEx(
@@ -112,7 +117,8 @@ draw_pause_menu :: proc() {
 				//game.player.menu = .pokedex
 				//TODO Play error sound
 			case 1: // Pokemon
-				game.player.menu = .pokemon
+				if game.player.pokemon[0].species != .empty do game.player.menu = .pokemon
+				//TODO Play error sound
 			case 2: // Bag
 				//game.player.menu = .bag
 				//TODO Play error sound
@@ -131,9 +137,9 @@ draw_pause_menu :: proc() {
 draw_pokemon_menu :: proc() {
 	posX := f32(game.screenWidth) / 16
 	posY := f32(game.screenHeight) / 16
-	raylib.DrawTextureNPatch(
-		game.box_ui,
-		game.box_ui_npatch,
+	raylib.DrawTexturePro(
+		game.pokemon_info_ui,
+		{0,0,f32(game.pokemon_info_ui.width),f32(game.pokemon_info_ui.height)},
 		{posX, posY, f32(game.screenWidth) - (f32(game.screenWidth) / 8), f32(game.screenHeight) - (f32(game.screenHeight) / 8)},
 		{0,0},
 		0,
@@ -146,7 +152,7 @@ draw_pokemon_menu :: proc() {
 		raylib.DrawTexturePro(
 			game.pokemonSprites[game.player.pokemon[0].species],
 			{0,0,64,64},
-			{posX + 60, posY + 60, 256, 256},
+			{posX + 76, posY + 75, 256, 256},
 			{0,0},
 			0,
 			raylib.WHITE,
@@ -179,8 +185,20 @@ draw_pokemon_menu :: proc() {
 		str := fmt.sbprintf(&builder, "%v", game.player.pokemon[0].level)
 		raylib.DrawTextEx(
 			game.font,
-			strings.clone_to_cstring(strings.concatenate({"Lv ", str})),
-			{posX + 340, posY + 220},
+			strings.clone_to_cstring(strings.concatenate({"Lv", str})),
+			{posX + 438 - (f32(len(str) * 24) / 2), posY + 260},
+			24,
+			5,
+			{56,56,56,255},
+		)
+		//* Experience
+		expCur, expNeed := monsters.exp_numbers(game.player.pokemon[0].level, game.player.pokemon[0].experience)
+		strings.builder_reset(&builder)
+		str = fmt.sbprintf(&builder, "%v/%v", expCur, expNeed)
+		raylib.DrawTextEx(
+			game.font,
+			strings.clone_to_cstring(str),
+			{posX + 438 - (f32(len(str) * 24) / 2), posY + 340},
 			24,
 			5,
 			{56,56,56,255},
@@ -191,7 +209,7 @@ draw_pokemon_menu :: proc() {
 		raylib.DrawTextEx(
 			game.font,
 			strings.clone_to_cstring(str),
-			{posX + 188 - (f32(len(str) * 24) / 2), posY + 320},
+			{posX + 188 - (f32(len(str) * 24) / 2), posY + 340},
 			24,
 			5,
 			{56,56,56,255},

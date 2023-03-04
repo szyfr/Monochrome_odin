@@ -18,6 +18,15 @@ exp_needed :: proc(
 
 	return int(forCur)
 }
+exp_numbers :: proc(
+	level : int,
+	experience : int,
+) -> (int, int) {
+	expNeededLast := exp_needed(level-1)
+	expNeededCurr := exp_needed(level)
+
+	return experience - expNeededLast, expNeededCurr - expNeededLast
+}
 
 exp_ratio :: proc(
 	total : int,

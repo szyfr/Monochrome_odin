@@ -32,6 +32,7 @@ keybindings		: map[string]Keybinding
 //* Graphics
 box_ui			: raylib.Texture
 box_ui_npatch	: raylib.NPatchInfo
+pokemon_info_ui	: raylib.Texture
 pointer			: raylib.Texture
 
 font			: raylib.Font

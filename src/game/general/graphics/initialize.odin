@@ -27,6 +27,11 @@ init :: proc() {
 		.NINE_PATCH,
 	}
 
+	img = raylib.LoadImage("data/sprites/ui/spr_pokemon_info.png")
+	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
+	game.pokemon_info_ui = raylib.LoadTextureFromImage(img)
+	raylib.UnloadImage(img)
+
 	game.pointer = raylib.LoadTexture("data/sprites/ui/spr_pointer.png")
 
 	for pk in game.PokemonSpecies {
