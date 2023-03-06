@@ -58,25 +58,25 @@ main_draw :: proc() {
 
 	if game.battleStruct != nil do ui.draw_battle()
 
-	builder : strings.Builder
-	last : raylib.Vector3 = {}
-	if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
-	cstr := strings.clone_to_cstring(fmt.sbprintf(
-		&builder,
-		"Previous: %v\nCurrent: %v\nTarget: %v\n\nPokemon:%v\n",
-		game.player.entity.previous,
-		game.player.entity.position,
-		game.player.entity.target,
-		last,
-	))
-	raylib.DrawText(
-		cstr,
-		10, 430,
-		20,
-		raylib.BLACK,
-	)
-	delete(cstr)
-	strings.builder_destroy(&builder)
+	//builder : strings.Builder
+	//last : raylib.Vector3 = {}
+	//if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
+	//cstr := strings.clone_to_cstring(fmt.sbprintf(
+	//	&builder,
+	//	"Previous: %v\nCurrent: %v\nTarget: %v\n\nPokemon:%v\n",
+	//	game.player.entity.previous,
+	//	game.player.entity.position,
+	//	game.player.entity.target,
+	//	last,
+	//))
+	//raylib.DrawText(
+	//	cstr,
+	//	10, 430,
+	//	20,
+	//	raylib.BLACK,
+	//)
+	//delete(cstr)
+	//strings.builder_destroy(&builder)
 	raylib.DrawFPS(10,400)
 
 	raylib.EndDrawing()
@@ -116,7 +116,7 @@ main_init :: proc() {
 	game.eventmanager = new(game.EventManager)
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
-	game.player.pokemon[0] = monsters.create(.totodile, 5)
+	game.player.pokemon[0] = monsters.create(.chikorita, 5)
 
 	game.currentTrack = "new_bark_town"
 	game.music["new_bark_town"]		= raylib.LoadSound("data/audio/aud_new_bark_town.wav")

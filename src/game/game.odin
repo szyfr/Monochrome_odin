@@ -34,6 +34,7 @@ box_ui			: raylib.Texture
 box_ui_npatch	: raylib.NPatchInfo
 pokemon_info_ui	: raylib.Texture
 pointer			: raylib.Texture
+barImg			: raylib.Image
 
 font			: raylib.Font
 

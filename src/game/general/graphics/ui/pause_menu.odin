@@ -140,7 +140,7 @@ draw_pokemon_menu :: proc() {
 	raylib.DrawTexturePro(
 		game.pokemon_info_ui,
 		{0,0,f32(game.pokemon_info_ui.width),f32(game.pokemon_info_ui.height)},
-		{posX, posY, f32(game.screenWidth) - (f32(game.screenWidth) / 8), f32(game.screenHeight) - (f32(game.screenHeight) / 8)},
+		{posX, posY, f32(game.screenWidth) - (f32(game.screenWidth) / 8), f32(game.screenHeight) - (f32(game.screenHeight) / 8) + 0.25},
 		{0,0},
 		0,
 		raylib.WHITE,
@@ -152,7 +152,7 @@ draw_pokemon_menu :: proc() {
 		raylib.DrawTexturePro(
 			game.pokemonSprites[game.player.pokemon[0].species],
 			{0,0,64,64},
-			{posX + 76, posY + 75, 256, 256},
+			{posX + 76, posY + 76, 256, 256},
 			{0,0},
 			0,
 			raylib.WHITE,
@@ -164,7 +164,7 @@ draw_pokemon_menu :: proc() {
 			raylib.DrawTextEx(
 				game.font,
 				game.player.pokemon[0].nickname,
-				{posX + 340, posY + 120},
+				{posX + 380, posY + 95},
 				24,
 				5,
 				{56,56,56,255},
@@ -175,44 +175,82 @@ draw_pokemon_menu :: proc() {
 		raylib.DrawTextEx(
 			game.font,
 			game.localization[reflect.enum_string(game.player.pokemon[0].species)],
-			{posX + 340, posY + 120 + offset},
+			{posX + 380, posY + 95 + offset},
 			24,
 			5,
 			{56,56,56,255},
 		)
 		//* Level
 		builder : strings.Builder
-		str := fmt.sbprintf(&builder, "%v", game.player.pokemon[0].level)
-		raylib.DrawTextEx(
+		str := fmt.sbprintf(&builder, "Lv%v", game.player.pokemon[0].level)
+		raylib.DrawTextPro(
 			game.font,
-			strings.clone_to_cstring(strings.concatenate({"Lv", str})),
-			{posX + 438 - (f32(len(str) * 24) / 2), posY + 260},
+			strings.clone_to_cstring(str),
+			{posX + 488.5, posY + 340},
+			{f32(len(str) * 24) / 2, 12},
+			0,
 			24,
 			5,
 			{56,56,56,255},
 		)
 		//* Experience
-		expCur, expNeed := monsters.exp_numbers(game.player.pokemon[0].level, game.player.pokemon[0].experience)
+		expNeed := monsters.exp_needed(game.player.pokemon[0].level)
 		strings.builder_reset(&builder)
-		str = fmt.sbprintf(&builder, "%v/%v", expCur, expNeed)
-		raylib.DrawTextEx(
+		str = fmt.sbprintf(&builder, "%v", expNeed)
+		raylib.DrawTextPro(
 			game.font,
 			strings.clone_to_cstring(str),
-			{posX + 438 - (f32(len(str) * 24) / 2), posY + 340},
+			{posX + 488.5, posY + 424},
+			{f32(len(str) * 24) / 2, 12},
+			0,
 			24,
 			5,
 			{56,56,56,255},
 		)
+		//* Bar
+		img		:= raylib.ImageCopy(game.barImg)
+		raylib.ImageColorReplace(&img, raylib.BLACK, {99,206,8,255})
+		ratio	:= monsters.exp_ratio(game.player.pokemon[0].experience, game.player.pokemon[0].level)
+		tex		:= raylib.LoadTextureFromImage(img)
+		raylib.DrawTexturePro(
+			tex,
+			{0,0,f32(img.width) * ratio,f32(img.height)},
+			{posX + 364, posY + 364,f32(img.width*4) * ratio,f32(img.height*4)},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+		raylib.UnloadTexture(tex)
+		raylib.UnloadImage(img)
+
+
 		//* Health
 		strings.builder_reset(&builder)
 		str = fmt.sbprintf(&builder, "%v/%v", game.player.pokemon[0].hpCur, game.player.pokemon[0].hpMax)
-		raylib.DrawTextEx(
+		raylib.DrawTextPro(
 			game.font,
 			strings.clone_to_cstring(str),
-			{posX + 188 - (f32(len(str) * 24) / 2), posY + 340},
+			{posX + 200.5, posY + 424},
+			{f32(len(str) * 24) / 2, 12},
+			0,
 			24,
 			5,
 			{56,56,56,255},
 		)
+		//* Bar
+		img		= raylib.ImageCopy(game.barImg)
+		raylib.ImageColorReplace(&img, raylib.BLACK, {247,82,49,255})
+		ratio	= f32(game.player.pokemon[0].hpCur) / f32(game.player.pokemon[0].hpMax)
+		tex		= raylib.LoadTextureFromImage(img)
+		raylib.DrawTexturePro(
+			raylib.LoadTextureFromImage(img),
+			{0,0,f32(img.width) * ratio,f32(img.height)},
+			{posX + 75, posY + 364,f32(img.width*4) * ratio,f32(img.height*4)},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+		raylib.UnloadTexture(tex)
+		raylib.UnloadImage(img)
 	}
 }
