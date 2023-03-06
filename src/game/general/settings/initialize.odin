@@ -33,12 +33,14 @@ init :: proc() {
 	}
 
 	//* Setting variables
-	game.screenWidth  = i32(jsonFile.(json.Object)["screenwidth"].(f64))
-	game.screenHeight = i32(jsonFile.(json.Object)["screenheight"].(f64))
-	game.textSpeed    = i32(jsonFile.(json.Object)["textspeed"].(f64))
-	game.fpsLimit     = i32(jsonFile.(json.Object)["fpslimit"].(f64))
-	game.language     = jsonFile.(json.Object)["language"].(string)
-	game.masterVolume = f32(jsonFile.(json.Object)["mastervolume"].(f64)) / 100
+	game.screenWidth	= i32(jsonFile.(json.Object)["screenwidth"].(f64))
+	game.screenHeight	= i32(jsonFile.(json.Object)["screenheight"].(f64))
+	game.textSpeed		= i32(jsonFile.(json.Object)["textspeed"].(f64))
+	game.fpsLimit		= i32(jsonFile.(json.Object)["fpslimit"].(f64))
+	game.language		= jsonFile.(json.Object)["language"].(string)
+	game.masterVolume	= f32(jsonFile.(json.Object)["mastervolume"].(f64)) / 100
+	game.musicVolume	= f32(jsonFile.(json.Object)["musicvolume"].(f64)) / 100
+	game.soundVolume	= f32(jsonFile.(json.Object)["soundvolume"].(f64)) / 100
 
 	kebindingJson := jsonFile.(json.Object)["keybindings"].(json.Array)
 	for mem in kebindingJson {
@@ -98,6 +100,18 @@ save_settings :: proc() {
 
 	strings.write_string(&builder, "\t\"fpslimit\":")
 	strings.write_int(&builder, int(game.fpsLimit))
+	strings.write_string(&builder, ",\n")
+
+	strings.write_string(&builder, "\t\"mastervolume\":")
+	strings.write_int(&builder, int(game.masterVolume))
+	strings.write_string(&builder, ",\n")
+
+	strings.write_string(&builder, "\t\"musicvolume\":")
+	strings.write_int(&builder, int(game.musicVolume))
+	strings.write_string(&builder, ",\n")
+
+	strings.write_string(&builder, "\t\"soundvolume\":")
+	strings.write_int(&builder, int(game.soundVolume))
 	strings.write_string(&builder, ",\n")
 
 	strings.write_string(&builder, "\t\"language\":\"")

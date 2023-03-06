@@ -3,8 +3,10 @@
 	"screenheight":1080,
 	"textspeed":1,
 	"fpslimit":85,
-	"language":"english",
 	"mastervolume":10,
+	"musicvolume":10,
+	"soundvolume":10,
+	"language":"english",
 
 	"keybindings": [
 		["up",0,87],

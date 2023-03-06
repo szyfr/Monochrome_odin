@@ -190,6 +190,12 @@ init :: proc(
 							chn = game.StartBattleEvent{
 								id = chain[i].(json.Array)[1].(string),
 							}
+
+						case "sound":
+							chn = game.PlaySound{
+								name	= chain[i].(json.Array)[1].(string),
+								pitch	= f32(chain[i].(json.Array)[2].(f64)),
+							}
 					}
 					append(&evt.chain, chn)
 				}

@@ -40,7 +40,6 @@ create :: proc(
 
 	//* Get filenames
 	fullpath_animation : string
-	fmt.printf("%v\n",strings.concatenate({ANI_LOCATION, filenameA, ANI_FILETYPE}))
 	fullpath_image     := strings.clone_to_cstring(strings.concatenate({SPR_LOCATION, filenameI, SPR_FILETYPE}))
 	if filenameA != "" do fullpath_animation = strings.concatenate({ANI_LOCATION, filenameA, ANI_FILETYPE})
 	else do fullpath_animation = strings.concatenate({ANI_LOCATION, filenameI, ANI_FILETYPE})

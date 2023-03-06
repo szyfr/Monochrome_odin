@@ -12,6 +12,7 @@ import "../entity"
 import "../../battle/monsters"
 import "../../battle"
 import "../../general/graphics/ui"
+import "../../general/audio"
 
 
 //= Constants
@@ -168,6 +169,11 @@ update :: proc() {
 				//TODO Run check for if the player doesn't have a pokemon
 				battle.init(&game.battles[curChain.(game.StartBattleEvent).id])
 				game.eventmanager.currentChain += 1
+
+			case game.PlaySound:
+				audio.play_sound(curChain.(game.PlaySound).name, curChain.(game.PlaySound).pitch)
+				game.eventmanager.currentChain += 1
+
 		}
 	}
 }

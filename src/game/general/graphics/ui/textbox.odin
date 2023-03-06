@@ -9,6 +9,7 @@ import "vendor:raylib"
 
 import "../../../../game"
 import "../../../../game/general/settings"
+import "../../audio"
 
 
 //= Procedures
@@ -63,6 +64,7 @@ draw_textbox :: proc() {
 		if settings.is_key_pressed("interact") && game.eventmanager.textbox.pause >= 2 {
 			if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) {
 				game.eventmanager.textbox.state = .finished
+				audio.play_sound("button")
 			} else {
 				game.eventmanager.textbox.position = len(game.eventmanager.textbox.targetText)
 				game.eventmanager.textbox.currentText = game.eventmanager.textbox.targetText

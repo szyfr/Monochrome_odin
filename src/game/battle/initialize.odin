@@ -9,6 +9,7 @@ import "vendor:raylib"
 
 import "../../game"
 import "../general/camera"
+import "../general/audio"
 import "../overworld/standee"
 import "monsters"
 
@@ -26,10 +27,8 @@ init :: proc(
 			camera.move({16,0,61}, 1.25)
 	}
 
-	//* Temp
-	raylib.StopSound(game.music[game.currentTrack])
-	game.currentTrack = "trainer_battle"
-	raylib.PlaySound(game.music[game.currentTrack])
+	//* Audio
+	audio.play_music("trainer_battle")
 	
 
 	configure_player_battle_entity()
@@ -50,11 +49,8 @@ close :: proc() {
 	free(game.battleStruct)
 	game.battleStruct = nil
 	
-
-	//* Temp
-	raylib.StopSound(game.music[game.currentTrack])
-	game.currentTrack = "new_bark_town"
-	raylib.PlaySound(game.music[game.currentTrack])
+	//* Audio
+	audio.play_music("new_bark_town")
 }
 
 configure_player_battle_entity :: proc() {

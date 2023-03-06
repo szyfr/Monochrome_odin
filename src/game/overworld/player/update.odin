@@ -8,6 +8,7 @@ import "../../../game"
 import "../../../utilities/mathz"
 import "../../overworld/entity"
 import "../../general/settings"
+import "../../general/audio"
 
 
 //= Constants
@@ -40,13 +41,15 @@ update :: proc() {
 			eventPosition += mathz.to_v2(int(game.player.entity.direction))
 
 			if game.region.events[eventPosition].interactable {
+				audio.play_sound("button")
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[eventPosition]
 			}
 
 			if eventPosition in game.region.entities {
+				audio.play_sound("button")
 				interactingEntity := &game.region.entities[eventPosition]
-				if interactingEntity.visibleVar in game.eventmanager.eventVariables {
+				if interactingEntity.visibleVar in game.eventmanager.eventVariables || interactingEntity.visibleVar == "" {
 					game.player.canMove = false
 					game.eventmanager.currentEvent = &game.region.events[interactingEntity.interactionEvent]
 					switch game.player.entity.direction {
@@ -84,9 +87,10 @@ update :: proc() {
 	if vertical == 0 && horizontal == 0 do game.player.moveTimer = 0
 
 	//* Pause menu
-	if pause {
+	if pause && game.eventmanager.currentEvent == nil && game.battleStruct == nil {
 		if game.player.menu != .pause do game.player.menu = .pause
 		else if game.player.menu == .pause do game.player.menu = .none
+		audio.play_sound("menu")
 	}
 
 	entity.update(game.player.entity)

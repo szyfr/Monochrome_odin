@@ -26,6 +26,8 @@ textSpeed		: i32
 fpsLimit		: i32
 language		: string
 masterVolume	: f32
+musicVolume		: f32
+soundVolume		: f32
 keybindings		: map[string]Keybinding
 
 
@@ -33,7 +35,10 @@ keybindings		: map[string]Keybinding
 box_ui			: raylib.Texture
 box_ui_npatch	: raylib.NPatchInfo
 pokemon_info_ui	: raylib.Texture
+typeTexture		: raylib.Texture
 pointer			: raylib.Texture
+barHP			: raylib.Texture
+barEXP			: raylib.Texture
 barImg			: raylib.Image
 
 font			: raylib.Font
@@ -46,8 +51,7 @@ attackOverlays	: map[PokemonAttack]AttackOverlay
 
 
 //* Audio
-currentTrack	: string
-music			: map[string]raylib.Sound
+audio : ^AudioSystem
 
 
 //* Data

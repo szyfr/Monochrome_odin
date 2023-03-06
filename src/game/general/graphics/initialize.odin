@@ -34,6 +34,8 @@ init :: proc() {
 
 	game.pointer = raylib.LoadTexture("data/sprites/ui/spr_pointer.png")
 
+	game.typeTexture = raylib.LoadTexture("data/sprites/ui/spr_types.png")
+
 	game.barImg = raylib.LoadImage("data/sprites/ui/spr_bar.png")
 
 	for pk in game.PokemonSpecies {

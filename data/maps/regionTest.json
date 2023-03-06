@@ -3210,7 +3210,25 @@
 			"direction":"right",
 			"event":[0,0],
 			"conditional":["rival_battle_1",true],
-		}
+		},
+		{
+			"id":"ent_2",
+			"location": [ 26,15 ],
+			"sprite":"rival_1",
+			"movement":"random",
+			"direction":"right",
+			"event":[0,1],
+			"conditional":[],
+		},
+		{
+			"id":"ent_3",
+			"location": [ 20,14 ],
+			"sprite":"rival_1",
+			"movement":"random",
+			"direction":"right",
+			"event":[0,2],
+			"conditional":[],
+		},
 	],
 	"events":[
 		{	 // Elm's Lab
@@ -3258,6 +3276,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
+				["sound","inside",1],
 				["warp","player",[ 21,47 ],true,"up"],
 			]
 		}, {
@@ -3265,6 +3284,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
+				["sound","outside",1],
 				["warp","player",[ 27,11 ],true,"down"],
 			]
 		}, {
@@ -3272,6 +3292,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
+				["sound","outside",1],
 				["warp","player",[ 27,11 ],true,"down"],
 			]
 		}, {
@@ -3279,6 +3300,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
+				["sound","outside",1],
 				["warp","player",[ 37,39 ],true,"down"],
 			]
 		}, {
@@ -3286,6 +3308,7 @@
 			"type":"trigger",
 			"conditional":[],
 			"chain": [
+				["sound","outside",1],
 				["warp","player",[ 24,39 ],true,"down"],
 			]
 		},
@@ -3323,9 +3346,28 @@
 				["move","player","down",1,true],
 				["move","ent_1","left",1,true],
 				["turn","ent_1","down"],
+				["sound","outside",0.5],
 				["move","player","down",2,false],
 				["move","ent_1","right",1,false],
 			//	["setcon","rival_battle_1",true],
+			]
+		},
+		{ // Talking to guy 1
+			"location": [ 0,1 ],
+			"type":"interact",
+			"conditional":[],
+			"chain": [
+				["text","event_2_1"],
+				["text","event_2_2"],
+			]
+		},
+		{ // Talking to girl 1
+			"location": [ 0,2 ],
+			"type":"interact",
+			"conditional":[],
+			"chain": [
+				["text","event_3_1"],
+				["text","event_3_2"],
 			]
 		},
 		{ // Leaving map

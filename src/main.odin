@@ -14,6 +14,7 @@ import "game/general/settings"
 import "game/general/localization"
 import "game/general/graphics"
 import "game/general/graphics/ui"
+import "game/general/audio"
 
 import "game/overworld/map/tiles"
 import "game/overworld/map/region"
@@ -36,8 +37,10 @@ main_logic :: proc() {
 	region.update()
 	if game.battleStruct != nil do battle.update()
 
+	raylib.UpdateMusicStream(game.audio.musicCurrent)
+
 	if settings.is_key_pressed("debug") {
-		//for pkmn in game.player.pokemon do fmt.printf("%v\n",pkmn)
+		fmt.printf("%v\n",raylib.GetMusicTimePlayed(game.audio.musicCurrent))
 	}
 }
 
@@ -58,25 +61,25 @@ main_draw :: proc() {
 
 	if game.battleStruct != nil do ui.draw_battle()
 
-	//builder : strings.Builder
-	//last : raylib.Vector3 = {}
-	//if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
-	//cstr := strings.clone_to_cstring(fmt.sbprintf(
-	//	&builder,
-	//	"Previous: %v\nCurrent: %v\nTarget: %v\n\nPokemon:%v\n",
-	//	game.player.entity.previous,
-	//	game.player.entity.position,
-	//	game.player.entity.target,
-	//	last,
-	//))
-	//raylib.DrawText(
-	//	cstr,
-	//	10, 430,
-	//	20,
-	//	raylib.BLACK,
-	//)
-	//delete(cstr)
-	//strings.builder_destroy(&builder)
+	builder : strings.Builder
+	last : raylib.Vector3 = {}
+	if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
+	cstr := strings.clone_to_cstring(fmt.sbprintf(
+		&builder,
+		"Previous: %v\nCurrent: %v\nTarget: %v\n\nPokemon:%v\n",
+		game.player.entity.previous,
+		game.player.entity.position,
+		game.player.entity.target,
+		last,
+	))
+	raylib.DrawText(
+		cstr,
+		10, 430,
+		20,
+		raylib.BLACK,
+	)
+	delete(cstr)
+	strings.builder_destroy(&builder)
 	raylib.DrawFPS(10,400)
 
 	raylib.EndDrawing()
@@ -99,8 +102,6 @@ main_init :: proc() {
 	)
 	if game.LIMIT_FPS do raylib.SetTargetFPS(game.fpsLimit)
 	raylib.SetExitKey(.NULL)
-	raylib.InitAudioDevice()
-	raylib.SetMasterVolume(game.masterVolume)
 
 	//* Data
 	camera.init()
@@ -112,21 +113,19 @@ main_init :: proc() {
 	//* Graphics
 	graphics.init()
 
+	//* Audio
+	audio.init()
+	audio.play_music("new_bark_town")
+
 	//* Temp
 	game.eventmanager = new(game.EventManager)
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
 	game.player.pokemon[0] = monsters.create(.chikorita, 5)
-
-	game.currentTrack = "new_bark_town"
-	game.music["new_bark_town"]		= raylib.LoadSound("data/audio/aud_new_bark_town.wav")
-	game.music["trainer_battle"]	= raylib.LoadSound("data/audio/aud_trainer_battle.wav")
-	raylib.PlaySound(game.music[game.currentTrack])
 }
 main_close :: proc() {
 	//* Raylib
 	raylib.CloseWindow()
-	raylib.CloseAudioDevice()
 
 	//* Overworld
 	camera.close()
@@ -138,6 +137,9 @@ main_close :: proc() {
 
 	//* Graphics
 	graphics.close()
+
+	//* Audio
+	audio.close()
 }
 
 main :: proc() {

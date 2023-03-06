@@ -17,11 +17,17 @@
 	"test_5": "New Bark Town",
 	"test_6": "The Town Where Winds of a\n\nNew Beginning Blow",
 
-	"event_0_1": "Hmm...",
-	"event_0_2": "So this is the famous\n\nElm Laboratory..",
-	"event_0_3": "Hey, what're you looking at?",
+	"event_0_1": "......",
+	"event_0_2": "So this is the famous\n\nElm Laboratory...",
+	"event_0_3": "... What're you staring at?",
 
 	"event_1_1": "I can't leave town\n\nwithout a Pokemon...",
+	
+	"event_2_1": "Yo, %v!",
+	"event_2_2": "I hear Prof. Elm\n\ndiscovered some new Pokemon.",
+	
+	"event_3_1": "Wow, your PokeGear\n\nis impressive!",
+	"event_3_2": "Did your mom get\n\nit for you?",
 
 	// Pokemon
 	"chikorita":"Chikorita",

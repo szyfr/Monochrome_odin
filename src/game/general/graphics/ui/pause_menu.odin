@@ -10,6 +10,7 @@ import "vendor:raylib"
 
 import "../../../../game"
 import "../../../general/settings"
+import "../../../general/audio"
 import "../../../battle/monsters"
 
 
@@ -130,6 +131,7 @@ draw_pause_menu :: proc() {
 			case 5: // Quit
 				game.running = false
 		}
+		audio.play_sound("button")
 	}
 	
 }
@@ -180,6 +182,28 @@ draw_pokemon_menu :: proc() {
 			5,
 			{56,56,56,255},
 		)
+
+		//* Type
+		rect := get_type_rec(game.player.pokemon[0].elementalType1)
+		raylib.DrawTexturePro(
+			game.typeTexture,
+			rect,
+			{posX + 364, posY + 200.25,48*4,8*4},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+
+		rect = get_type_rec(game.player.pokemon[1].elementalType1)
+		raylib.DrawTexturePro(
+			game.typeTexture,
+			rect,
+			{posX + 556, posY + 200.25,48*4,8*4},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+
 		//* Level
 		builder : strings.Builder
 		str := fmt.sbprintf(&builder, "Lv%v", game.player.pokemon[0].level)
@@ -193,64 +217,101 @@ draw_pokemon_menu :: proc() {
 			5,
 			{56,56,56,255},
 		)
+		//* Bar
+		raylib.UnloadTexture(game.barEXP)
+		img			:= raylib.ImageCopy(game.barImg)
+		raylib.ImageColorReplace(&img, raylib.BLACK, {99,206,8,255})
+		ratio		:= monsters.exp_ratio(game.player.pokemon[0].experience, game.player.pokemon[0].level)
+		game.barEXP	 = raylib.LoadTextureFromImage(img)
+		raylib.DrawTexturePro(
+			game.barEXP,
+			{0,0,f32(img.width) * ratio,f32(img.height)},
+			{posX + 364, posY + 364.25,f32(img.width*4) * ratio,f32(img.height*4)},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+		raylib.UnloadImage(img)
 		//* Experience
-		expNeed := monsters.exp_needed(game.player.pokemon[0].level)
+		expNeed := monsters.exp_needed(game.player.pokemon[0].level) - game.player.pokemon[0].experience
 		strings.builder_reset(&builder)
 		str = fmt.sbprintf(&builder, "%v", expNeed)
 		raylib.DrawTextPro(
 			game.font,
 			strings.clone_to_cstring(str),
-			{posX + 488.5, posY + 424},
+			{posX + 488.5, posY + 384},
 			{f32(len(str) * 24) / 2, 12},
 			0,
 			24,
 			5,
 			{56,56,56,255},
 		)
+
 		//* Bar
-		img		:= raylib.ImageCopy(game.barImg)
-		raylib.ImageColorReplace(&img, raylib.BLACK, {99,206,8,255})
-		ratio	:= monsters.exp_ratio(game.player.pokemon[0].experience, game.player.pokemon[0].level)
-		tex		:= raylib.LoadTextureFromImage(img)
+		raylib.UnloadTexture(game.barHP)
+		img			= raylib.ImageCopy(game.barImg)
+		raylib.ImageColorReplace(&img, raylib.BLACK, {247,82,49,255})
+		ratio		= f32(game.player.pokemon[0].hpCur) / f32(game.player.pokemon[0].hpMax)
+		game.barHP	= raylib.LoadTextureFromImage(img)
 		raylib.DrawTexturePro(
-			tex,
+			game.barHP,
 			{0,0,f32(img.width) * ratio,f32(img.height)},
-			{posX + 364, posY + 364,f32(img.width*4) * ratio,f32(img.height*4)},
+			{posX + 76, posY + 364.25,f32(img.width*4) * ratio,f32(img.height*4)},
 			{0,0},
 			0,
 			raylib.WHITE,
 		)
-		raylib.UnloadTexture(tex)
 		raylib.UnloadImage(img)
-
-
 		//* Health
 		strings.builder_reset(&builder)
 		str = fmt.sbprintf(&builder, "%v/%v", game.player.pokemon[0].hpCur, game.player.pokemon[0].hpMax)
 		raylib.DrawTextPro(
 			game.font,
 			strings.clone_to_cstring(str),
-			{posX + 200.5, posY + 424},
+			{posX + 200.5, posY + 384},
 			{f32(len(str) * 24) / 2, 12},
 			0,
 			24,
 			5,
 			{56,56,56,255},
 		)
-		//* Bar
-		img		= raylib.ImageCopy(game.barImg)
-		raylib.ImageColorReplace(&img, raylib.BLACK, {247,82,49,255})
-		ratio	= f32(game.player.pokemon[0].hpCur) / f32(game.player.pokemon[0].hpMax)
-		tex		= raylib.LoadTextureFromImage(img)
-		raylib.DrawTexturePro(
-			raylib.LoadTextureFromImage(img),
-			{0,0,f32(img.width) * ratio,f32(img.height)},
-			{posX + 75, posY + 364,f32(img.width*4) * ratio,f32(img.height*4)},
-			{0,0},
-			0,
-			raylib.WHITE,
+
+		//* Stats
+		strings.builder_reset(&builder)
+		str = fmt.sbprintf(
+			&builder,
+			"      Stats\nATK:   %v\nDEF:   %v\nSPATK: %v\nSPDEF: %v\nSPD:   %v",
+			game.player.pokemon[0].atk,
+			game.player.pokemon[0].def,
+			game.player.pokemon[0].spAtk,
+			game.player.pokemon[0].spDef,
+			game.player.pokemon[0].spd,
 		)
-		raylib.UnloadTexture(tex)
-		raylib.UnloadImage(img)
+		raylib.DrawTextPro(
+			game.font,
+			strings.clone_to_cstring(str),
+			{posX + 96, posY + 464},
+			{0, 0},
+			0,
+			24,
+			5,
+			{56,56,56,255},
+		)
+
+		//* IVs
+
+		//* EVs
 	}
+}
+
+get_type_rec :: proc(
+	type : game.ElementalType,
+) -> raylib.Rectangle {
+	#partial switch type {
+		case .normal:	return {0,0,48,8}
+		case .fire:		return {48,0,48,8}
+		case .water:	return {96,0,48,8}
+		case .grass:	return {144,0,48,8}
+	}
+	return {}
 }

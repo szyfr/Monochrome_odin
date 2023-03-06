@@ -9,6 +9,7 @@ import "vendor:raylib"
 
 import "../../../game"
 import "../../general/graphics/animations"
+import "../../general/audio"
 
 
 //= Procedures
@@ -38,8 +39,9 @@ move :: proc(
 		if  tile.solid ||                      		//? Tile is solid
 			(!entity.isSurfing && tile.surf) ||		//? Tile is surfable and playing isn't surfing
 			(diff > 0.5 || diff < -0.75) ||    		//? Height difference is too extreme
-			(res && (resu && ent.visible != var))	//? There is currently an entity there
+			(res && ((resu && ent.visible != var) || ent.visibleVar == ""))	//? There is currently an entity there
 		{
+			if game.player.entity == entity do audio.play_sound("collision")
 			//TODO Thump noise
 			//TODO Slow walking animation?
 			return

@@ -66,6 +66,7 @@ EventChain :: union {
 	SetTileEvent,
 	GetPokemonEvent,
 	StartBattleEvent,
+	PlaySound,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -113,7 +114,11 @@ GetPokemonEvent :: struct {
 	level	: int,
 }
 StartBattleEvent :: struct {
-	id			: string,
+	id	: string,
+}
+PlaySound :: struct {
+	name	: string,
+	pitch	: f32,
 }
 
 BattleData :: struct {
@@ -290,6 +295,17 @@ AttackOverlayGeneral :: struct {
 	mesh	: raylib.Mesh,
 	model	: raylib.Model,
 	texture	: raylib.Texture,
+}
+
+AudioSystem :: struct {
+	musicFilenames	: map[string]cstring,
+	soundFilenames	: map[string]cstring,
+
+	musicCurrentName: string,
+	musicCurrent	: raylib.Music,
+
+	soundCurrentName: string,
+	soundCurrent	: raylib.Sound,
 }
 
 
