@@ -30,8 +30,8 @@ draw_textbox :: proc() {
 		raylib.DrawTextEx(
 			game.font,
 			text,
-			{posX + 50, posY + 60},
-			24,
+			{posX + 50, posY + 70},
+			32,
 			5,
 			{56,56,56,255},
 		)
