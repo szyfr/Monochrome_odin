@@ -11,11 +11,11 @@
 
 	"test_0": "Man, isn't technology amazing?!",
 	"test_1": "Elm Laboratory",
-	"test_2": "Specializing in Pokethology",
+	"test_2": "Specializing in\n\nPokethology",
 	"test_3": "Player residence",
 	"test_4": "Elm residence",
 	"test_5": "New Bark Town",
-	"test_6": "The Town Where Winds of a\n\nNew Beginning Blow",
+	"test_6": "The Town Where Winds of\n\na New Beginning Blow",
 
 	"event_0_1": "......",
 	"event_0_2": "So this is the famous\n\nElm Laboratory...",

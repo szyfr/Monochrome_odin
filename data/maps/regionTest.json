@@ -3245,7 +3245,15 @@
 			"conditional":[],
 			"chain": [
 				["text","test_3"],
-				["startbattle","rival_battle_chikorita"]
+				["music","trainer_battle",1],
+				["animation",
+					"trainer_battle_2",
+					230,
+					4,
+					[26,26,26,26,0,0,0,0,26,26,26,26,0,0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26],
+					false,
+				]
+				["startbattle","rival_battle_chikorita"],
 			]
 		}, { // Elm's House
 			"location": [ 23,19 ],
@@ -3275,9 +3283,12 @@
 			"location": [ 27,11 ],
 			"type":"trigger",
 			"conditional":[],
+			
 			"chain": [
 				["sound","inside",1],
+				["animation","flash",23,8,[0,1,2],true]
 				["warp","player",[ 21,47 ],true,"up"],
+				["animation","flash",23,8,[2,1,0],false]
 			]
 		}, {
 			"location": [ 21,47 ],
@@ -3285,7 +3296,9 @@
 			"conditional":[],
 			"chain": [
 				["sound","outside",1],
+				["animation","flash",23,8,[0,1,2],true]
 				["warp","player",[ 27,11 ],true,"down"],
+				["animation","flash",23,8,[2,1,0],false]
 			]
 		}, {
 			"location": [ 22,47 ],
@@ -3293,7 +3306,9 @@
 			"conditional":[],
 			"chain": [
 				["sound","outside",1],
+				["animation","flash",23,8,[0,1,2],true]
 				["warp","player",[ 27,11 ],true,"down"],
+				["animation","flash",23,8,[2,1,0],false]
 			]
 		}, {
 			"location": [ 24,39 ],
@@ -3301,7 +3316,9 @@
 			"conditional":[],
 			"chain": [
 				["sound","outside",1],
+				["animation","flash",23,8,[0,1,2],true]
 				["warp","player",[ 37,39 ],true,"down"],
+				["animation","flash",23,8,[2,1,0],false]
 			]
 		}, {
 			"location": [ 37,39 ],
@@ -3309,7 +3326,9 @@
 			"conditional":[],
 			"chain": [
 				["sound","outside",1],
+				["animation","flash",23,8,[0,1,2],true]
 				["warp","player",[ 24,39 ],true,"down"],
+				["animation","flash",23,8,[2,1,0],false]
 			]
 		},
 		{ // Elm's house Warp

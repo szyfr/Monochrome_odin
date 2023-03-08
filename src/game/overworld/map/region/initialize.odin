@@ -7,6 +7,7 @@ import "core:os"
 import "core:encoding/json"
 import "core:reflect"
 import "core:math"
+import "core:strings"
 
 import "vendor:raylib"
 
@@ -192,9 +193,26 @@ init :: proc(
 							}
 
 						case "sound":
-							chn = game.PlaySound{
+							chn = game.PlaySoundEvent{
 								name	= chain[i].(json.Array)[1].(string),
 								pitch	= f32(chain[i].(json.Array)[2].(f64)),
+							}
+						case "music":
+							chn = game.PlayMusicEvent{
+								name	= chain[i].(json.Array)[1].(string),
+								pitch	= f32(chain[i].(json.Array)[2].(f64)),
+							}
+						case "animation":
+							texture := raylib.LoadTexture(strings.clone_to_cstring(strings.concatenate({"data/sprites/animations/spr_", chain[i].(json.Array)[1].(string), ".png"})))
+							list := make([dynamic]int)
+							for i in chain[i].(json.Array)[4].(json.Array) do append(&list, int(i.(f64)))
+							chn = game.OverlayAnimationEvent{
+								texture			= texture,
+								length			= int(chain[i].(json.Array)[2].(f64)),
+								timer			= int(chain[i].(json.Array)[3].(f64)),
+								animation		= list,
+								currentFrame	= 0,
+								stay			= chain[i].(json.Array)[5].(bool),
 							}
 					}
 					append(&evt.chain, chn)

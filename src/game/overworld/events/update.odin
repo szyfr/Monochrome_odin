@@ -170,10 +170,46 @@ update :: proc() {
 				battle.init(&game.battles[curChain.(game.StartBattleEvent).id])
 				game.eventmanager.currentChain += 1
 
-			case game.PlaySound:
-				audio.play_sound(curChain.(game.PlaySound).name, curChain.(game.PlaySound).pitch)
+			case game.PlaySoundEvent:
+				audio.play_sound(curChain.(game.PlaySoundEvent).name, curChain.(game.PlaySoundEvent).pitch)
 				game.eventmanager.currentChain += 1
 
+			case game.PlayMusicEvent:
+				audio.play_music(curChain.(game.PlayMusicEvent).name, curChain.(game.PlayMusicEvent).pitch)
+				game.eventmanager.currentChain += 1
+
+			case game.OverlayAnimationEvent:
+				if game.eventmanager.uses == 0 {
+					game.overlayTexture = curChain.(game.OverlayAnimationEvent).texture
+					game.overlayActive	= true
+				}
+				if game.eventmanager.uses >= curChain.(game.OverlayAnimationEvent).length {
+					game.eventmanager.uses = 0
+					game.eventmanager.currentChain += 1
+
+					if !curChain.(game.OverlayAnimationEvent).stay {
+						game.overlayTexture = {}
+						game.overlayActive = false
+					}
+				} else {
+					game.eventmanager.uses += 1
+					mod := game.eventmanager.uses / curChain.(game.OverlayAnimationEvent).timer
+					fmt.printf(
+						"%v/%v=%vm%v=%v\n",
+						game.eventmanager.uses,
+						curChain.(game.OverlayAnimationEvent).timer,
+						mod,
+						(len(curChain.(game.OverlayAnimationEvent).animation)),
+						mod % (len(curChain.(game.OverlayAnimationEvent).animation)),
+					)
+					game.overlayRectangle = {
+						f32(curChain.(game.OverlayAnimationEvent).animation[mod % (len(curChain.(game.OverlayAnimationEvent).animation))] * 256),
+						0,
+						255,
+						144,
+					}
+
+				}
 		}
 	}
 }

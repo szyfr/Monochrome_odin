@@ -26,9 +26,6 @@ init :: proc(
 		case .grass:
 			camera.move({16,0,61}, 1.25)
 	}
-
-	//* Audio
-	audio.play_music("trainer_battle")
 	
 
 	configure_player_battle_entity()

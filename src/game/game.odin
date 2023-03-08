@@ -49,6 +49,10 @@ emotes			: raylib.Texture
 targeter		: raylib.Model
 attackOverlays	: map[PokemonAttack]AttackOverlay
 
+overlayActive		: bool
+overlayTexture		: raylib.Texture
+overlayRectangle	: raylib.Rectangle
+
 
 //* Audio
 audio : ^AudioSystem
