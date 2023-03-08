@@ -73,6 +73,8 @@ battleStruct	: ^BattleStructure
 lastBattleOutcome : bool = false
 pokemonData		: json.Array
 
+battleWinEvent	: Event
+
 
 //= Procedures
 check_variable :: proc{

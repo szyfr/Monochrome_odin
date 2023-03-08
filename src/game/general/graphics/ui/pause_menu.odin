@@ -163,14 +163,17 @@ draw_pokemon_menu :: proc() {
 		offset : f32 = 0
 		//* Nickname
 		if game.player.pokemon[0].nickname != "" {
+			//nick := strings.clone_to_cstring(game.player.pokemon[0].nickname)
 			raylib.DrawTextEx(
 				game.font,
 				game.player.pokemon[0].nickname,
+				//nick,
 				{posX + 380, posY + 95},
 				24,
 				5,
 				{56,56,56,255},
 			)
+			//delete(nick)
 			offset += 40
 		}
 		//* Species

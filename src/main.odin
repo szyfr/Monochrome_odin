@@ -58,7 +58,6 @@ main_draw :: proc() {
 	entity.draw_emotes()
 	ui.draw_menus()
 	ui.draw_textbox()
-	//(texture: Texture2D, source, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color)
 	if game.overlayActive {
 		raylib.DrawTexturePro(
 			game.overlayTexture,
@@ -100,8 +99,9 @@ main_init :: proc() {
 	//* Debug
 	debug.create_log()
 
-	//* Settings / Localization
+	//* Settings / Save / Localization
 	settings.init()
+	events.init()
 	localization.init()
 
 	//* Raylib
@@ -128,10 +128,7 @@ main_init :: proc() {
 	audio.init()
 	audio.play_music("new_bark_town")
 
-	//* Temp
-	game.eventmanager = new(game.EventManager)
-	game.eventmanager.eventVariables["variable_1"] = false
-	game.eventmanager.eventVariables["rival_battle_1"] = false
+	//!TEMP
 	game.player.pokemon[0] = monsters.create(.chikorita, 5)
 }
 main_close :: proc() {

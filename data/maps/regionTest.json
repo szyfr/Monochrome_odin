@@ -3378,6 +3378,7 @@
 			"chain": [
 				["text","event_2_1"],
 				["text","event_2_2"],
+				["choice","test_0",[2,["yes","no"],[[0,2],[0,1]]]]
 			]
 		},
 		{ // Talking to girl 1

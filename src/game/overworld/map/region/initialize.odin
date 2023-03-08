@@ -71,7 +71,8 @@ init :: proc(
 				position : raylib.Vector3 = {}
 				position.x = f32(eventList[count].(json.Object)["location"].(json.Array)[0].(f64))
 				position.z = f32(eventList[count].(json.Object)["location"].(json.Array)[1].(f64))
-				position.y = tile.pos.y //TODO
+				positionCalc := int(position.x) % int(game.region.size.x) + (int(position.z) * int(game.region.size.x))
+				position.y = f32(tileList[positionCalc].(json.Object)["level"].(f64))
 				evt : game.Event = {}
 				evt.position		= position
 				evt.interactable	= ("interact" == eventList[count].(json.Object)["type"].(string))
@@ -214,6 +215,24 @@ init :: proc(
 								currentFrame	= 0,
 								stay			= chain[i].(json.Array)[5].(bool),
 							}
+						case "choice":
+							choiceList := make([dynamic]game.Choice)
+							for o:=0;o<int(chain[i].(json.Array)[2].(json.Array)[0].(f64));o+=1 {
+								array1 := chain[i].(json.Array)[2].(json.Array)[1].(json.Array)
+								array2 := chain[i].(json.Array)[2].(json.Array)[2].(json.Array)
+								choice : game.Choice = {
+									text	= &game.localization[array1[o].(string)],
+									event	= {
+										f32(array2[o].(json.Array)[0].(f64)),
+										f32(array2[o].(json.Array)[1].(f64)),
+									},
+								}
+								append(&choiceList, choice)
+							}
+							chn = game.ChoiceEvent{
+								text	= &game.localization[chain[i].(json.Array)[1].(string)],
+								choices	= choiceList,
+							}
 					}
 					append(&evt.chain, chn)
 				}
@@ -225,7 +244,8 @@ init :: proc(
 				position : raylib.Vector3 = {}
 				position.x = f32(entityList[count].(json.Object)["location"].(json.Array)[0].(f64))
 				position.z = f32(entityList[count].(json.Object)["location"].(json.Array)[1].(f64))
-				position.y = tile.pos.y //TODO
+				positionCalc := int(position.x) % int(game.region.size.x) + (int(position.z) * int(game.region.size.x))
+				position.y = f32(tileList[positionCalc].(json.Object)["level"].(f64))
 				ent := entity.create(
 					entityList[count].(json.Object)["sprite"].(string),
 					position,

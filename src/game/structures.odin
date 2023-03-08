@@ -69,6 +69,7 @@ EventChain :: union {
 	PlaySoundEvent,
 	PlayMusicEvent,
 	OverlayAnimationEvent,
+	ChoiceEvent,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -135,6 +136,14 @@ OverlayAnimationEvent :: struct {
 
 	currentFrame	: int,
 }
+ChoiceEvent :: struct {
+	text	: ^cstring,
+	choices	: [dynamic]Choice,
+}
+Choice :: struct {
+	text	: ^cstring,
+	event	: raylib.Vector2,
+}
 
 BattleData :: struct {
 	id				: string,
@@ -196,6 +205,9 @@ EventManager :: struct {
 	uses			:  int,
 
 	eventVariables	: map[string]bool,
+	playerName		: string,
+	playerPronouns	: [3]string,
+	rivalName		: string,
 }
 Textbox :: struct {
 	state		: TextboxState,
@@ -204,6 +216,10 @@ Textbox :: struct {
 	timer		: int,
 	pause		: int,
 	position	: int,
+	
+	hasChoice	: bool,
+	choiceList	: [dynamic]Choice,
+	curPosition	: int,
 }
 
 Keybinding :: struct {
@@ -254,6 +270,7 @@ BattleStructure :: struct {
 	playerPokemon	: BattleEntity,
 	enemyPokemon	: BattleEntity,
 	enemyPokemonList: [4]^Pokemon,
+	enemyName		: string,
 
 	playerHPBar		: raylib.Texture,
 	playerEXPBar	: raylib.Texture,

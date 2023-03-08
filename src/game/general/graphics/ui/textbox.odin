@@ -4,6 +4,7 @@ package ui
 //= Imports
 import "core:fmt"
 import "core:strings"
+import "core:reflect"
 
 import "vendor:raylib"
 
@@ -36,6 +37,59 @@ draw_textbox :: proc() {
 			{56,56,56,255},
 		)
 		delete(text)
+
+		if game.eventmanager.textbox.hasChoice && game.eventmanager.textbox.currentText == game.eventmanager.textbox.targetText {
+			raylib.DrawTextureNPatch(
+				game.box_ui,
+				game.box_ui_npatch,
+				{
+					posX + (f32(game.screenWidth) / 3),
+					posY - (f32(game.screenHeight) / 4),
+					(f32(game.screenWidth) / 2) - (f32(game.screenWidth) / 3),
+					f32(game.screenHeight) / 4},
+				{0,0},
+				0,
+				raylib.WHITE,
+			)
+
+			for i:=0;i<len(game.eventmanager.textbox.choiceList);i+=1 {
+				raylib.DrawTextEx(
+					game.font,
+					game.eventmanager.textbox.choiceList[i].text^,
+					{
+						posX + (f32(game.screenWidth) / 3) + 100,
+						posY - (f32(game.screenHeight) / 4) + 90 + (64*f32(i)),
+					},
+					32,
+					5,
+					{56,56,56,255},
+				)
+			}
+
+			//(texture: Texture2D, source, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color)
+			raylib.DrawTexturePro(
+				game.pointer,
+				{0,0,8,8},
+				{
+					posX + (f32(game.screenWidth) / 3) + 60,
+					posY - (f32(game.screenHeight) / 4) + 90 + (64*f32(game.eventmanager.textbox.curPosition)),
+					32,32,
+				},
+				{0,0},
+				0,
+				raylib.WHITE,
+			)
+
+			//* Controls
+			if settings.is_key_pressed("up") {
+				if game.eventmanager.textbox.curPosition == 0 do game.eventmanager.textbox.curPosition = len(game.eventmanager.textbox.choiceList)-1
+				else do game.eventmanager.textbox.curPosition -= 1
+			}
+			if settings.is_key_pressed("down") {
+				if game.eventmanager.textbox.curPosition == len(game.eventmanager.textbox.choiceList)-1 do game.eventmanager.textbox.curPosition = 0
+				else do game.eventmanager.textbox.curPosition += 1
+			}
+		}
 
 		game.eventmanager.textbox.timer += 1
 
@@ -105,14 +159,50 @@ reset_textbox :: proc() {
 }
 
 open_textbox :: proc(
-	newText : string,
+	newText		: string,
+	hasChoice	: bool = false,
+	choiceList	: [dynamic]game.Choice = nil,
+	total		: int = 0,
 ) {
 	textbox := &game.eventmanager.textbox
 
 	textbox.state = .active
 	textbox.currentText = ""
 	textbox.targetText = newText
+
+	refName	: string
+	if game.player.pokemon[0].nickname != "" do refName = strings.clone_from_cstring(game.player.pokemon[0].nickname)
+	else do refName = strings.to_pascal_case(reflect.enum_string(game.player.pokemon[0].species))
+
+	refEnemy : string
+	if game.battleStruct == nil do refEnemy = "TRAINER NOT FOUND"
+	else do refEnemy = game.battleStruct.enemyName
+
+	builder : strings.Builder
+
+	refLevel := strings.clone(fmt.sbprintf(&builder,"%v",game.player.pokemon[0].level))
+	strings.builder_reset(&builder)
+	refExperience := strings.clone(fmt.sbprintf(&builder,"%v",total))
+	strings.builder_reset(&builder)
+
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PLAYER_NAME}",	game.eventmanager.playerName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{RIVAL_NAME}",		game.eventmanager.rivalName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PRO_PERSONAL}",	game.eventmanager.playerPronouns[0])
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PRO_OBJECTIVE}",	game.eventmanager.playerPronouns[1])
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PRO_POSSESSIVE}",	game.eventmanager.playerPronouns[2])
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_TRAINER}",	refEnemy)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_NAME}",	refName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_LEVEL}",refLevel)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{EXPERIENCE}",		refExperience)
+
+	delete(refName)
+	//delete(refEnemy)
+	delete(refLevel)
+	delete(refExperience)
+
 	textbox.timer = 0
 	textbox.position = 0
 	textbox.pause = 0
+	textbox.hasChoice = hasChoice
+	textbox.choiceList = choiceList
 }

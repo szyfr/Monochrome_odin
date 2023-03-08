@@ -48,6 +48,7 @@ init :: proc() {
 	jsonFile, jsResult := json.parse(rawFile)
 
 	for obj in jsonFile.(json.Object) {
-		game.localization[obj] = strings.clone_to_cstring(jsonFile.(json.Object)[obj].(string))
+		str := jsonFile.(json.Object)[obj].(string)
+		game.localization[obj] = strings.clone_to_cstring(str)
 	}
 }

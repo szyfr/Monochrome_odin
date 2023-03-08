@@ -42,8 +42,9 @@ update :: proc() {
 				if game.eventmanager.textbox.state == .finished {
 					game.eventmanager.currentChain += 1
 					if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
-						v, ok := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
-						if ok {
+						_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
+						_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
+						if ok1 || ok2 {
 							ui.reset_textbox()
 						} else {
 							ui.close_textbox()
@@ -194,14 +195,6 @@ update :: proc() {
 				} else {
 					game.eventmanager.uses += 1
 					mod := game.eventmanager.uses / curChain.(game.OverlayAnimationEvent).timer
-					fmt.printf(
-						"%v/%v=%vm%v=%v\n",
-						game.eventmanager.uses,
-						curChain.(game.OverlayAnimationEvent).timer,
-						mod,
-						(len(curChain.(game.OverlayAnimationEvent).animation)),
-						mod % (len(curChain.(game.OverlayAnimationEvent).animation)),
-					)
 					game.overlayRectangle = {
 						f32(curChain.(game.OverlayAnimationEvent).animation[mod % (len(curChain.(game.OverlayAnimationEvent).animation))] * 256),
 						0,
@@ -209,6 +202,32 @@ update :: proc() {
 						144,
 					}
 
+				}
+
+			case game.ChoiceEvent:
+				if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
+					str := strings.clone_from_cstring(curChain.(game.ChoiceEvent).text^)
+					ui.open_textbox(str, true, curChain.(game.ChoiceEvent).choices)
+				}
+				if game.eventmanager.textbox.state == .finished {
+					game.eventmanager.currentChain += 1
+					evt, res := game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event]
+					if !res {
+						game.eventmanager.currentChain += 1
+						return
+					}
+
+					game.eventmanager.currentChain = 0
+					game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event]
+					game.eventmanager.textbox.curPosition = 0
+					
+					_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
+					_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
+					if ok1 || ok2 {
+						ui.reset_textbox()
+					} else {
+						ui.close_textbox()
+					}
 				}
 		}
 	}

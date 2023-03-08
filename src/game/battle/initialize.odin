@@ -70,4 +70,6 @@ configure_enemy_battle_entity :: proc(
 	game.battleStruct.enemyPokemonList[2] = &event.pokemonNormal[2]
 	game.battleStruct.enemyPokemonList[3] = &event.pokemonNormal[3]
 	game.battleStruct.enemyPokemon.pokemonInfo	= &event.pokemonNormal[0]
+
+	game.battleStruct.enemyName = event.trainerName
 }
