@@ -66,10 +66,13 @@ EventChain :: union {
 	SetTileEvent,
 	GetPokemonEvent,
 	StartBattleEvent,
+	EndBattleEvent,
 	PlaySoundEvent,
 	PlayMusicEvent,
 	OverlayAnimationEvent,
 	ChoiceEvent,
+	GiveExperience,
+	ShowLevelUp,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -119,6 +122,9 @@ GetPokemonEvent :: struct {
 StartBattleEvent :: struct {
 	id	: string,
 }
+EndBattleEvent :: struct {
+	welp : bool,
+}
 PlaySoundEvent :: struct {
 	name	: string,
 	pitch	: f32,
@@ -143,6 +149,19 @@ ChoiceEvent :: struct {
 Choice :: struct {
 	text	: ^cstring,
 	event	: raylib.Vector2,
+}
+GiveExperience :: struct {
+	amount : int,
+	member : int,
+}
+ShowLevelUp :: struct {
+	level	: int,
+	hp		: int,
+	atk		: int,
+	def		: int,
+	spatk	: int,
+	spdef	: int,
+	spd		: int,
 }
 
 BattleData :: struct {
@@ -271,6 +290,8 @@ BattleStructure :: struct {
 	enemyPokemon	: BattleEntity,
 	enemyPokemonList: [4]^Pokemon,
 	enemyName		: string,
+
+	experience		: int,
 
 	playerHPBar		: raylib.Texture,
 	playerEXPBar	: raylib.Texture,

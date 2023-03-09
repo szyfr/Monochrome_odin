@@ -73,7 +73,9 @@ battleStruct	: ^BattleStructure
 lastBattleOutcome : bool = false
 pokemonData		: json.Array
 
-battleWinEvent	: Event
+battleTrainerWinEvent	: Event
+battleWildWinEvent		: Event
+levelUpDisplay : ^ShowLevelUp
 
 
 //= Procedures

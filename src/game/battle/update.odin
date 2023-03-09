@@ -31,7 +31,7 @@ update :: proc() {
 	pkmn	:=  game.battleStruct.playerPokemon.pokemonInfo
 	
 	//* Player movement
-	if player.canMove {
+	if player.canMove && game.eventmanager.currentEvent == nil {
 		upDown    := settings.is_key_down("up")
 		downDown  := settings.is_key_down("down")
 		leftDown  := settings.is_key_down("left")
@@ -57,7 +57,7 @@ update :: proc() {
 			dir := reflect.enum_string(player.direction)
 			animations.set_animation(&player.standee.animator, strings.concatenate({"walk_", dir}))
 		}
-	} else if player.forcedMove {
+	} else if player.forcedMove && game.eventmanager.currentEvent == nil {
 		player.position += lerp(player.forcedMoveStart, player.forcedMoveTarget, 0.1, {1,0,1})
 	}
 	if player.position.x > ARENA_MAX_X do player.position.x = ARENA_MAX_X
@@ -95,7 +95,7 @@ update :: proc() {
 		if game.battleStruct.playerAttackRot > 360 do game.battleStruct.playerAttackRot = 0
 	}
 
-	if rot == (f32(player.selectedAtk) * interval) {
+	if rot == (f32(player.selectedAtk) * interval) && game.eventmanager.currentEvent == nil {
 		if settings.is_key_down("switch_attack_right") {
 			if player.selectedAtk == count-1 do player.selectedAtk = 0
 			else do player.selectedAtk += 1
@@ -205,14 +205,39 @@ update :: proc() {
 		//experience := ((monsters.get_exp_yield(enemy.pokemonInfo.species) * f32(enemy.pokemonInfo.level)) / 5) * math.pow(((2 * f32(enemy.pokemonInfo.level) + 10) / (f32(enemy.pokemonInfo.level) + f32(player.pokemonInfo.level) + 10)), 2.5) + 1
 		experience := ((monsters.get_exp_yield(enemy.pokemonInfo.species) * f32(enemy.pokemonInfo.level)) / 5)
 		if !enemy.wild do experience = f32(experience) * 1.5
+		game.battleStruct.experience = int(experience)
 		//EXP share
 		//Traded
 		//Lucky Egg
 		//Can evolve by level already
-		monsters.give_experience(player.pokemonInfo, int(experience))
+		
+		if !enemy.wild && game.eventmanager.currentEvent == nil {
+			chn1 := &game.battleTrainerWinEvent.chain[3].(game.GiveExperience)
+			chn2 := &game.battleTrainerWinEvent.chain[4].(game.ShowLevelUp)
+			chn1.amount = int(experience)
+			chn2.level	= player.pokemonInfo.level
+			chn2.hp		= player.pokemonInfo.hpMax
+			chn2.atk	= player.pokemonInfo.atk
+			chn2.def	= player.pokemonInfo.def
+			chn2.spatk	= player.pokemonInfo.spAtk
+			chn2.spdef	= player.pokemonInfo.spDef
+			chn2.spd	= player.pokemonInfo.spd
+			game.eventmanager.currentEvent = &game.battleTrainerWinEvent
+		} else if enemy.wild && game.eventmanager.currentEvent == nil {
+			chn1 := &game.battleWildWinEvent.chain[3].(game.GiveExperience)
+			chn2 := &game.battleWildWinEvent.chain[4].(game.ShowLevelUp)
+			chn1.amount	= int(experience)
+			chn2.level	= player.pokemonInfo.level
+			chn2.hp		= player.pokemonInfo.hpMax
+			chn2.atk	= player.pokemonInfo.atk
+			chn2.def	= player.pokemonInfo.def
+			chn2.spatk	= player.pokemonInfo.spAtk
+			chn2.spdef	= player.pokemonInfo.spDef
+			chn2.spd	= player.pokemonInfo.spd
+			game.eventmanager.currentEvent = &game.battleWildWinEvent
+		}
 		//switch
 		game.lastBattleOutcome = true
-		close()
 		return
 	}
 	if player.pokemonInfo.hpCur <= 0 {

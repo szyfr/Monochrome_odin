@@ -44,7 +44,8 @@ update :: proc() {
 					if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
 						_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
 						_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
-						if ok1 || ok2 {
+						_, ok3 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ShowLevelUp)
+						if ok1 || ok2 || ok3 {
 							ui.reset_textbox()
 						} else {
 							ui.close_textbox()
@@ -170,6 +171,10 @@ update :: proc() {
 				//TODO Run check for if the player doesn't have a pokemon
 				battle.init(&game.battles[curChain.(game.StartBattleEvent).id])
 				game.eventmanager.currentChain += 1
+			
+			case game.EndBattleEvent:
+				battle.close()
+				game.eventmanager.currentChain += 1
 
 			case game.PlaySoundEvent:
 				audio.play_sound(curChain.(game.PlaySoundEvent).name, curChain.(game.PlaySoundEvent).pitch)
@@ -223,9 +228,51 @@ update :: proc() {
 					
 					_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
 					_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
-					if ok1 || ok2 {
+					_, ok3 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ShowLevelUp)
+					if ok1 || ok2 || ok3 {
 						ui.reset_textbox()
 					} else {
+						ui.close_textbox()
+					}
+				}
+			
+			case game.GiveExperience:
+				if game.eventmanager.uses >= curChain.(game.GiveExperience).amount * 3 {
+					game.eventmanager.currentChain += 1
+					break
+				}
+				if game.eventmanager.uses % 3 == 0 && game.eventmanager.uses > 0 {
+					//audio.play_sound("experience") //TODO experience gain noise
+					result := monsters.give_experience(&game.player.pokemon[curChain.(game.GiveExperience).member], 1)
+					if result {
+						chn := &curChain.(game.GiveExperience)
+						chn.amount -= game.eventmanager.uses / 3
+						game.eventmanager.uses = -170
+					}
+				}
+				game.eventmanager.uses += 1
+
+			case game.ShowLevelUp:
+				if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
+					str := strings.clone_from_cstring(game.localization["level_up"])
+					ui.open_textbox(str)
+					game.levelUpDisplay = &curChain.(game.ShowLevelUp)
+				}
+				if game.eventmanager.textbox.state == .finished {
+					game.eventmanager.currentChain += 1
+					if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
+						_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
+						_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
+						_, ok3 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ShowLevelUp)
+						if ok1 || ok2 || ok3 {
+							game.levelUpDisplay = nil
+							ui.reset_textbox()
+						} else {
+							game.levelUpDisplay = nil
+							ui.close_textbox()
+						}
+					} else {
+						game.levelUpDisplay = nil
 						ui.close_textbox()
 					}
 				}

@@ -33,10 +33,13 @@
 	"event_3_2": "Did your mom get\n\nit for you?",
 
 	//* Battle
-	"trainer_battle_win_1":"You've beat {ENEMY_TRAINER}!",
-	"trainer_battle_win_2":"{POKEMON_0_NAME} gained {EXPERIENCE}.!",
+	"trainer_battle_win_1":"You've beaten\n\n{ENEMY_TRAINER}!",
+	"trainer_battle_win_2":"{POKEMON_0_NAME} gained\n\n{EXPERIENCE} experience!",
 
-	"level_up":"{POKEMON_0_NAME} has reached level {POKEMON_0_LEVEL}"
+	"wild_battle_win_1":"Wild {ENEMY_POKEMON_0_NAME}\n\nfainted!",
+	"wild_battle_win_2":"{POKEMON_0_NAME} gained\n\n{EXPERIENCE} experience!",
+
+	"level_up":"{POKEMON_0_NAME} has\n\nreached level {POKEMON_0_LEVEL}"
 
 	// Pokemon
 	"chikorita":"Chikorita",
@@ -64,4 +67,8 @@
 	"ember_desc":"The user spits a hot flame that deals damage and can burn.",
 	"watergun_name":"Water Gun",
 	"watergun_desc":"The user lets out a gush of water dealing damage with high knockback.",
+
+	// Trainers
+	"rival_unnamed":"???",
+	"rival_named":"Rival {RIVAL_NAME}",
 }

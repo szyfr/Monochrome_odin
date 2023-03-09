@@ -8,6 +8,7 @@ import "core:reflect"
 import "core:encoding/json"
 
 import "../../../game"
+import "../../general/audio"
 
 
 //= Procedures
@@ -51,6 +52,8 @@ number_attacks :: proc(
 level_up :: proc(
 	pokemon : ^game.Pokemon,
 ) {
+	audio.play_sound("level_up")
+
 	pokemon.level += 1
 	pokemonData := game.pokemonData[int(pokemon.species)].(json.Array)
 	newHPMax	:= calculate_hp(int(pokemonData[2].(f64)), pokemon.ev[0], pokemon.iv[0], pokemon.level)
@@ -77,10 +80,15 @@ level_up :: proc(
 give_experience :: proc(
 	pokemon : ^game.Pokemon,
 	total : int,
-) {
+) -> bool {
+	val := false
 	pokemon.experience += total
 	for {
-		if pokemon.experience >= exp_needed(pokemon.level) do level_up(pokemon)
-		else do break
+		if pokemon.experience >= exp_needed(pokemon.level) {
+			level_up(pokemon)
+			val = true
+		} else do break
 	}
+
+	return val
 }

@@ -3245,7 +3245,7 @@
 			"conditional":[],
 			"chain": [
 				["text","test_3"],
-				["music","trainer_battle",1],
+				["music","rival_battle",1],
 				["animation",
 					"trainer_battle_2",
 					230,
@@ -3415,7 +3415,7 @@
 	"battles":[
 		{
 			"id":"rival_battle_chikorita",
-			"trainer":"rival",
+			"trainer":"rival_unnamed",
 			"arena":"grass",
 			"mon_normal":[
 				["chikorita",5,"hardy","tackle","growl","leafage","empty"],
@@ -3427,7 +3427,7 @@
 			],
 		}, {
 			"id":"rival_battle_cyndaquil",
-			"trainer":"rival",
+			"trainer":"rival_unnamed",
 			"arena":"grass",
 			"mon_normal":[
 				["cyndaquil",5,"hardy","tackle","leer","ember","empty"],
@@ -3439,7 +3439,7 @@
 			],
 		}, {
 			"id":"rival_battle_totodile",
-			"trainer":"rival",
+			"trainer":"rival_unnamed",
 			"arena":"grass",
 			"mon_normal":[
 				["totodile",5,"hardy","scratch","growl","watergun","empty"],

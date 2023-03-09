@@ -68,6 +68,47 @@ main_draw :: proc() {
 			raylib.WHITE,
 		)
 	}
+	if game.levelUpDisplay != nil {
+		posX := f32(game.screenWidth) / 4
+		posY := f32(game.screenHeight) - (f32(game.screenHeight) / 2)
+		raylib.DrawTextureNPatch(
+			game.box_ui,
+			game.box_ui_npatch,
+			{
+				posX + (f32(game.screenWidth) / 6),
+				posY - (f32(game.screenHeight) / 4),
+				(f32(game.screenWidth) / 2) - (f32(game.screenWidth) / 6),
+				f32(game.screenHeight) / 2},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+		builder : strings.Builder
+		str := fmt.sbprintf(
+			&builder,
+			" Level %v-%v\n\nHP:    %v-%v\nAtk:   %v-%v\nDef:   %v-%v\nSpAtk: %v-%v\nSpDef: %v-%v\nSpd:   %v-%v",
+			game.levelUpDisplay.level, game.player.pokemon[0].level,
+			game.levelUpDisplay.hp, game.player.pokemon[0].hpMax,
+			game.levelUpDisplay.atk, game.player.pokemon[0].atk,
+			game.levelUpDisplay.def, game.player.pokemon[0].def,
+			game.levelUpDisplay.spatk, game.player.pokemon[0].spAtk,
+			game.levelUpDisplay.spdef, game.player.pokemon[0].spDef,
+			game.levelUpDisplay.spd, game.player.pokemon[0].spd,
+		)
+		cstr := strings.clone_to_cstring(str)
+		raylib.DrawTextEx(
+			game.font,
+			cstr,
+			{
+				posX + (f32(game.screenWidth) / 6) + 60,
+				posY - (f32(game.screenHeight) / 4) + 90,
+			},
+			32,
+			5,
+			{56,56,56,255},
+		)
+		delete(cstr)
+	}
 
 	if game.battleStruct != nil do ui.draw_battle()
 
@@ -101,8 +142,8 @@ main_init :: proc() {
 
 	//* Settings / Save / Localization
 	settings.init()
-	events.init()
 	localization.init()
+	events.init()
 
 	//* Raylib
 	raylib.SetTraceLogLevel(.NONE)

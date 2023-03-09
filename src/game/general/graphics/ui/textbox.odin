@@ -66,7 +66,6 @@ draw_textbox :: proc() {
 				)
 			}
 
-			//(texture: Texture2D, source, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color)
 			raylib.DrawTexturePro(
 				game.pointer,
 				{0,0,8,8},
@@ -176,29 +175,38 @@ open_textbox :: proc(
 
 	refEnemy : string
 	if game.battleStruct == nil do refEnemy = "TRAINER NOT FOUND"
-	else do refEnemy = game.battleStruct.enemyName
+	else {
+		refEnemy = strings.clone_from_cstring(game.localization[game.battleStruct.enemyName])
+		fmt.printf("%v\n",game.localization[game.battleStruct.enemyName])
+	}
+	
+
+	refEnemyName : string
+	if game.battleStruct == nil do refEnemyName = "POKEMON NOT FOUND"
+	else do refEnemyName = strings.to_pascal_case(reflect.enum_string(game.battleStruct.enemyPokemonList[0].species))
 
 	builder : strings.Builder
 
 	refLevel := strings.clone(fmt.sbprintf(&builder,"%v",game.player.pokemon[0].level))
 	strings.builder_reset(&builder)
-	refExperience := strings.clone(fmt.sbprintf(&builder,"%v",total))
-	strings.builder_reset(&builder)
 
+	refExperience : string
+	if game.battleStruct == nil do refExperience = "0"
+	else do refExperience = fmt.sbprintf(&builder,"%v",game.battleStruct.experience)
+	
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_TRAINER}",	refEnemy)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_POKEMON_0_NAME}",	refName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_NAME}",	refName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_LEVEL}",refLevel)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{EXPERIENCE}",		refExperience)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PLAYER_NAME}",	game.eventmanager.playerName)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{RIVAL_NAME}",		game.eventmanager.rivalName)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PRO_PERSONAL}",	game.eventmanager.playerPronouns[0])
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PRO_OBJECTIVE}",	game.eventmanager.playerPronouns[1])
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PRO_POSSESSIVE}",	game.eventmanager.playerPronouns[2])
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_TRAINER}",	refEnemy)
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_NAME}",	refName)
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_LEVEL}",refLevel)
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{EXPERIENCE}",		refExperience)
 
 	delete(refName)
-	//delete(refEnemy)
 	delete(refLevel)
-	delete(refExperience)
 
 	textbox.timer = 0
 	textbox.position = 0
