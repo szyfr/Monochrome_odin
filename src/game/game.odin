@@ -64,6 +64,7 @@ tilesMaterial	:  raylib.Material
 tilesTexture	:  [8]raylib.Texture
 
 tiles			:  map[string]raylib.Model
+attackModels	:  map[string]raylib.Model
 region			: ^Region
 emoteList		: [dynamic]EmoteStruct
 localization	:  map[string]cstring

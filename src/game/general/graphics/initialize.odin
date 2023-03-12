@@ -43,6 +43,17 @@ init :: proc() {
 		game.pokemonSprites[pk] = raylib.LoadTexture(strings.clone_to_cstring(strings.concatenate({"data/sprites/pokemon/pk_",str,".png"})))
 	}
 
+	count : i32 = 0
+	directories := raylib.GetDirectoryFiles("data/attacks", &count)
+	//for i in directories {
+	for i:=2;i<int(count);i+=1 {
+		strLoc := strings.clone_from_cstring(directories[i])
+		strName, _ := strings.remove_all(strLoc,".obj")
+		strName, _ = strings.remove_all(strName,"atk_")
+		fmt.printf("%v:%v\n",strLoc,strName)
+		game.attackModels[strName] = raylib.LoadModel(strings.clone_to_cstring(strings.concatenate({"data/attacks/",strLoc})))
+	}
+
 	game.emotes	= raylib.LoadTexture("data/sprites/spr_emotes.png")
 
 	trgTex	:= raylib.LoadTexture("data/sprites/spr_targeter.png")

@@ -129,6 +129,8 @@ update :: proc() {
 						player.pokemonInfo.attacks[player.selectedAtk].cooldown = 100
 
 						ent : game.AttackFollow = {
+							"tackle",
+
 							player,
 							player.bounds,
 

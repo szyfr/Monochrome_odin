@@ -328,6 +328,7 @@ AttackEntity :: union {
 	AttackFollow,
 }
 AttackFollow :: struct {
+	attackModel : string,
 	target	: ^BattleEntity,
 	bounds	: raylib.BoundingBox,
 

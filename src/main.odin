@@ -146,7 +146,7 @@ main_init :: proc() {
 	events.init()
 
 	//* Raylib
-	raylib.SetTraceLogLevel(.NONE)
+	//raylib.SetTraceLogLevel(.NONE)
 	raylib.InitWindow(
 		game.screenWidth,
 		game.screenHeight,

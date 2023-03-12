@@ -39,7 +39,7 @@ draw :: proc() {
 		overlay := &game.attackOverlays[player.pokemonInfo.attacks[player.selectedAtk].type]
 		switch in overlay {
 			case game.AttackOverlayGeneral:
-				rot		:= -math.atan2(
+				rot	:= -math.atan2(
 					(game.battleStruct.playerTarget.z - 1) - player.position.z,
 					(game.battleStruct.playerTarget.x - 0.5) - player.position.x,
 				) * (180 / math.PI)
@@ -82,10 +82,33 @@ draw :: proc() {
 		standee.draw(enemy.standee)
 	}
 
+	//* 
 	for i in game.battleStruct.attackEntities {
 		switch in i {
 			case game.AttackFollow:
 				raylib.DrawBoundingBox(i.(game.AttackFollow).bounds, raylib.RED)
+				//game.attackModels[i.(game.AttackFollow).attackModel].transform = 
+				position : raylib.Vector3
+				rot : f32
+				if i.(game.AttackFollow).player {
+					position = player.position
+					rot	= -math.atan2(
+						(player.forcedMoveTarget.z - 1) - player.position.z,
+						(player.forcedMoveTarget.x - 0.5) - player.position.x,
+					) * (180 / math.PI)
+					if rot < 0
+				} else {
+					position = enemy.position
+				}
+				fmt.printf("%v\n",game.attackModels[i.(game.AttackFollow).attackModel])
+				raylib.DrawModelEx(
+					game.attackModels[i.(game.AttackFollow).attackModel],
+					position + {0.5,0.03,1},
+					{0,1,0},
+					rot,
+					{1,1,1},
+					raylib.WHITE,
+				)
 		}
 	}
 }

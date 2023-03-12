@@ -175,10 +175,7 @@ open_textbox :: proc(
 
 	refEnemy : string
 	if game.battleStruct == nil do refEnemy = "TRAINER NOT FOUND"
-	else {
-		refEnemy = strings.clone_from_cstring(game.localization[game.battleStruct.enemyName])
-		fmt.printf("%v\n",game.localization[game.battleStruct.enemyName])
-	}
+	else do refEnemy = strings.clone_from_cstring(game.localization[game.battleStruct.enemyName])
 	
 
 	refEnemyName : string
