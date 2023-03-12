@@ -269,6 +269,8 @@ Pokemon :: struct {
 	spAtk	: int,
 	spDef	: int,
 	spd		: int,
+	
+	statChanges : [6]int,
 
 	size	: Size,
 
@@ -331,10 +333,13 @@ AttackFollow :: struct {
 	attackModel : string,
 	target	: ^BattleEntity,
 	bounds	: raylib.BoundingBox,
+	boundsSize : raylib.Vector3,
+	sphere: bool,
 
 	attackType		: AttackType,
 	elementalType	: ElementalType,
 	power			: f32,
+	effects			: [dynamic]AttackEffect,
 
 	life	: int,
 	user	: ^Pokemon,
@@ -431,6 +436,30 @@ ElementalType :: enum {
 	water,
 	fire,
 	grass,
+}
+
+AttackEffect :: enum {
+	atkDown_enemy,
+	atkDown_self,
+	defDown_enemy,
+	defDown_self,
+	spatkDown_enemy,
+	spatkDown_self,
+	spdefDown_enemy,
+	spdefDown_self,
+	spdDown_enemy,
+	spdDown_self,
+	
+	atkUp_enemy,
+	atkUp_self,
+	defUp_enemy,
+	defUp_self,
+	spatkUp_enemy,
+	spatkUp_self,
+	spdefUp_enemy,
+	spdefUp_self,
+	spdUp_enemy,
+	spdUp_self,
 }
 
 Size :: enum {

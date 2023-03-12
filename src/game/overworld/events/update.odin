@@ -25,6 +25,7 @@ update :: proc() {
 		if game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain) {
 			game.eventmanager.currentEvent = nil
 			game.eventmanager.currentChain = 0
+			game.eventmanager.uses = 0
 			game.player.canMove = true
 			return
 		}
@@ -188,6 +189,7 @@ update :: proc() {
 				if game.eventmanager.uses == 0 {
 					game.overlayTexture = curChain.(game.OverlayAnimationEvent).texture
 					game.overlayActive	= true
+					fmt.printf("%v\n",curChain)
 				}
 				if game.eventmanager.uses >= curChain.(game.OverlayAnimationEvent).length {
 					game.eventmanager.uses = 0
@@ -196,6 +198,7 @@ update :: proc() {
 					if !curChain.(game.OverlayAnimationEvent).stay {
 						game.overlayTexture = {}
 						game.overlayActive = false
+						game.overlayRectangle = {}
 					}
 				} else {
 					game.eventmanager.uses += 1

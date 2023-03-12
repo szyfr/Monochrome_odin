@@ -16,6 +16,7 @@ import "../../game/overworld/standee"
 import "../../game/battle/monsters"
 import "../../game/general/settings"
 import "../../game/general/graphics/animations"
+import "attacks"
 
 
 //= Constants
@@ -107,45 +108,9 @@ update :: proc() {
 			player.forcedMove	= false
 			if settings.is_key_pressed("attack") && player.pokemonInfo.attacks[player.selectedAtk].cooldown <= 0 {
 				#partial switch player.pokemonInfo.attacks[player.selectedAtk].type {
-					case .tackle:
-						player.canMove = false
-						player.timer = 15
-
-						player.forcedMove		= true
-						player.forcedMoveTarget	= game.battleStruct.playerTarget
-						player.forcedMoveStart	= player.position + {0.5,0.02,1}
-
-						angle : f32 = -math.atan2(
-							(player.forcedMoveTarget.z - 1) - player.forcedMoveStart.z,
-							(player.forcedMoveTarget.x - 0.5) - player.forcedMoveStart.x,
-						) * (180 / math.PI)
-						if angle <=  120 && angle >   60 do player.direction = .up
-						if angle <=   60 && angle >  -60 do player.direction = .right
-						if angle <=  -60 && angle > -120 do player.direction = .down
-						if (angle <= -120 && angle > -180) || (angle <= 180 && angle > 120) do player.direction = .left
-						dir := reflect.enum_string(player.direction)
-						animations.set_animation(&player.standee.animator, strings.concatenate({"walk_", dir}))
-
-						player.pokemonInfo.attacks[player.selectedAtk].cooldown = 100
-
-						ent : game.AttackFollow = {
-							"tackle",
-
-							player,
-							player.bounds,
-
-							.physical,
-							.normal,
-							40,
-
-							15,
-							player.pokemonInfo,
-							true,
-						}
-						append(&game.battleStruct.attackEntities, ent)
-	
+					case .tackle:		attacks.use_tackle(player,enemy,true)
 					case .scratch:
-					case .growl:
+					case .growl:		attacks.use_growl(player,enemy,true)
 					case .leer:
 					case .leafage:
 					case .ember:
@@ -177,24 +142,40 @@ update :: proc() {
 				}
 				//* Enemy
 				if raylib.CheckCollisionBoxes(enemy.bounds, get_bounds(&game.battleStruct.attackEntities[i])) && follow.player {
-					enemy.canMove			= false
-					enemy.timer				= 20
-					enemy.forcedMove		= true
-					enemy.forcedMoveStart	= enemy.position
-					enemy.forcedMoveTarget	= enemy.position + (enemy.position - follow.target.position)
-					
 					damage : f32
 					switch follow.attackType {
 						case .physical:
 							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.pokemonInfo.def))) / 50) + 2)
 							if	follow.elementalType == follow.user.elementalType1 || follow.elementalType == follow.user.elementalType2 do damage *= 1.5
+
+							fmt.printf("Enemy hit for %v damage\n", damage)
+
+							enemy.canMove			= false
+							enemy.timer				= 20
+							enemy.forcedMove		= true
+							enemy.forcedMoveStart	= enemy.position
+							enemy.forcedMoveTarget	= enemy.position + (enemy.position - follow.target.position)
 						case .special:
+
+							fmt.printf("Enemy hit for %v damage\n", damage)
+
+							enemy.canMove			= false
+							enemy.timer				= 20
+							enemy.forcedMove		= true
+							enemy.forcedMoveStart	= enemy.position
+							enemy.forcedMoveTarget	= enemy.position + (enemy.position - follow.target.position)
 						case .other:
+							enemy.timer				= 20
+							for i in follow.effects {
+								#partial switch i {
+									case .atkDown_enemy: enemy.pokemonInfo.statChanges[1] -= 1
+									case .atkDown_self: player.pokemonInfo.statChanges[1] -= 1
+								}
+							}
 					}
 					
 					damage = math.ceil(damage)
 					enemy.pokemonInfo.hpCur -= int(damage)
-					fmt.printf("Enemy hit for %v damage\n", damage)
 				}
 		} 
 		
@@ -284,7 +265,19 @@ update_bounds_attack_entity :: proc(
 	#partial switch in ent {
 		case game.AttackFollow:
 			follow := &ent.(game.AttackFollow)
-			follow.bounds = get_bounds_battle_entity(follow.target)
+			position := ent.(game.AttackFollow).target.position + {0.5,0.03,0.5}
+			follow.bounds = {
+				{
+					position.x - ent.(game.AttackFollow).boundsSize.x/2,
+					position.y - ent.(game.AttackFollow).boundsSize.y/2,
+					position.z - ent.(game.AttackFollow).boundsSize.z/2,
+				},
+				{
+					position.x + ent.(game.AttackFollow).boundsSize.x/2,
+					position.y + ent.(game.AttackFollow).boundsSize.y/2,
+					position.z + ent.(game.AttackFollow).boundsSize.z/2,
+				},
+			}
 	}
 }
 
@@ -331,7 +324,20 @@ get_bounds_attack_entity :: proc(
 	bounds : raylib.BoundingBox
 	#partial switch in ent {
 		case game.AttackFollow:
-			bounds = ent.(game.AttackFollow).bounds
+			position := ent.(game.AttackFollow).target.position + {0.5,0.03,1}
+			bounds = {
+				{
+					position.x - ent.(game.AttackFollow).boundsSize.x/2,
+					position.y - ent.(game.AttackFollow).boundsSize.y/2,
+					position.z - ent.(game.AttackFollow).boundsSize.z/2,
+				},
+				{
+					position.x + ent.(game.AttackFollow).boundsSize.x/2,
+					position.y + ent.(game.AttackFollow).boundsSize.y/2,
+					position.z + ent.(game.AttackFollow).boundsSize.z/2,
+				},
+			}
+			//bounds = ent.(game.AttackFollow).bounds
 	}
 	return bounds
 }

@@ -59,26 +59,26 @@ draw :: proc() {
 		enemy.standee.position[3,0] = enemy.position.x + 0.5
 		enemy.standee.position[3,1] = enemy.position.y + 1.0
 		enemy.standee.position[3,2] = enemy.position.z + 0.5
-		raylib.DrawBoundingBox(enemy.bounds, raylib.PURPLE)
+		//raylib.DrawBoundingBox(enemy.bounds, raylib.PURPLE)
 		standee.draw(enemy.standee)
 
 		player.standee.position[3,0] = player.position.x + 0.5
 		player.standee.position[3,1] = player.position.y + 1.0
 		player.standee.position[3,2] = player.position.z + 0.5
-		raylib.DrawBoundingBox(player.bounds, raylib.PURPLE)
+		//raylib.DrawBoundingBox(player.bounds, raylib.PURPLE)
 		standee.draw(player.standee)
 	}
 	if player.position.z < enemy.position.z {
 		player.standee.position[3,0] = player.position.x + 0.5
 		player.standee.position[3,1] = player.position.y + 1.0
 		player.standee.position[3,2] = player.position.z + 0.5
-		raylib.DrawBoundingBox(player.bounds, raylib.PURPLE)
+		//raylib.DrawBoundingBox(player.bounds, raylib.PURPLE)
 		standee.draw(player.standee)
 
 		enemy.standee.position[3,0] = enemy.position.x + 0.5
 		enemy.standee.position[3,1] = enemy.position.y + 1.0
 		enemy.standee.position[3,2] = enemy.position.z + 0.5
-		raylib.DrawBoundingBox(enemy.bounds, raylib.PURPLE)
+		//raylib.DrawBoundingBox(enemy.bounds, raylib.PURPLE)
 		standee.draw(enemy.standee)
 	}
 
@@ -96,14 +96,13 @@ draw :: proc() {
 						(player.forcedMoveTarget.z - 1) - player.position.z,
 						(player.forcedMoveTarget.x - 0.5) - player.position.x,
 					) * (180 / math.PI)
-					if rot < 0
+					//if rot < 0
 				} else {
 					position = enemy.position
 				}
-				fmt.printf("%v\n",game.attackModels[i.(game.AttackFollow).attackModel])
 				raylib.DrawModelEx(
 					game.attackModels[i.(game.AttackFollow).attackModel],
-					position + {0.5,0.03,1},
+					position + {0.5,0.03,0.5},
 					{0,1,0},
 					rot,
 					{1,1,1},

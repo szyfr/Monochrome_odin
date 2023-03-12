@@ -45,9 +45,10 @@ init :: proc() {
 
 	count : i32 = 0
 	directories := raylib.GetDirectoryFiles("data/attacks", &count)
-	//for i in directories {
 	for i:=2;i<int(count);i+=1 {
 		strLoc := strings.clone_from_cstring(directories[i])
+		result := strings.contains(strLoc,".obj")
+		if !result do continue
 		strName, _ := strings.remove_all(strLoc,".obj")
 		strName, _ = strings.remove_all(strName,"atk_")
 		fmt.printf("%v:%v\n",strLoc,strName)

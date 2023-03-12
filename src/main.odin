@@ -40,7 +40,7 @@ main_logic :: proc() {
 	raylib.UpdateMusicStream(game.audio.musicCurrent)
 
 	if settings.is_key_pressed("debug") {
-		fmt.printf("%v\n",raylib.GetMusicTimePlayed(game.audio.musicCurrent))
+		fmt.printf("%v\n",game.battleStruct.enemyPokemon.pokemonInfo)
 	}
 }
 
@@ -146,7 +146,7 @@ main_init :: proc() {
 	events.init()
 
 	//* Raylib
-	//raylib.SetTraceLogLevel(.NONE)
+	raylib.SetTraceLogLevel(.NONE)
 	raylib.InitWindow(
 		game.screenWidth,
 		game.screenHeight,
