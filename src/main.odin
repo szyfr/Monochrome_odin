@@ -40,7 +40,7 @@ main_logic :: proc() {
 	raylib.UpdateMusicStream(game.audio.musicCurrent)
 
 	if settings.is_key_pressed("debug") {
-		fmt.printf("%v\n",game.battleStruct.enemyPokemon.pokemonInfo)
+		fmt.printf("%v\n",game.battleStruct.playerPokemon)
 	}
 }
 

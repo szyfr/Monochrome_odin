@@ -19,7 +19,7 @@ use_tackle :: proc(
 	player.timer = 15
 
 	player.forcedMove		= true
-	player.forcedMoveTarget	= game.battleStruct.playerTarget
+	player.forcedMoveTarget	= player.target
 	player.forcedMoveStart	= player.position + {0.5,0.02,1}
 
 	angle : f32 = -math.atan2(

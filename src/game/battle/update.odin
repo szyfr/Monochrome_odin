@@ -14,6 +14,7 @@ import "../../game"
 import "../../game/general/camera"
 import "../../game/overworld/standee"
 import "../../game/battle/monsters"
+import "../../game/battle/enemy_ai"
 import "../../game/general/settings"
 import "../../game/general/graphics/animations"
 import "attacks"
@@ -66,7 +67,10 @@ update :: proc() {
 	if player.position.z > ARENA_MAX_Z do player.position.z = ARENA_MAX_Z
 	if player.position.z < ARENA_MIN_Z do player.position.z = ARENA_MIN_Z
 
-	//* Enemy movement
+	//* Enemy
+	if game.eventmanager.currentEvent == nil {
+		enemy_ai.run_ai()
+	}
 	if enemy.forcedMove {
 		enemy.position += lerp(enemy.forcedMoveStart, enemy.forcedMoveTarget, 0.1, {1,0,1})
 	}
@@ -138,7 +142,40 @@ update :: proc() {
 				follow := &game.battleStruct.attackEntities[i].(game.AttackFollow)
 				//* Player
 				if raylib.CheckCollisionBoxes(player.bounds, get_bounds(&game.battleStruct.attackEntities[i])) && !follow.player {
-					fmt.printf("player hit by enemy\n")
+					damage : f32
+					switch follow.attackType {
+						case .physical:
+							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.pokemonInfo.def))) / 50) + 2)
+							if	follow.elementalType == follow.user.elementalType1 || follow.elementalType == follow.user.elementalType2 do damage *= 1.5
+
+							fmt.printf("Player hit for %v damage\n", damage)
+
+							player.canMove			= false
+							player.timer			= 20
+							player.forcedMove		= true
+							player.forcedMoveStart	= player.position
+							player.forcedMoveTarget	= player.position + (player.position - follow.target.position)
+						case .special:
+
+							fmt.printf("Player hit for %v damage\n", damage)
+
+							player.canMove			= false
+							player.timer				= 20
+							player.forcedMove		= true
+							player.forcedMoveStart	= player.position
+							player.forcedMoveTarget	= player.position + (player.position - follow.target.position)
+						case .other:
+							enemy.timer				= 20
+							for i in follow.effects {
+								#partial switch i {
+									case .atkDown_enemy: player.pokemonInfo.statChanges[1] -= 1
+									case .atkDown_self: enemy.pokemonInfo.statChanges[1] -= 1
+								}
+							}
+					}
+					
+					damage = math.ceil(damage)
+					player.pokemonInfo.hpCur -= int(damage)
 				}
 				//* Enemy
 				if raylib.CheckCollisionBoxes(enemy.bounds, get_bounds(&game.battleStruct.attackEntities[i])) && follow.player {

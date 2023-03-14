@@ -22,7 +22,7 @@ draw :: proc() {
 	//* Targeter
 	ray := raylib.GetMouseRay(raylib.GetMousePosition(), game.camera)
 	col := raylib.GetRayCollisionBox(ray, {{8,0,56}, {24,0,64}})
-	game.battleStruct.playerTarget = col.point
+	player.target = col.point
 	color := raylib.WHITE
 	if !col.hit {
 		color = {0,0,0,64}
@@ -40,8 +40,8 @@ draw :: proc() {
 		switch in overlay {
 			case game.AttackOverlayGeneral:
 				rot	:= -math.atan2(
-					(game.battleStruct.playerTarget.z - 1) - player.position.z,
-					(game.battleStruct.playerTarget.x - 0.5) - player.position.x,
+					(player.target.z - 1) - player.position.z,
+					(player.target.x - 0.5) - player.position.x,
 				) * (180 / math.PI)
 				raylib.DrawModelEx(
 					overlay.(game.AttackOverlayGeneral).model,

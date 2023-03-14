@@ -302,9 +302,6 @@ BattleStructure :: struct {
 	rotationDirect	: bool,
 
 	attackEntities	: [dynamic]AttackEntity,
-
-	playerTarget	: raylib.Vector3,
-	enemyTarget		: raylib.Vector3,
 }
 BattleEntity :: struct {
 	position	: raylib.Vector3,
@@ -315,6 +312,8 @@ BattleEntity :: struct {
 	bounds		: raylib.BoundingBox,
 	selectedAtk	: int,
 
+	enemyAi		: AIType,
+
 	wild		: bool,
 
 	forcedMove			: bool,
@@ -324,6 +323,8 @@ BattleEntity :: struct {
 	standee		: ^Standee,
 
 	pokemonInfo	: ^Pokemon,
+
+	target	: raylib.Vector3,
 }
 
 AttackEntity :: union {
@@ -460,6 +461,10 @@ AttackEffect :: enum {
 	spdefUp_self,
 	spdUp_enemy,
 	spdUp_self,
+}
+
+AIType :: enum {
+	physical_close_range,
 }
 
 Size :: enum {
