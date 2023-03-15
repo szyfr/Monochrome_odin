@@ -12,6 +12,31 @@
 	"yes":"Yes",
 	"no":"No",
 
+	//* Events
+	// Mom
+	"mom_event_1":"Oh, {PLAYER_NAME}...! Our\n\nneighbor, Prof. Elm,",
+	"mom_event_2":"was looking for you.",
+	"mom_event_3":"He said he wanted you\n\nto do something for him.",
+	"mom_event_4":"Oh! I almost forgot!\n\nYour Pokemon Gear",
+	"mom_event_5":"is back from\n\nthe repair shop.",
+	"mom_event_6":"Here you go!",
+	"mom_event_7":"Pokemon Gear, or just\n\nPokeGear.",
+	"mom_event_8":"It's essential if\n\nyou want to be a",
+	"mom_event_9":"good trainer.",
+	"mom_event_10":"By the way, do you\n\nknow how to use",
+	"mom_event_11":"the phone?",
+	"mom_event_12_yes":"Don't you just turn\n\nthe PokeGear on and",
+	"mom_event_13_yes":"select the phone icon?",
+	"mom_event_14_no":"I'll read the\n\ninstructions.",
+	"mom_event_15_no":"Turn the PokeGear\n\non and select the",
+	"mom_event_16_no":"phone icon.",
+	"mom_event_17":"Phone number are stored\n\nin -the balls- memory.",
+	"mom_event_18":"Just choose a name\n\nyou want to call.",
+	"mom_event_19":"Gee, isn't that\n\nconvenient?",
+
+	"mom_talk_1":"Prof. Elm is waiting\n\nfor you.",
+	"mom_talk_2":"Hurry up, baby!",
+
 	"test_0": "Man, isn't technology\n\namazing?!",
 	"test_1": "Elm Laboratory",
 	"test_2": "Specializing in\n\nPokethology",

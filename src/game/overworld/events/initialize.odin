@@ -31,6 +31,7 @@ init :: proc() {
 
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
+	game.eventmanager.eventVariables["talked_mom_1"] = false
 
 	game.eventmanager.playerName = "TEST"
 	game.eventmanager.playerPronouns[0] = "they"
