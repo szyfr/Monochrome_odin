@@ -73,6 +73,7 @@ EventChain :: union {
 	ChoiceEvent,
 	GiveExperience,
 	ShowLevelUp,
+	SkipEvent,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -148,7 +149,7 @@ ChoiceEvent :: struct {
 }
 Choice :: struct {
 	text	: ^cstring,
-	event	: raylib.Vector2,
+	event	: union{ int, raylib.Vector2 },
 }
 GiveExperience :: struct {
 	amount : int,
@@ -162,6 +163,9 @@ ShowLevelUp :: struct {
 	spatk	: int,
 	spdef	: int,
 	spd		: int,
+}
+SkipEvent :: struct {
+	event : int,
 }
 
 BattleData :: struct {

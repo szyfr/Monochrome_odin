@@ -3379,13 +3379,44 @@
 				["warp","player",[ 8,6 ],true,"up"],
 			]
 		}, 
-		{ // Talk to mom
+		// Mom
+		{ // Default talk
 			"location": [ 0,3 ],
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["text","mom_talk_1"],
-				["text","mom_talk_2"],
+				["text","newbarktown_mom_talk1_1"],
+				["turn","mom_1","left"]
+			]
+		},{ // Game start event
+			"location": [ 24,40 ],
+			"type":"trigger",
+			"conditional":["talked_mom_1",false],
+			"chain": [
+				["emote","ent_1","shocked",1.0],
+				["move","mom_1","right",2,true],
+				["move","mom_1","up",1,true],
+				["choice","newbarktown_mom_event1_1",[2,["yes","no"],[3,6]]]
+				["text","newbarktown_mom_event1_good_1"],
+				["text","newbarktown_mom_event1_good_2"],
+				["skip",8],
+				["text","newbarktown_mom_event1_bad_1"],
+				["text","newbarktown_mom_event1_bad_2"],
+				["text","newbarktown_mom_event1_2"],
+				["text","newbarktown_mom_event1_3"],
+				["text","newbarktown_mom_event1_4"],
+				["turn","mom_1","left"]
+				["text","newbarktown_mom_event1_5"],
+				["text","newbarktown_mom_event1_6"],
+				["text","newbarktown_mom_event1_7"],
+				["text","newbarktown_mom_event1_8"],
+				["text","newbarktown_mom_event1_9"],
+				["turn","mom_1","up"]
+				["text","newbarktown_mom_event1_10"],
+				["text","newbarktown_mom_event1_11"],
+				["move","mom_1","down",1,true],
+				["move","mom_1","left",2,true],
+				["setcon","talked_mom_1",true],
 			]
 		},
 		{ // Talking to silver
@@ -3450,56 +3481,6 @@
 				["emote","player","sad",1.5],
 				["text","event_1_1"],
 				["move","player","right",1,true],
-			]
-		},
-		{ // Talking to mom
-			"location": [ 24,40 ],
-			"type":"trigger",
-			"conditional":["talked_mom_1",false],
-			"chain": [
-				["emote","mom_1","shocked",1.5],
-				["move","mom_1","right",2,true],
-				["move","mom_1","up",1,true],
-				["text","mom_event_1"],
-				["text","mom_event_2"],
-				["text","mom_event_3"],
-				["text","mom_event_4"],
-				["text","mom_event_5"],
-				["text","mom_event_6"],
-				["text","mom_event_7"],
-				["text","mom_event_8"],
-				["text","mom_event_9"],
-				["text","mom_event_10"],
-				["choice","mom_event_11",[2,["yes","no"],[[0,4],[0,5]]]]
-			]
-		}, { // Yes
-			"location": [ 0,4 ],
-			"type":"trigger",
-			"conditional":[],
-			"chain": [
-				["text","mom_event_12_yes"],
-				["text","mom_event_13_yes"],
-				["text","mom_event_17"],
-				["text","mom_event_18"],
-				["text","mom_event_19"],
-				["move","mom_1","down",1,true],
-				["move","mom_1","left",2,true],
-				["setcon","talked_mom_1",true],
-			]
-		}, { // No
-			"location": [ 0,5 ],
-			"type":"trigger",
-			"conditional":[],
-			"chain": [
-				["text","mom_event_14_no"],
-				["text","mom_event_15_no"],
-				["text","mom_event_16_no"],
-				["text","mom_event_17"],
-				["text","mom_event_18"],
-				["text","mom_event_19"],
-				["move","mom_1","down",1,true],
-				["move","mom_1","left",2,true],
-				["setcon","talked_mom_1",true],
 			]
 		},
 

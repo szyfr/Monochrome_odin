@@ -220,12 +220,19 @@ init :: proc(
 							for o:=0;o<int(chain[i].(json.Array)[2].(json.Array)[0].(f64));o+=1 {
 								array1 := chain[i].(json.Array)[2].(json.Array)[1].(json.Array)
 								array2 := chain[i].(json.Array)[2].(json.Array)[2].(json.Array)
+								ev : union{ int, raylib.Vector2 }
+								#partial switch in array2[o] {
+									case (json.Array):
+										ev = raylib.Vector2{
+											f32(array2[o].(json.Array)[0].(f64)),
+											f32(array2[o].(json.Array)[1].(f64)),
+										}
+									case (f64):
+										ev = int(array2[o].(f64))
+								}
 								choice : game.Choice = {
 									text	= &game.localization[array1[o].(string)],
-									event	= {
-										f32(array2[o].(json.Array)[0].(f64)),
-										f32(array2[o].(json.Array)[1].(f64)),
-									},
+									event	= ev,
 								}
 								append(&choiceList, choice)
 							}
@@ -233,6 +240,12 @@ init :: proc(
 								text	= &game.localization[chain[i].(json.Array)[1].(string)],
 								choices	= choiceList,
 							}
+
+						case "skip":
+							chn = game.SkipEvent{
+								event	= int(chain[i].(json.Array)[1].(f64)),
+							}
+
 					}
 					append(&evt.chain, chn)
 				}

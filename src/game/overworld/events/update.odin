@@ -219,14 +219,21 @@ update :: proc() {
 				}
 				if game.eventmanager.textbox.state == .finished {
 					game.eventmanager.currentChain += 1
-					evt, res := game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event]
-					if !res {
-						game.eventmanager.currentChain += 1
-						return
+					evt := curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event
+					#partial switch in evt {
+						case (raylib.Vector2):
+							evnt, res := game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
+							if !res {
+								game.eventmanager.currentChain += 1
+								return
+							}
+							game.eventmanager.currentChain = 0
+							game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
+						case (int):
+							fmt.printf("%v:%v\n",game.eventmanager.currentChain,evt.(int))
+							game.eventmanager.currentChain = evt.(int)
 					}
 
-					game.eventmanager.currentChain = 0
-					game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event]
 					game.eventmanager.textbox.curPosition = 0
 					
 					_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
@@ -279,6 +286,9 @@ update :: proc() {
 						ui.close_textbox()
 					}
 				}
+
+			case game.SkipEvent:
+				game.eventmanager.currentChain = game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.SkipEvent).event
 		}
 	}
 }

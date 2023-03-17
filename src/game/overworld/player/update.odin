@@ -29,7 +29,9 @@ update :: proc() {
 
 		//* Check if event is a trigger
 		if eventPosition in game.region.events {
-			if !game.region.events[eventPosition].interactable {
+			event := game.region.events[eventPosition]
+			visible, result := game.eventmanager.eventVariables[event.visibleVar]
+			if !event.interactable && (visible == event.visible || !result) {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[eventPosition]
 				return

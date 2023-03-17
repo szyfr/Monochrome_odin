@@ -9,11 +9,39 @@
 	"options": "Options",
 	"quit": "Quit",
 
-	"yes":"Yes",
-	"no":"No",
 
 	//* Events
+	//= Responses
+	"yes":"Yes",
+	"no":"No",
+	"good":"Good",
+	"bad":"Bad",
+
+	//= New Bark Town
 	// Mom
+	// Talk
+	"newbarktown_mom_talk1_1":"Hope you have a good\nday, sweetheart.",
+
+	// Game beginning event
+	"newbarktown_mom_event1_1":"Goodmorning sweetheart.\nYou have a good\nnight sleep?",
+	"newbarktown_mom_event1_good_1":"That's good to hear.",
+	"newbarktown_mom_event1_good_2":"I'd offer you breakfast,\nbut I have something\nimportant to tell you!",
+	"newbarktown_mom_event1_bad_1":"Aww, that's sad to hear.\nBad dreams?",
+	"newbarktown_mom_event1_bad_2":"Well, I have some news\nthat'll make you feel a lot\nbetter!",
+	"newbarktown_mom_event1_2":"Ready?",
+	"newbarktown_mom_event1_3":"Professor Elm called,\nyou got accepted into\nthe League Program!",
+	"newbarktown_mom_event1_4":"Isn't that exciting!\nYou'll get your own\npartner and everything!",
+	"newbarktown_mom_event1_5":"Oh, I remember when I\nchallenged the league\nmyself.",
+	"newbarktown_mom_event1_6":"But that was a lifetime\nago and I never managed to\nfinish it,",
+	"newbarktown_mom_event1_7":"but it was certainly\nan adventure.",
+	"newbarktown_mom_event1_8":"That was before the\nRegional Government changed\nthe rules, though.",
+	"newbarktown_mom_event1_9":"Not much we can do\nabout that, though.",
+	"newbarktown_mom_event1_10":"But enough of your old\nmother's ramblings.",
+	"newbarktown_mom_event1_11":"You should get going,\ndon't want to be late.",
+	//"newbarktown_mom_event1_":"",
+	//"newbarktown_mom_event1_":"",
+
+
 	"mom_event_1":"Oh, {PLAYER_NAME}...! Our\n\nneighbor, Prof. Elm,",
 	"mom_event_2":"was looking for you.",
 	"mom_event_3":"He said he wanted you\n\nto do something for him.",
