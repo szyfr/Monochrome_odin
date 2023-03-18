@@ -3393,13 +3393,13 @@
 			"type":"trigger",
 			"conditional":["talked_mom_1",false],
 			"chain": [
-				["emote","ent_1","shocked",1.0],
+				["emote","mom_1","shocked",1.0],
 				["move","mom_1","right",2,true],
 				["move","mom_1","up",1,true],
-				["choice","newbarktown_mom_event1_1",[2,["yes","no"],[3,6]]]
+				["choice","newbarktown_mom_event1_1",[2,["yes","no"],[4,7]]]
 				["text","newbarktown_mom_event1_good_1"],
 				["text","newbarktown_mom_event1_good_2"],
-				["skip",8],
+				["skip",9],
 				["text","newbarktown_mom_event1_bad_1"],
 				["text","newbarktown_mom_event1_bad_2"],
 				["text","newbarktown_mom_event1_2"],

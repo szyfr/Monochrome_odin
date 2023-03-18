@@ -121,6 +121,10 @@ update :: proc() {
 					strc : game.EmoteStruct = {
 						src			= src,
 						dest		= dest,
+						charPos		= {
+							emotingEnt.position.x,
+							emotingEnt.position.z,
+						},
 						duration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
 						maxDuration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
 					}

@@ -28,9 +28,12 @@ draw :: proc(
 
 draw_emotes :: proc() {
 	for i:=0;i<len(game.emoteList);i+=1 {
+		xDist := game.player.entity.position.x - game.emoteList[i].charPos.x
+		fmt.printf("%v\n",xDist)
+		yDist := game.player.entity.position.z - game.emoteList[i].charPos.y
 		rect : raylib.Rectangle = {
-			game.emoteList[i].dest.x,
-			game.emoteList[i].dest.y,
+			game.emoteList[i].dest.x + (50   * xDist),
+			game.emoteList[i].dest.y + (12.5 * yDist),
 			game.emoteList[i].dest.width,
 			game.emoteList[i].dest.height,
 		}
@@ -38,9 +41,9 @@ draw_emotes :: proc() {
 		if game.emoteList[i].duration > rev {
 			rect.y += ((f32(game.emoteList[i].duration - rev) / f32(rev)) * 60)
 		}
-		if game.emoteList[i].player {
-			rect.x += 32
-		}
+		if game.emoteList[i].player do rect.x += 32
+		if xDist == 1  do rect.x -= 50
+		if xDist == -1 do rect.x += 50
 		raylib.DrawTexturePro(
 			game.emotes,
 			game.emoteList[i].src,

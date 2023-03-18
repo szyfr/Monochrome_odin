@@ -178,6 +178,7 @@ BattleData :: struct {
 
 EmoteStruct :: struct {
 	src, dest	: raylib.Rectangle,
+	charPos		: raylib.Vector2,
 	duration	: int,
 	maxDuration : int,
 	player		: bool,
