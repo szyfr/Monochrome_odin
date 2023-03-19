@@ -29,7 +29,6 @@ draw :: proc(
 draw_emotes :: proc() {
 	for i:=0;i<len(game.emoteList);i+=1 {
 		xDist := game.player.entity.position.x - game.emoteList[i].charPos.x
-		fmt.printf("%v\n",xDist)
 		yDist := game.player.entity.position.z - game.emoteList[i].charPos.y
 		rect : raylib.Rectangle = {
 			game.emoteList[i].dest.x + (50   * xDist),

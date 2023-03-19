@@ -142,14 +142,19 @@ update :: proc() {
 			
 			case game.ConditionalEvent:
 				if game.check_variable(curChain.(game.ConditionalEvent)) {
-					evt, res := game.region.events[curChain.(game.ConditionalEvent).event]
-					if !res {
-						game.eventmanager.currentChain += 1
-						return
+					evt := curChain.(game.ConditionalEvent).event
+					#partial switch in evt {
+						case (raylib.Vector2):
+							evnt, res := game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
+							if !res {
+								game.eventmanager.currentChain += 1
+								return
+							}
+							game.eventmanager.currentChain = 0
+							game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
+						case (int):
+							game.eventmanager.currentChain = evt.(int)
 					}
-
-					game.eventmanager.currentChain = 0
-					game.eventmanager.currentEvent = &game.region.events[curChain.(game.ConditionalEvent).event]
 				} else {
 					game.eventmanager.currentChain += 1
 				}
@@ -193,7 +198,6 @@ update :: proc() {
 				if game.eventmanager.uses == 0 {
 					game.overlayTexture = curChain.(game.OverlayAnimationEvent).texture
 					game.overlayActive	= true
-					fmt.printf("%v\n",curChain)
 				}
 				if game.eventmanager.uses >= curChain.(game.OverlayAnimationEvent).length {
 					game.eventmanager.uses = 0
@@ -234,7 +238,6 @@ update :: proc() {
 							game.eventmanager.currentChain = 0
 							game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
 						case (int):
-							fmt.printf("%v:%v\n",game.eventmanager.currentChain,evt.(int))
 							game.eventmanager.currentChain = evt.(int)
 					}
 

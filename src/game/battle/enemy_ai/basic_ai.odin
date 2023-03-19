@@ -30,7 +30,6 @@ physical_close_range_ai :: proc() {
 			case .tackle:
 				if enemy.pokemonInfo.attacks[i].cooldown <= 0 {
 					if distance(enemy.position + {0.5,0.02,1}, enemy.target) <= 3 {
-						fmt.printf("%v\n",distance(enemy.position + {0.5,0.02,1}, enemy.target))
 						attacks.use_tackle(enemy, player, false)
 					} else if enemy.canMove {
 						movement : raylib.Vector3

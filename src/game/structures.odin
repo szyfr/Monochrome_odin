@@ -105,7 +105,7 @@ EmoteEvent :: struct {
 ConditionalEvent :: struct {
 	variableName	: string,
 	value			: bool,
-	event			: raylib.Vector2,
+	event			: union{ int, raylib.Vector2 },
 }
 SetConditionalEvent :: struct {
 	variableName	: string,
@@ -400,6 +400,9 @@ Emote :: enum {
 	shocked,
 	confused,
 	sad,
+	heart,
+	happy,
+	poison,
 }
 
 PokemonSpecies :: enum {

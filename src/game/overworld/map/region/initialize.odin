@@ -140,6 +140,7 @@ init :: proc(
 								case "shocked":		emote = .shocked
 								case "confused":	emote = .confused
 								case "sad":			emote = .sad
+								case "poison":		emote = .poison
 							}
 							chn = game.EmoteEvent{
 								entityid	= chain[i].(json.Array)[1].(string),
@@ -148,13 +149,18 @@ init :: proc(
 							}
 
 						case "conditional":
+							condEvent : union{ int, raylib.Vector2 }
+							#partial switch in chain[i].(json.Array)[3] {
+								case (f64):			condEvent = int(chain[i].(json.Array)[3].(f64))
+								case (json.Array):	condEvent = raylib.Vector2{
+									f32(chain[i].(json.Array)[3].(json.Array)[0].(f64)),
+									f32(chain[i].(json.Array)[3].(json.Array)[1].(f64)),
+								}
+							}
 							chn = game.ConditionalEvent{
 								variableName	= chain[i].(json.Array)[1].(string),
 								value			= chain[i].(json.Array)[2].(bool),
-								event			= {
-									f32(chain[i].(json.Array)[3].(json.Array)[0].(f64)),
-									f32(chain[i].(json.Array)[3].(json.Array)[1].(f64)),
-								},
+								event			= condEvent,
 							}
 						
 						case "setcon":

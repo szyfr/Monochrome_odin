@@ -3203,7 +3203,7 @@
 	],
 	"entities":[
 		{
-			"id":"ent_1",
+			"id":"rival_1",
 			"location": [ 17,8 ],
 			"sprite":"rival_1",
 			"movement":"random",
@@ -3232,10 +3232,37 @@
 		{
 			"id":"mom_1",
 			"location": [ 22,42 ],
-			"sprite":"rival_1",
+			"sprite":"mom",
 			"movement":"random",
 			"direction":"left",
 			"event":[0,3],
+			"conditional":[],
+		},
+		{
+			"id":"elm_1",
+			"location": [ 6,32 ],
+			"sprite":"elm",
+			"movement":"random",
+			"direction":"down",
+			"event":[1,0],
+			"conditional":[],
+		},
+		{
+			"id":"labassist_1",
+			"location": [ 2,38 ],
+			"sprite":"lab_assistant",
+			"movement":"random",
+			"direction":"up",
+			"event":[1,1],
+			"conditional":[],
+		},
+		{
+			"id":"labassist_2",
+			"location": [ 8,40 ],
+			"sprite":"lab_assistant",
+			"movement":"random",
+			"direction":"right",
+			"event":[1,2],
 			"conditional":[],
 		},
 	],
@@ -3419,27 +3446,71 @@
 				["setcon","talked_mom_1",true],
 			]
 		},
+		// Lab
+		{ // Elm
+			"location": [ 1,0 ],
+			"type":"interact",
+			"conditional":[],
+			"chain": [
+				["text","newbarktown_mom_talk1_1"],
+				["turn","mom_1","left"]
+			]
+		},
+		{ // 
+			"location": [ 1,1 ],
+			"type":"interact",
+			"conditional":[],
+			"chain": [
+				["conditional","rival_battle_1",true,5],
+				["text","newbarktown_lab_assistant1_1_1"],
+				["text","newbarktown_lab_assistant1_1_2"],
+				["text","newbarktown_lab_assistant1_1_3"],
+				["skip",7]
+				["text","newbarktown_lab_assistant1_2_1"],
+				["text","newbarktown_lab_assistant1_2_2"],
+				["turn","labassist_1","up"],
+			]
+		},
+		{ // 
+			"location": [ 1,2 ],
+			"type":"interact",
+			"conditional":[],
+			"chain": [
+				["conditional","rival_battle_1",true,8],
+				["text","newbarktown_lab_assistant2_1_1"],
+				["text","newbarktown_lab_assistant2_1_2"],
+				["text","newbarktown_lab_assistant2_1_3"],
+				["wait",50],
+				["emote","labassist_2","poison",1.0],
+				["text","newbarktown_lab_assistant2_1_4"],
+				["skip",11],
+				["text","newbarktown_lab_assistant2_2_1"],
+				["text","newbarktown_lab_assistant2_2_2"],
+				["text","newbarktown_lab_assistant2_2_3"],
+				["turn","labassist_2","right"]
+			]
+		},
 		{ // Talking to silver
 			"location": [ 0,0 ],
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["turn","ent_1","right"],
+				["turn","rival_1","right"],
 				["text","event_0_1"],
 				["text","event_0_2"],
-				["turn","ent_1","left"],
-				["emote","ent_1","shocked",1.0],
+				["turn","rival_1","left"],
+				["emote","rival_1","shocked",1.0],
 			//	["conditional","variable_1",true,[ 11,5 ]],
 			//	["setcon","variable_1",true],
 			//	["getpokemon","chikorita",5],
 			//	["settile",[ 4,4 ],"tile_flower_bottom",true,false],
 				["text","event_0_3"],
 				["move","player","down",1,true],
-				["move","ent_1","left",1,true],
-				["turn","ent_1","down"],
+				["move","rival_1","left",1,true],
+				["turn","rival_1","down"],
 				["sound","outside",0.5],
 				["move","player","down",2,false],
-				["move","ent_1","right",1,false],
+				["move","rival_1","right",1,false],
 			//	["setcon","rival_battle_1",true],
 			]
 		},

@@ -25,7 +25,7 @@ create :: proc(
 
 	data.direction = .down
 
-	data.standee   = standee.create(filename)
+	data.standee   = standee.create(filename, "general")
 
 	return data
 }

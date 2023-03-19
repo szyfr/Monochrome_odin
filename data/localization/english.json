@@ -21,7 +21,6 @@
 	// Mom
 	// Talk
 	"newbarktown_mom_talk1_1":"Hope you have a good\nday, sweetheart.",
-
 	// Game beginning event
 	"newbarktown_mom_event1_1":"Goodmorning sweetheart.\nYou have a good\nnight sleep?",
 	"newbarktown_mom_event1_good_1":"That's good to hear.",
@@ -32,14 +31,30 @@
 	"newbarktown_mom_event1_3":"Professor Elm called,\nyou got accepted into\nthe League Program!",
 	"newbarktown_mom_event1_4":"Isn't that exciting!\nYou'll get your own\npartner and everything!",
 	"newbarktown_mom_event1_5":"Oh, I remember when I\nchallenged the league\nmyself.",
-	"newbarktown_mom_event1_6":"But that was a lifetime\nago and I never managed to\nfinish it,",
-	"newbarktown_mom_event1_7":"but it was certainly\nan adventure.",
-	"newbarktown_mom_event1_8":"That was before the\nRegional Government changed\nthe rules, though.",
+	"newbarktown_mom_event1_6":"But that was a lifetime\nago and I never managed\nto finish it,",
+	"newbarktown_mom_event1_7":"It was certainly\nan adventure.",
+	"newbarktown_mom_event1_8":"That was before the\nRegional Government changed\nthe rules.",
 	"newbarktown_mom_event1_9":"Not much we can do\nabout that, though.",
 	"newbarktown_mom_event1_10":"But enough of your old\nmother's ramblings.",
 	"newbarktown_mom_event1_11":"You should get going,\ndon't want to be late.",
-	//"newbarktown_mom_event1_":"",
-	//"newbarktown_mom_event1_":"",
+	// Lab
+	// Prof
+	"newbarktown_elm_1_1":"Good luck out there\nNot like you'll need it.",
+	"newbarktown_elm_1_2":"And thanks again.",
+	// Assistants
+	"newbarktown_lab_assistant1_1_1":"Hey kid,\ndo you need something?",
+	"newbarktown_lab_assistant1_1_2":"... ... ...",
+	"newbarktown_lab_assistant1_1_3":"The professor?\nHe's in his office just\npast the bookshelves.",
+	"newbarktown_lab_assistant1_2_1":"What the hell was that?",
+	"newbarktown_lab_assistant1_2_2":"You stopped that, kid?\nNice going.",
+
+	"newbarktown_lab_assistant2_1_1":"... ... ...",
+	"newbarktown_lab_assistant2_1_2":"...What?",
+	"newbarktown_lab_assistant2_1_3":"I'm totally working,\nwhat are you...",
+	"newbarktown_lab_assistant2_1_4":"I'm so tired...\nPlease don't tell the\nprofessor about this.",
+	"newbarktown_lab_assistant2_2_1":"... ... ...",
+	"newbarktown_lab_assistant2_2_2":"Huh? did something happen?\n",
+	"newbarktown_lab_assistant2_2_3":"WHAT!?",
 
 
 	"mom_event_1":"Oh, {PLAYER_NAME}...! Our\n\nneighbor, Prof. Elm,",

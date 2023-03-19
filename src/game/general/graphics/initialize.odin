@@ -51,7 +51,6 @@ init :: proc() {
 		if !result do continue
 		strName, _ := strings.remove_all(strLoc,".obj")
 		strName, _ = strings.remove_all(strName,"atk_")
-		fmt.printf("%v:%v\n",strLoc,strName)
 		game.attackModels[strName] = raylib.LoadModel(strings.clone_to_cstring(strings.concatenate({"data/attacks/",strLoc})))
 	}
 
