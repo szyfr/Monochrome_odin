@@ -61,8 +61,8 @@ update :: proc() {
 				for ent in game.region.entities do if game.region.entities[ent].id == curChain.(game.WarpEvent).entityid do warpingEnt = &game.region.entities[ent]
 				if curChain.(game.WarpEvent).entityid == "player" do warpingEnt = game.player.entity
 				if warpingEnt != nil {
-					entity.teleport(game.player.entity, curChain.(game.WarpEvent).position)
-					if curChain.(game.WarpEvent).move do entity.move(game.player.entity, curChain.(game.WarpEvent).direction)
+					entity.teleport(warpingEnt, curChain.(game.WarpEvent).position)
+					if curChain.(game.WarpEvent).move do entity.move(warpingEnt, curChain.(game.WarpEvent).direction)
 				}
 
 				game.eventmanager.currentChain += 1

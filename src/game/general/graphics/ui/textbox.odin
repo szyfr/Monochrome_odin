@@ -27,11 +27,13 @@ draw_textbox :: proc() {
 			raylib.WHITE,
 		)
 
-		text := strings.clone_to_cstring(game.eventmanager.textbox.currentText)
+		nlCount := f32(strings.count(game.eventmanager.textbox.targetText, "\n"))
+		textY	:= (posY + 75) + ((2 - nlCount) * 15)
+		text	:= strings.clone_to_cstring(game.eventmanager.textbox.currentText)
 		raylib.DrawTextEx(
 			game.font,
 			text,
-			{posX + 50, posY + 70},
+			{posX + 50, textY},
 			32,
 			1,
 			{56,56,56,255},

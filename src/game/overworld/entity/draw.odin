@@ -40,7 +40,7 @@ draw_emotes :: proc() {
 		if game.emoteList[i].duration > rev {
 			rect.y += ((f32(game.emoteList[i].duration - rev) / f32(rev)) * 60)
 		}
-		if game.emoteList[i].player do rect.x += 32
+		if game.emoteList[i].player || xDist == 0 do rect.x += 32
 		if xDist == 1  do rect.x -= 50
 		if xDist == -1 do rect.x += 50
 		raylib.DrawTexturePro(

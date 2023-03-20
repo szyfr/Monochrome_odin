@@ -170,7 +170,7 @@ main_init :: proc() {
 	audio.play_music("new_bark_town")
 
 	//!TEMP
-	game.player.pokemon[0] = monsters.create(.chikorita, 5)
+	//game.player.pokemon[0] = monsters.create(.chikorita, 5)
 }
 main_close :: proc() {
 	//* Raylib
