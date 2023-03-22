@@ -3214,7 +3214,7 @@
 		{
 			"id":"ent_2",
 			"location": [ 26,15 ],
-			"sprite":"rival_1",
+			"sprite":"man",
 			"movement":"random",
 			"direction":"right",
 			"event":[0,1],
@@ -3223,7 +3223,7 @@
 		{
 			"id":"ent_3",
 			"location": [ 20,14 ],
-			"sprite":"rival_1",
+			"sprite":"woman",
 			"movement":"random",
 			"direction":"right",
 			"event":[0,2],
