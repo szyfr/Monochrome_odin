@@ -7,6 +7,7 @@ import "core:fmt"
 import "../../../game"
 import "../../../utilities/mathz"
 import "../../overworld/entity"
+import "../../overworld/events"
 import "../../general/settings"
 import "../../general/audio"
 
@@ -30,8 +31,8 @@ update :: proc() {
 		//* Check if event is a trigger
 		if eventPosition in game.region.events {
 			event := game.region.events[eventPosition]
-			visible, result := game.eventmanager.eventVariables[event.visibleVar]
-			if !event.interactable && (visible == event.visible || !result) {
+			//visible, result := game.eventmanager.eventVariables[event.visibleVar]
+			if !event.interactable && events.check_visible(&event) {
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[eventPosition]
 				return
@@ -51,7 +52,7 @@ update :: proc() {
 			if eventPosition in game.region.entities {
 				audio.play_sound("button")
 				interactingEntity := &game.region.entities[eventPosition]
-				if interactingEntity.visibleVar in game.eventmanager.eventVariables || interactingEntity.visibleVar == "" {
+				if entity.check_visible(interactingEntity) {
 					game.player.canMove = false
 					game.eventmanager.currentEvent = &game.region.events[interactingEntity.interactionEvent]
 					switch game.player.entity.direction {

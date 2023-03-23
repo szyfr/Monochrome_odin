@@ -30,8 +30,7 @@ Entity :: struct {
 	position	: raylib.Vector3,
 	target		: raylib.Vector3,
 
-	visibleVar	: string,
-	visible		: bool,
+	conditional : map[string]bool,
 
 	id			: string,
 
@@ -49,8 +48,7 @@ Event :: struct {
 	position		: raylib.Vector3,
 	interactable	: bool,
 
-	visibleVar		: string,
-	visible			: bool,
+	conditional		: map[string]bool,
 
 	chain : [dynamic]EventChain,
 }
@@ -101,6 +99,7 @@ EmoteEvent :: struct {
 	entityid	: string,
 	emote		: Emote,
 	multiplier	: f32,
+	skipwait	: bool,
 }
 ConditionalEvent :: struct {
 	variableName	: string,

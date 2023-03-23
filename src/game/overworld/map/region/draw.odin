@@ -58,9 +58,10 @@ draw :: proc() {
 			x = 0
 			for x:=0;x<int(game.region.size.x);x+=1 {
 				ent, err := game.region.entities[{f32(x),f32(y)}]
-				if err && game.check_variable(ent.visibleVar, ent.visible) do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
+				
+				if err && entity.check_visible(&ent) do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
 				ent, err  = game.region.entities[{f32(x),f32(y-1)}]
-				if err && game.check_variable(ent.visibleVar, ent.visible) do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
+				if err && entity.check_visible(&ent) do if test_entity(f32(x), f32(y), &ent, true) do entity.draw(&ent)
 				
 				ply := game.player.entity
 				if test_entity(f32(x), f32(y), ply, false) do entity.draw(ply)
@@ -88,6 +89,5 @@ test_entity :: proc(
 		if math.ceil(entity.target.z) < entity.position.z do posZ += 1
 		return math.round(entity.target.x) == x && posZ == y
 		//return math.round(entity.target.x) == x && math.ceil(entity.target.z) == posZ
-	}
-	else		do return math.round(entity.position.x) == x && math.ceil(entity.position.z) == y
+	} else do return math.round(entity.position.x) == x && math.ceil(entity.position.z) == y
 }

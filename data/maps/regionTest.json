@@ -3209,7 +3209,9 @@
 			"movement":"random",
 			"direction":"right",
 			"event":[0,0],
-			"conditional":["rival_battle_1",true],
+			"conditional":[
+				["rival_battle_1",false],
+			],
 		},
 		{
 			"id":"ent_2",
@@ -3272,7 +3274,9 @@
 			"movement":"random",
 			"direction":"right",
 			"event":[1,3],
-			"conditional":["chose_chikorita",true],
+			"conditional":[
+				["chose_chikorita",false],
+			],
 		}, {
 			"id":"ball_fire",
 			"location": [ 8,34 ],
@@ -3280,7 +3284,9 @@
 			"movement":"random",
 			"direction":"right",
 			"event":[1,4],
-			"conditional":["chose_cyndaquil",true],
+			"conditional":[
+				["chose_cyndaquil",false],
+			],
 		}, {
 			"id":"ball_water",
 			"location": [ 9,34 ],
@@ -3288,7 +3294,9 @@
 			"movement":"random",
 			"direction":"right",
 			"event":[1,5],
-			"conditional":["chose_totodile",true],
+			"conditional":[
+				["chose_totodile",false],
+			],
 		},
 	],
 	"events":[
@@ -3443,9 +3451,11 @@
 		},{ // Game start event
 			"location": [ 24,40 ],
 			"type":"trigger",
-			"conditional":["talked_mom_1",false],
+			"conditional":[
+				["talked_mom_1",false],
+			],
 			"chain": [
-				["emote","mom_1","shocked",1.0],
+				["emote","mom_1","shocked",1.0,true],
 				["move","mom_1","right",2,true],
 				["move","mom_1","up",1,true],
 				["choice","newbarktown_mom_event1_1",[2,["yes","no"],[4,7]]]
@@ -3484,10 +3494,12 @@
 		}, { // Elm Event 1
 			"location": [ 6,36 ],
 			"type":"trigger",
-			"conditional":["talked_elm_1",false],
+			"conditional":[
+				["talked_elm_1",false],
+			],
 			"chain": [
 				["turn","elm_1","down"],
-				["emote","elm_1","shocked",1.0],
+				["emote","elm_1","shocked",1.0,true],
 				["text","newbarktown_elm_event1_1"],
 				["move","elm_1","left",1,true],
 				["move","elm_1","down",1,true],
@@ -3503,7 +3515,7 @@
 				["text","newbarktown_elm_event1_7"],
 				["wait",100],
 				["turn","elm_1","down"],
-				["emote","elm_1","sad",1.0],
+				["emote","elm_1","sad",1.0,true],
 				["turn","elm_1","right"],
 				["text","newbarktown_elm_event1_8"],
 				["text","newbarktown_elm_event1_9"],
@@ -3552,7 +3564,10 @@
 		},  { // Elm Event 2
 			"location": [ 6,35 ],
 			"type":"trigger",
-			"conditional":["talked_elm_2",true],
+			"conditional":[
+				["talked_elm_2",true],
+				["talked_elm_3",false],
+			],
 			"chain": [
 				["turn","player","up"],
 				["turn","elm_1","down"],
@@ -3565,8 +3580,17 @@
 				["turn","player","left"],
 				["text","newbarktown_elm_event2_2"],
 				["text","newbarktown_elm_event2_3"],
-				["warp","rival_1",[ 6,42 ],true,"up"],
+				["turn","elm_1","down"],
+				["turn","player","down"],
+				["turn","labassist_1","down"],
+				["emote","elm_1","shocked",1.0,false],
+				["emote","player","shocked",1.0,false],
+				["emote","labassist_1","shocked",1.0,false],
+				["warp","rival_1",[ 6,41 ],false,"up"],
 				["move","rival_1","up",6,true],
+				["text","newbarktown_elm_event2_4"],
+				["move","player","up",2,true],
+				["turn","player","down"],
 				["setcon","talked_elm_3",true],
 			]
 		},
@@ -3595,7 +3619,7 @@
 				["text","newbarktown_lab_assistant2_1_2"],
 				["text","newbarktown_lab_assistant2_1_3"],
 				["wait",50],
-				["emote","labassist_2","poison",1.0],
+				["emote","labassist_2","poison",1.0,true],
 				["text","newbarktown_lab_assistant2_1_4"],
 				["skip",11],
 				["text","newbarktown_lab_assistant2_2_1"],
@@ -3613,7 +3637,7 @@
 				["text","event_0_1"],
 				["text","event_0_2"],
 				["turn","rival_1","left"],
-				["emote","rival_1","shocked",1.0],
+				["emote","rival_1","shocked",1.0,true],
 			//	["conditional","variable_1",true,[ 11,5 ]],
 			//	["setcon","variable_1",true],
 			//	["getpokemon","chikorita",5],
@@ -3622,7 +3646,7 @@
 				["move","player","down",1,true],
 				["move","rival_1","left",1,true],
 				["turn","rival_1","down"],
-				["sound","outside",0.5],
+				["sound","push",0.5],
 				["move","player","down",2,false],
 				["move","rival_1","right",1,false],
 			//	["setcon","rival_battle_1",true],
@@ -3653,7 +3677,7 @@
 			"conditional":[],
 			"chain": [
 				["wait",100],
-				["emote","player","sad",1.5],
+				["emote","player","sad",1.5,true],
 				["text","event_1_1"],
 				["move","player","right",1,true],
 			]
@@ -3663,7 +3687,7 @@
 			"conditional":[],
 			"chain": [
 				["wait",100],
-				["emote","player","sad",1.5],
+				["emote","player","sad",1.5,true],
 				["text","event_1_1"],
 				["move","player","right",1,true],
 			]

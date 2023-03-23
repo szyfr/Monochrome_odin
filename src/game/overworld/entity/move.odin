@@ -35,11 +35,10 @@ move :: proc(
 		tile : ^game.Tile	 = &game.region.tiles[{target.x, target.z}]
 		diff :  f32			 = tile.pos.y - entity.position.y
 		ent, res			:= game.region.entities[{target.x, target.z}]
-		var, resu			:= game.eventmanager.eventVariables[ent.visibleVar]
 		if  tile.solid ||                      		//? Tile is solid
 			(!entity.isSurfing && tile.surf) ||		//? Tile is surfable and playing isn't surfing
 			(diff > 0.5 || diff < -0.75) ||    		//? Height difference is too extreme
-			(res && ((resu && ent.visible != var) || ent.visibleVar == ""))	//? There is currently an entity there
+			(res && check_visible(&ent))		//? There is currently an entity there
 		{
 			if game.player.entity == entity do audio.play_sound("collision")
 			//TODO Thump noise
@@ -71,9 +70,20 @@ teleport :: proc(
 	entity		: ^game.Entity,
 	location	:  raylib.Vector3,
 ) {
+	entity.previous = entity.position
 	entity.position = location
-	entity.previous = location
 	entity.target   = location
+
+	if game.player.entity != entity {
+		value := entity^
+		position : raylib.Vector2
+		position.x = value.previous.x
+		position.y = value.previous.z
+		delete_key(&game.region.entities, position)
+		position.x = value.target.x
+		position.y = value.target.z
+		game.region.entities[position] = value
+	}
 }
 
 turn :: proc(

@@ -40,7 +40,9 @@ main_logic :: proc() {
 	raylib.UpdateMusicStream(game.audio.musicCurrent)
 
 	if settings.is_key_pressed("debug") {
-		fmt.printf("%v\n",game.battleStruct.playerPokemon)
+		for i in game.region.events {
+			fmt.printf("%v:%v\n",i,game.region.events[i])
+		}
 	}
 }
 
@@ -168,9 +170,6 @@ main_init :: proc() {
 	//* Audio
 	audio.init()
 	audio.play_music("new_bark_town")
-
-	//!TEMP
-	//game.player.pokemon[0] = monsters.create(.chikorita, 5)
 }
 main_close :: proc() {
 	//* Raylib

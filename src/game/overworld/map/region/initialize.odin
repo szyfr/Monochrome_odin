@@ -79,8 +79,9 @@ init :: proc(
 
 				arr := eventList[count].(json.Object)["conditional"].(json.Array)
 				if len(arr) > 0 {
-					evt.visibleVar		= arr[0].(string)
-					evt.visible			= arr[1].(bool)
+					for member in arr {
+						evt.conditional[member.(json.Array)[0].(string)] = member.(json.Array)[1].(bool)
+					}
 				}
 				
 				chain := eventList[count].(json.Object)["chain"].(json.Array)
@@ -146,6 +147,7 @@ init :: proc(
 								entityid	= chain[i].(json.Array)[1].(string),
 								emote		= emote,
 								multiplier	= f32(chain[i].(json.Array)[3].(f64)),
+								skipwait	= chain[i].(json.Array)[4].(bool),
 							}
 
 						case "conditional":
@@ -278,8 +280,9 @@ init :: proc(
 
 				arr := entityList[count].(json.Object)["conditional"].(json.Array)
 				if len(arr) > 0 {
-					ent.visibleVar		= arr[0].(string)
-					ent.visible			= arr[1].(bool)
+					for member in arr {
+						ent.conditional[member.(json.Array)[0].(string)] = member.(json.Array)[1].(bool)
+					}
 				}
 
 				switch entityList[count].(json.Object)["direction"].(string) {

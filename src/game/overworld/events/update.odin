@@ -131,6 +131,8 @@ update :: proc() {
 					if curChain.(game.EmoteEvent).entityid == "player" do strc.player = true
 					append(&game.emoteList, strc)
 					//TODO Noise
+
+					if !curChain.(game.EmoteEvent).skipwait do game.eventmanager.currentChain += 1
 					
 					game.eventmanager.uses += 1
 				} else if game.eventmanager.uses < int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier) && emotingEnt != nil {
