@@ -41,7 +41,6 @@ move :: proc(
 			(res && check_visible(&ent))		//? There is currently an entity there
 		{
 			if game.player.entity == entity do audio.play_sound("collision")
-			//TODO Thump noise
 			//TODO Slow walking animation?
 			return
 		}
