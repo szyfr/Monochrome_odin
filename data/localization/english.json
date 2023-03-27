@@ -61,13 +61,14 @@
 	"newbarktown_starter_event_2":"Do you choose\nCyndaquil?",
 	"newbarktown_starter_event_3":"Do you choose\nTotodile?",
 
-	"newbarktown_elm_event2_1":"Now, i'm not supposed to\ngive you any help aside from encouraging \"Good luck out there!\" But i want you to do well, so here...",
+	"newbarktown_elm_event2_1":"Now, i'm not supposed to\ngive you any help aside\nfrom encouraging \nGood luck out there!",
+	"newbarktown_elm_event2_8":"But i want you to do well,\nso here...",
 	"newbarktown_elm_event2_2":"{PLAYER_NAME} received 5 PokeBalls!",
 	"newbarktown_elm_event2_3":"Good luck, kid. I do hope\nyou make us proud.",
 	"newbarktown_elm_event2_4":"???: Out of my way, rat.",
 	"newbarktown_elm_event2_5":"Elm: Now wait a min...",
-	"newbarktown_elm_event2_6":"???: What? You trying to be a hero, kid?",
-	"newbarktown_elm_event2_7":"I'll show you not to play hero.",
+	"newbarktown_elm_event2_6":"???: What? You trying to\nbe a hero, kid?",
+	"newbarktown_elm_event2_7":"I'll show you not to\nplay hero.",
 
 	"newbarktown_elm_event2win_1":"You?...",
 	"newbarktown_elm_event2win_2":"Wha?...",
@@ -136,6 +137,8 @@
 	//* Battle
 	"trainer_battle_win_1":"You've beaten\n\n{ENEMY_TRAINER}!",
 	"trainer_battle_win_2":"{POKEMON_0_NAME} gained\n\n{EXPERIENCE} experience!",
+	"trainer_battle_lose_1":"All of your pokemon have fainted.",
+	"trainer_battle_lose_2":"You run home to heal\nyour wounded pokemon.",
 
 	"wild_battle_win_1":"Wild {ENEMY_POKEMON_0_NAME}\n\nfainted!",
 	"wild_battle_win_2":"{POKEMON_0_NAME} gained\n\n{EXPERIENCE} experience!",

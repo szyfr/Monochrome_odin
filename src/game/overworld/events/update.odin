@@ -90,6 +90,7 @@ update :: proc() {
 					if (!movingEnt.isMoving || !curChain.(game.MoveEvent).simul ) && curChain.(game.MoveEvent).times <= game.eventmanager.uses {
 						game.eventmanager.currentChain += 1
 						game.eventmanager.uses = 0
+						fmt.printf("Moved")
 					}
 				}
 			
@@ -156,6 +157,10 @@ update :: proc() {
 							game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
 						case (int):
 							game.eventmanager.currentChain = evt.(int)
+						case (string):
+							battle.init(&game.battles[evt.(string)])
+							game.eventmanager.currentChain += 1
+
 					}
 				} else {
 					game.eventmanager.currentChain += 1

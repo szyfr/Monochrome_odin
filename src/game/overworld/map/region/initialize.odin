@@ -151,9 +151,10 @@ init :: proc(
 							}
 
 						case "conditional":
-							condEvent : union{ int, raylib.Vector2 }
+							condEvent : union{ int, raylib.Vector2, string }
 							#partial switch in chain[i].(json.Array)[3] {
 								case (f64):			condEvent = int(chain[i].(json.Array)[3].(f64))
+								case (string):		condEvent = chain[i].(json.Array)[3].(string)
 								case (json.Array):	condEvent = raylib.Vector2{
 									f32(chain[i].(json.Array)[3].(json.Array)[0].(f64)),
 									f32(chain[i].(json.Array)[3].(json.Array)[1].(f64)),

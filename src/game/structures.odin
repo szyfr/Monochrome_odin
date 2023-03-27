@@ -104,7 +104,7 @@ EmoteEvent :: struct {
 ConditionalEvent :: struct {
 	variableName	: string,
 	value			: bool,
-	event			: union{ int, raylib.Vector2 },
+	event			: union{ int, raylib.Vector2, string },
 }
 SetConditionalEvent :: struct {
 	variableName	: string,

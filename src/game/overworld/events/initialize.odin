@@ -28,6 +28,14 @@ init :: proc() {
 		game.ShowLevelUp{},
 		game.EndBattleEvent{},
 	)
+	append(&game.battleTrainerLoseEvent.chain,
+		game.PlayMusicEvent{"",1},
+		game.TextEvent{&game.localization["trainer_battle_lose_1"]},
+		game.TextEvent{&game.localization["trainer_battle_lose_2"]},
+		//TODO Lose mons
+		game.WarpEvent{"player",{32,41},.up,false}
+		game.EndBattleEvent{},
+	)
 
 	game.eventmanager.eventVariables["variable_1"] = false
 	game.eventmanager.eventVariables["rival_battle_1"] = false
@@ -40,9 +48,13 @@ init :: proc() {
 	game.eventmanager.eventVariables["chose_chikorita"] = false
 	game.eventmanager.eventVariables["chose_cyndaquil"] = false
 	game.eventmanager.eventVariables["chose_totodile"] = false
+	
+	game.eventmanager.eventVariables["rival_chikorita"] = false
+	game.eventmanager.eventVariables["rival_cyndaquil"] = false
+	game.eventmanager.eventVariables["rival_totodile"] = false
 
 
-	game.eventmanager.playerName = "TEST"
+	game.eventmanager.playerName = "Gold"
 	game.eventmanager.playerPronouns[0] = "they"
 	game.eventmanager.playerPronouns[1] = "them"
 	game.eventmanager.playerPronouns[2] = "theirs"

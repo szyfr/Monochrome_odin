@@ -76,6 +76,8 @@ pokemonData		: json.Array
 
 battleTrainerWinEvent	: Event
 battleWildWinEvent		: Event
+battleTrainerLoseEvent	: Event
+battleWildLoseEvent		: Event
 levelUpDisplay : ^ShowLevelUp
 
 
