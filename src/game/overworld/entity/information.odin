@@ -18,3 +18,17 @@ check_visible :: proc(
 	}
 	return result
 }
+
+get_entity :: proc{ get_entity_id }
+get_entity_id :: proc(
+	id : string,
+) -> ^game.Entity {
+	if id == "player" do return game.player.entity
+
+	for ent in game.region.entities {
+		entity := &game.region.entities[ent]
+		if entity.id == id do return entity
+	}
+	
+	return nil
+}
