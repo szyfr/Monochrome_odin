@@ -2,6 +2,7 @@ package game
 
 
 //= Imports
+import  "core:fmt"
 import  "core:encoding/json"
 
 import "vendor:raylib"
@@ -43,7 +44,7 @@ barImg			: raylib.Image
 
 font			: raylib.Font
 
-pokemonSprites	: map[PokemonSpecies]raylib.Texture
+pokemonSprites	: map[MonsterSpecies]raylib.Texture
 
 emotes			: raylib.Texture
 targeter		: raylib.Model
@@ -101,9 +102,10 @@ check_variable_simple :: proc(
 check_variable_conditionalevent :: proc(
 	event : ConditionalEvent,
 ) -> bool {
-	if event.variableName != "" {
-		var, res := eventmanager.eventVariables[event.variableName]
-		if res && var == event.value do return true
+	if event.varName != "" {
+		var, res := eventmanager.eventVariables[event.varName]
+		fmt.printf("%v:%v=%v",var,event.varValue,res && var == event.varValue)
+		if res && var == event.varValue do return true
 		else do return false
 	} else {
 		return true

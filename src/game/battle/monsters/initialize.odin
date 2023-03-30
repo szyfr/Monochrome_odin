@@ -32,7 +32,7 @@ init :: proc() {
 }
 
 get_exp_yield :: proc(
-	species : game.PokemonSpecies,
+	species : game.MonsterSpecies,
 ) -> f32 {
 	return f32(game.pokemonData[int(species)].(json.Array)[10].(f64))
 }

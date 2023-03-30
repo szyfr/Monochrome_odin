@@ -7,10 +7,16 @@ A re-imagining of the monster battler genre with new combat mechanics, semi-open
 ### Controls
 #### Overworld
 WASD - Movement
+
 Space - Interact
+
 Enter - Open / Close Menu
+
 #### Battle
 WASD - Movement
+
 Left Mouse - Use Attack
+
 Right Mouse - Choose Attack
+
 Space - Show attack overlay

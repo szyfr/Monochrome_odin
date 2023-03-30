@@ -10,7 +10,7 @@ Event :: struct {
 	position		: raylib.Vector3,
 	interactable	: bool,
 
-	conditional		: map[string]bool,
+	conditional		: map[string]union{ int, bool, string },
 
 	chain : [dynamic]EventChain,
 }
@@ -24,7 +24,7 @@ EventChain :: union {
 	ConditionalEvent,
 	SetConditionalEvent,
 	SetTileEvent,
-	GetPokemonEvent,
+	GetMonsterEvent,
 	StartBattleEvent,
 	EndBattleEvent,
 	PlaySoundEvent,
@@ -64,21 +64,22 @@ EmoteEvent :: struct {
 	skipwait	: bool,
 }
 ConditionalEvent :: struct {
-	variableName	: string,
-	value			: bool,
-	event			: union{ int, raylib.Vector2, string },
+	varName		: string,
+	varValue	: union{ int, bool, string },
+	eventType	: ConditionalType,
+	eventData	: union{ int, raylib.Vector2, string },
 }
 SetConditionalEvent :: struct {
 	variableName	: string,
-	value			: bool,
+	value			: union{ int, bool, string },
 }
 SetTileEvent :: struct {
 	position	: raylib.Vector2,
 	value		: string,
 	solid, surf	: bool,
 }
-GetPokemonEvent :: struct {
-	species : PokemonSpecies,
+GetMonsterEvent :: struct {
+	species : MonsterSpecies,
 	level	: int,
 }
 StartBattleEvent :: struct {
@@ -127,4 +128,14 @@ ShowLevelUp :: struct {
 }
 SkipEvent :: struct {
 	event : int,
+}
+
+
+//= Enumerations
+ConditionalType :: enum {
+	new_event,
+	jump_chain,
+	set_chain,
+	leave_chain,
+	start_battle,
 }

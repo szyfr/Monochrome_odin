@@ -80,7 +80,12 @@ init :: proc(
 				arr := eventList[count].(json.Object)["conditional"].(json.Array)
 				if len(arr) > 0 {
 					for member in arr {
-						evt.conditional[member.(json.Array)[0].(string)] = member.(json.Array)[1].(bool)
+						#partial switch in member.(json.Array)[1] {
+							case (bool):	evt.conditional[member.(json.Array)[0].(string)] = member.(json.Array)[1].(bool)
+							case (f64):		evt.conditional[member.(json.Array)[0].(string)] = int(member.(json.Array)[1].(f64))
+							case (string):	evt.conditional[member.(json.Array)[0].(string)] = member.(json.Array)[1].(string)
+						}
+					//	evt.conditional[member.(json.Array)[0].(string)] = member.(json.Array)[1].(bool)
 					}
 				}
 				
@@ -151,25 +156,51 @@ init :: proc(
 							}
 
 						case "conditional":
-							condEvent : union{ int, raylib.Vector2, string }
-							#partial switch in chain[i].(json.Array)[3] {
-								case (f64):			condEvent = int(chain[i].(json.Array)[3].(f64))
-								case (string):		condEvent = chain[i].(json.Array)[3].(string)
-								case (json.Array):	condEvent = raylib.Vector2{
-									f32(chain[i].(json.Array)[3].(json.Array)[0].(f64)),
-									f32(chain[i].(json.Array)[3].(json.Array)[1].(f64)),
-								}
+							//condEvent : union{ int, raylib.Vector2, string }
+							//#partial switch in chain[i].(json.Array)[3] {
+							//	case (f64):			condEvent = int(chain[i].(json.Array)[3].(f64))
+							//	case (string):		condEvent = chain[i].(json.Array)[3].(string)
+							//	case (json.Array):	condEvent = raylib.Vector2{
+							//		f32(chain[i].(json.Array)[3].(json.Array)[0].(f64)),
+							//		f32(chain[i].(json.Array)[3].(json.Array)[1].(f64)),
+							//	}
+							//}
+							//chn = game.ConditionalEvent{
+							//	variableName	= chain[i].(json.Array)[1].(string),
+							//	value			= chain[i].(json.Array)[2].(bool),
+							//	event			= condEvent,
+							//}
+							varValue : union{ int, bool, string }
+							#partial switch in chain[i].(json.Array)[1].(json.Array)[1] {
+								case (f64):		varValue = int(chain[i].(json.Array)[1].(json.Array)[1].(f64))
+								case (string):	varValue = chain[i].(json.Array)[1].(json.Array)[1].(string)
+								case (bool):	varValue = chain[i].(json.Array)[1].(json.Array)[1].(bool)
+							}
+							eventType, _ := reflect.enum_from_name(game.ConditionalType, chain[i].(json.Array)[2].(json.Array)[0].(string))
+							eventData : union{ int, raylib.Vector2, string } 
+							#partial switch eventType {
+								case .new_event:	eventData = raylib.Vector2{f32(chain[i].(json.Array)[2].(json.Array)[1].(json.Array)[0].(f64)), f32(chain[i].(json.Array)[2].(json.Array)[1].(json.Array)[1].(f64))}
+								case .jump_chain:	eventData = int(chain[i].(json.Array)[2].(json.Array)[1].(f64))
+								case .set_chain:	eventData = int(chain[i].(json.Array)[2].(json.Array)[1].(f64))
+								case .start_battle:	eventData = chain[i].(json.Array)[2].(json.Array)[1].(string)
 							}
 							chn = game.ConditionalEvent{
-								variableName	= chain[i].(json.Array)[1].(string),
-								value			= chain[i].(json.Array)[2].(bool),
-								event			= condEvent,
+								varName		= chain[i].(json.Array)[1].(json.Array)[0].(string),
+								varValue	= varValue,
+								eventType	= eventType,
+								eventData	= eventData,
 							}
 						
 						case "setcon":
+							vari : union{ int, bool, string }
+							#partial switch in chain[i].(json.Array)[2] {
+								case (bool):	vari = chain[i].(json.Array)[2].(bool)
+								case (f64):		vari = int(chain[i].(json.Array)[2].(f64))
+								case (string):	vari = chain[i].(json.Array)[2].(string)
+							}
 							chn = game.SetConditionalEvent{
 								variableName	= chain[i].(json.Array)[1].(string),
-								value			= chain[i].(json.Array)[2].(bool),
+								value			= vari,
 							}
 
 						case "settile":
@@ -184,14 +215,14 @@ init :: proc(
 							}
 						
 						case "getpokemon":
-							pokemon, res := reflect.enum_from_name(game.PokemonSpecies, chain[i].(json.Array)[1].(string))
+							pokemon, res := reflect.enum_from_name(game.MonsterSpecies, chain[i].(json.Array)[1].(string))
 							if res {
-								chn = game.GetPokemonEvent{
+								chn = game.GetMonsterEvent{
 									species	= pokemon,
 									level	= int(chain[i].(json.Array)[2].(f64)),
 								}
 							} else {
-								chn = game.GetPokemonEvent{
+								chn = game.GetMonsterEvent{
 									species	= .empty,
 									level	= 0,
 								}
@@ -325,7 +356,7 @@ load_pokemon :: proc(
 ) -> [4]game.Pokemon {
 	output : [4]game.Pokemon
 	for i in 0..<4 {
-		pokemon, res := reflect.enum_from_name(game.PokemonSpecies, input[i].(json.Array)[0].(string))
+		pokemon, res := reflect.enum_from_name(game.MonsterSpecies, input[i].(json.Array)[0].(string))
 		if pokemon == .empty do break
 
 		pkmn : game.Pokemon = monsters.create(pokemon, int(input[i].(json.Array)[1].(f64)))

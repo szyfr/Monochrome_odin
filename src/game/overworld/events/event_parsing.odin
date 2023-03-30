@@ -22,11 +22,24 @@ parse_events :: proc() {
 	curChain	:= &game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
 
 	#partial switch in curChain {
-		case game.TextEvent: event_text(&curChain.(game.TextEvent))
-		case game.WarpEvent: event_warp(&curChain.(game.WarpEvent))
-		case game.TurnEvent: event_turn(&curChain.(game.TurnEvent))
-		case game.MoveEvent: event_move(&curChain.(game.MoveEvent))
-		case game.WaitEvent: event_wait(&curChain.(game.WaitEvent))
+		case game.TextEvent:			event_text(&curChain.(game.TextEvent))
+		case game.ChoiceEvent:			event_text_choice(&curChain.(game.ChoiceEvent))
+
+		case game.WarpEvent:			event_warp(&curChain.(game.WarpEvent))
+		case game.TurnEvent:			event_turn(&curChain.(game.TurnEvent))
+		case game.MoveEvent:			event_move(&curChain.(game.MoveEvent))
+
+		case game.WaitEvent:			event_wait(&curChain.(game.WaitEvent))
+
+		case game.ConditionalEvent:		event_conditional(&curChain.(game.ConditionalEvent))
+		case game.SetConditionalEvent:	event_set_conditional(&curChain.(game.SetConditionalEvent))
+
+		case game.SetTileEvent:			event_set_tile(&curChain.(game.SetTileEvent))
+
+		case game.GetMonsterEvent:		event_receive_monster(&curChain.(game.GetMonsterEvent))
+		
+		case game.StartBattleEvent:		event_start_battle(&curChain.(game.StartBattleEvent))
+		case game.EndBattleEvent:		event_end_battle(&curChain.(game.EndBattleEvent))
 			
 		case game.EmoteEvent:
 				emotingEnt : ^game.Entity
@@ -68,56 +81,11 @@ parse_events :: proc() {
 					game.eventmanager.uses = 0
 					game.eventmanager.currentChain += 1
 				}
+				
+
 			
-		case game.ConditionalEvent:
-				if game.check_variable(curChain.(game.ConditionalEvent)) {
-					evt := curChain.(game.ConditionalEvent).event
-					#partial switch in evt {
-						case (raylib.Vector2):
-							evnt, res := game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-							if !res {
-								game.eventmanager.currentChain += 1
-								return
-							}
-							game.eventmanager.currentChain = 0
-							game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-						case (int):
-							game.eventmanager.currentChain = evt.(int)
-						case (string):
-							battle.init(&game.battles[evt.(string)])
-							game.eventmanager.currentChain += 1
 
-					}
-				} else {
-					game.eventmanager.currentChain += 1
-				}
-
-		case game.SetConditionalEvent:
-				game.eventmanager.eventVariables[curChain.(game.SetConditionalEvent).variableName] = curChain.(game.SetConditionalEvent).value
-				game.eventmanager.currentChain += 1
-
-		case game.SetTileEvent:
-				tile := &game.region.tiles[curChain.(game.SetTileEvent).position]
-				tile.model = curChain.(game.SetTileEvent).value
-				tile.solid = curChain.(game.SetTileEvent).solid
-				tile.surf  = curChain.(game.SetTileEvent).surf
-				game.eventmanager.currentChain += 1
-
-		case game.GetPokemonEvent:
-				monsters.add_to_team(monsters.create(
-					curChain.(game.GetPokemonEvent).species,
-					curChain.(game.GetPokemonEvent).level,
-				))
-				game.eventmanager.currentChain += 1
-			
-		case game.StartBattleEvent:
-				//TODO Run check for if the player doesn't have a pokemon
-				battle.init(&game.battles[curChain.(game.StartBattleEvent).id])
-				game.eventmanager.currentChain += 1
-			
-		case game.EndBattleEvent:
-				battle.close()
-				game.eventmanager.currentChain += 1
+		
 
 		case game.PlaySoundEvent:
 				audio.play_sound(curChain.(game.PlaySoundEvent).name, curChain.(game.PlaySoundEvent).pitch)
@@ -151,39 +119,6 @@ parse_events :: proc() {
 						144,
 					}
 
-				}
-
-		case game.ChoiceEvent:
-				if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
-					str := strings.clone_from_cstring(curChain.(game.ChoiceEvent).text^)
-					ui.open_textbox(str, true, curChain.(game.ChoiceEvent).choices)
-				}
-				if game.eventmanager.textbox.state == .finished {
-					game.eventmanager.currentChain += 1
-					evt := curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event
-					#partial switch in evt {
-						case (raylib.Vector2):
-							evnt, res := game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-							if !res {
-								game.eventmanager.currentChain += 1
-								return
-							}
-							game.eventmanager.currentChain = 0
-							game.eventmanager.currentEvent = &game.region.events[curChain.(game.ChoiceEvent).choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-						case (int):
-							game.eventmanager.currentChain = evt.(int)
-					}
-
-					game.eventmanager.textbox.curPosition = 0
-					
-					_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
-					_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
-					_, ok3 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ShowLevelUp)
-					if ok1 || ok2 || ok3 {
-						ui.reset_textbox()
-					} else {
-						ui.close_textbox()
-					}
 				}
 			
 		case game.GiveExperience:
@@ -228,7 +163,7 @@ parse_events :: proc() {
 				}
 
 		case game.SkipEvent:
-				game.eventmanager.currentChain = game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.SkipEvent).event
+			game.eventmanager.currentChain = game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.SkipEvent).event
 	}
 }
 
@@ -251,6 +186,39 @@ event_text :: proc( curChain : ^game.TextEvent ) {
 			if ok1 || ok2 || ok3 do ui.reset_textbox()
 			else do ui.close_textbox()
 		} else do ui.close_textbox()
+	}
+}
+
+event_text_choice :: proc( curChain : ^game.ChoiceEvent ) {
+	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
+		str := strings.clone_from_cstring(curChain.text^)
+		ui.open_textbox(str, true, curChain.choices)
+	}
+	if game.eventmanager.textbox.state == .finished {
+		game.eventmanager.currentChain += 1
+		evt := curChain.choices[game.eventmanager.textbox.curPosition].event
+		#partial switch in evt {
+			case (raylib.Vector2):
+				evnt, res := game.region.events[curChain.choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
+				if !res {
+					game.eventmanager.currentChain += 1
+					return
+				}
+				game.eventmanager.currentChain = 0
+				game.eventmanager.currentEvent = &game.region.events[curChain.choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
+			case (int):
+				game.eventmanager.currentChain = evt.(int)
+		}
+		game.eventmanager.textbox.curPosition = 0
+
+		newChain := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
+		_, ok1 := newChain.(game.TextEvent)
+		_, ok2 := newChain.(game.ChoiceEvent)
+		_, ok3 := newChain.(game.ShowLevelUp)
+		
+		//* Reset if next event is also text-based, else close
+		if ok1 || ok2 || ok3 do ui.reset_textbox()
+		else do ui.close_textbox()
 	}
 }
 
@@ -301,24 +269,60 @@ event_wait :: proc( curChain : ^game.WaitEvent ) {
 
 event_conditional :: proc( curChain : ^game.ConditionalEvent ) {
 	if game.check_variable(curChain^) {
-		evt := curChain.event
-		#partial switch in evt {
-			case (raylib.Vector2):
-				//evnt, res := game.region.events[curChain.choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-				//if !res {
-				//	game.eventmanager.currentChain += 1
-				//	return
-				//}
-				//game.eventmanager.currentChain = 0
-				//game.eventmanager.currentEvent = &game.region.events[curChain.choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-			case (int):
-				game.eventmanager.currentChain = evt.(int)
-			case (string):
-				battle.init(&game.battles[evt.(string)])
+		switch curChain.eventType {
+			case .new_event:
+				evt, rs := game.region.events[curChain.eventData.(raylib.Vector2)]
+				if !rs {
+					game.eventmanager.currentChain += 1
+					return
+				}
+				game.eventmanager.currentChain = 0
+				game.eventmanager.uses = 0
+				game.eventmanager.currentEvent = &evt
+			case .jump_chain:
+				game.eventmanager.currentChain += curChain.eventData.(int)
+			case .set_chain:
+				game.eventmanager.currentChain = curChain.eventData.(int)
+			case .leave_chain:
+				game.eventmanager.currentChain = 10000
+			case .start_battle:
+				battle.init(&game.battles[curChain.eventData.(string)])
 				game.eventmanager.currentChain += 1
-
 		}
 	} else {
 		game.eventmanager.currentChain += 1
 	}
+}
+
+event_set_conditional :: proc( curChain : ^game.SetConditionalEvent ) {
+	game.eventmanager.eventVariables[curChain.variableName] = curChain.value
+	game.eventmanager.currentChain += 1
+}
+
+event_set_tile :: proc( curChain : ^game.SetTileEvent ) {
+	tile := &game.region.tiles[curChain.position]
+	tile.model = curChain.value
+	tile.solid = curChain.solid
+	tile.surf  = curChain.surf
+	game.eventmanager.currentChain += 1
+}
+
+event_receive_monster :: proc( curChain : ^game.GetMonsterEvent ) {
+	monsters.add_to_team(monsters.create(
+		curChain.species,
+		curChain.level,
+	))
+	game.eventmanager.currentChain += 1
+}
+
+event_start_battle :: proc( curChain : ^game.StartBattleEvent ) {
+	if game.player.pokemon[0].species == .empty do return
+
+	battle.init(&game.battles[curChain.id])
+	game.eventmanager.currentChain += 1
+}
+
+event_end_battle :: proc( curChain : ^game.EndBattleEvent ) {
+	battle.close()
+	game.eventmanager.currentChain += 1
 }

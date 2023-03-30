@@ -104,7 +104,8 @@ EventManager :: struct {
 	currentChain	:  int,
 	uses			:  int,
 
-	eventVariables	: map[string]bool,
+	eventVariables	: map[string]union{ int, bool, string },
+	
 	playerName		: string,
 	playerPronouns	: [3]string,
 	rivalName		: string,
@@ -133,7 +134,7 @@ Keybinding :: struct {
 }
 
 Pokemon :: struct {
-	species : PokemonSpecies,
+	species : MonsterSpecies,
 	elementalType1	: ElementalType,
 	elementalType2	: ElementalType,
 
@@ -281,7 +282,7 @@ Emote :: enum {
 	poison,
 }
 
-PokemonSpecies :: enum {
+MonsterSpecies :: enum {
 	empty,
 
 	chikorita,

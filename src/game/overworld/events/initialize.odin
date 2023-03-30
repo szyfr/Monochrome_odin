@@ -17,6 +17,7 @@ init :: proc() {
 	game.eventmanager.eventVariables["rival_battle_1"] = false
 	game.eventmanager.eventVariables["talked_mom_1"] = false
 
+	game.eventmanager.eventVariables["tut_elm_series"] = 0
 	game.eventmanager.eventVariables["talked_elm_1"] = false
 	game.eventmanager.eventVariables["talked_elm_2"] = false
 	game.eventmanager.eventVariables["talked_elm_3"] = false

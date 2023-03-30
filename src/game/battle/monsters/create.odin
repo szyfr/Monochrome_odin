@@ -15,7 +15,7 @@ import "../../../debug"
 
 //= Procedures
 create :: proc(
-	species : game.PokemonSpecies,
+	species : game.MonsterSpecies,
 	level	: int,
 ) -> game.Pokemon {
 	pkmn : game.Pokemon = {}

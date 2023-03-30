@@ -3458,6 +3458,7 @@
 				["skip",9],
 				["text","newbarktown_mom_event1_bad_1"],
 				["text","newbarktown_mom_event1_bad_2"],
+
 				["text","newbarktown_mom_event1_2"],
 				["text","newbarktown_mom_event1_3"],
 				["text","newbarktown_mom_event1_4"],
@@ -3489,7 +3490,7 @@
 			"location": [ 6,36 ],
 			"type":"trigger",
 			"conditional":[
-				["talked_elm_1",false],
+				["tut_elm_series",0],
 			],
 			"chain": [
 				["turn","elm_1","down"],
@@ -3517,18 +3518,21 @@
 				["text","newbarktown_elm_event1_11"],
 				["text","newbarktown_elm_event1_12"],
 				["text","newbarktown_elm_event1_13"],
-				["setcon","talked_elm_1",true],
+			//	["setcon","talked_elm_1",true],
+				["setcon","tut_elm_series",1]
 			]
 		}, { // Chikorita
 			"location": [ 1,3 ],
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["conditional","talked_elm_2",true,5],
+				["conditional",["tut_elm_series",0],["leave_chain"]],
+				["conditional",["tut_elm_series",2],["leave_chain"]],
+				["conditional",["tut_elm_series",3],["leave_chain"]],
 				["choice","newbarktown_starter_event_1",[2,["yes","no"],[2,5]]]
 				["getpokemon","chikorita",5],
 				["setcon","chose_chikorita",true],
-				["setcon","talked_elm_2",true],
+				["setcon","tut_elm_series",2]
 				["wait",1],
 			]
 		}, { // Cyndaquil
@@ -3536,11 +3540,13 @@
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["conditional","talked_elm_2",true,5],
+				["conditional",["tut_elm_series",0],["leave_chain"]],
+				["conditional",["tut_elm_series",2],["leave_chain"]],
+				["conditional",["tut_elm_series",3],["leave_chain"]],
 				["choice","newbarktown_starter_event_2",[2,["yes","no"],[2,5]]]
 				["getpokemon","cyndaquil",5],
 				["setcon","chose_cyndaquil",true],
-				["setcon","talked_elm_2",true],
+				["setcon","tut_elm_series",2]
 				["wait",1],
 			]
 		}, { // Totodile
@@ -3548,19 +3554,20 @@
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["conditional","talked_elm_2",true,5],
+				["conditional",["tut_elm_series",0],["leave_chain"]],
+				["conditional",["tut_elm_series",2],["leave_chain"]],
+				["conditional",["tut_elm_series",3],["leave_chain"]],
 				["choice","newbarktown_starter_event_3",[2,["yes","no"],[2,5]]]
 				["getpokemon","totodile",5],
 				["setcon","chose_totodile",true],
-				["setcon","talked_elm_2",true],
+				["setcon","tut_elm_series",2]
 				["wait",1],
 			]
 		},  { // Elm Event 2
 			"location": [ 6,35 ],
 			"type":"trigger",
 			"conditional":[
-				["talked_elm_2",true],
-				["talked_elm_3",false],
+				["tut_elm_series",2],
 			],
 			"chain": [
 				["turn","player","up"],//0
@@ -3594,9 +3601,9 @@
 				["emote","rival_1","poison",1.0,true],//28
 				["emote","elm_1","sad",1.0,true],//29
 
-				["conditional","chose_chikorita",true,41],//30
-				["conditional","chose_cyndaquil",true,49],//31
-				["conditional","chose_totodile",true,33],//32
+				["conditional",["chose_chikorita",true],["jump_chain",11]],//30
+				["conditional",["chose_cyndaquil",true],["jump_chain",18]],//31
+				["wait",1],//32
 
 				["move","rival_1","right",1,true], // Chickorita //33
 				["turn","rival_1","up"],//34
@@ -3628,7 +3635,7 @@
 				["text","newbarktown_elm_event2_6"],
 				["text","newbarktown_elm_event2_7"],
 				
-				["setcon","talked_elm_3",true],
+				["setcon","tut_elm_series",3]
 				["music","rival_battle",1],
 				["animation",
 					"trainer_battle_2",
@@ -3638,9 +3645,9 @@
 					false,
 				]
 				["setcon","rival_battle_1",true],
-				["conditional","chose_chikorita",true,"rival_battle_cyndaquil"],
-				["conditional","chose_cyndaquil",true,"rival_battle_totodile"],
-				["conditional","chose_totodile",true,"rival_battle_chikorita"],
+				["conditional",["chose_chikorita",true],["start_battle","rival_battle_cyndaquil"]],
+				["conditional",["chose_cyndaquil",true],["start_battle","rival_battle_totodile"]],
+				["conditional",["chose_totodile",true],["start_battle","rival_battle_chikorita"]],
 			]
 		},
 		//{ // Elm Event 2
@@ -3658,7 +3665,7 @@
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["conditional","rival_battle_1",true,5],
+				["conditional",["rival_battle_1",true],["leave_chain"]],
 				["text","newbarktown_lab_assistant1_1_1"],
 				["text","newbarktown_lab_assistant1_1_2"],
 				["text","newbarktown_lab_assistant1_1_3"],
@@ -3673,7 +3680,7 @@
 			"type":"interact",
 			"conditional":[],
 			"chain": [
-				["conditional","rival_battle_1",true,8],
+				["conditional",["rival_battle_1",true],["leave_chain"]],
 				["text","newbarktown_lab_assistant2_1_1"],
 				["text","newbarktown_lab_assistant2_1_2"],
 				["text","newbarktown_lab_assistant2_1_3"],
