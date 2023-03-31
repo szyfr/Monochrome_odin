@@ -22,24 +22,28 @@ parse_events :: proc() {
 	curChain	:= &game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
 
 	#partial switch in curChain {
-		case game.TextEvent:			event_text(&curChain.(game.TextEvent))
-		case game.ChoiceEvent:			event_text_choice(&curChain.(game.ChoiceEvent))
+		case game.TextEvent:				event_text(&curChain.(game.TextEvent))
+		case game.ChoiceEvent:				event_text_choice(&curChain.(game.ChoiceEvent))
+		case game.ShowLevelUp:				event_show_levelup(&curChain.(game.ShowLevelUp))
 
-		case game.WarpEvent:			event_warp(&curChain.(game.WarpEvent))
-		case game.TurnEvent:			event_turn(&curChain.(game.TurnEvent))
-		case game.MoveEvent:			event_move(&curChain.(game.MoveEvent))
+		case game.WarpEvent:				event_warp(&curChain.(game.WarpEvent))
+		case game.TurnEvent:				event_turn(&curChain.(game.TurnEvent))
+		case game.MoveEvent:				event_move(&curChain.(game.MoveEvent))
 
-		case game.WaitEvent:			event_wait(&curChain.(game.WaitEvent))
+		case game.WaitEvent:				event_wait(&curChain.(game.WaitEvent))
 
-		case game.ConditionalEvent:		event_conditional(&curChain.(game.ConditionalEvent))
-		case game.SetConditionalEvent:	event_set_conditional(&curChain.(game.SetConditionalEvent))
+		case game.ConditionalEvent:			event_conditional(&curChain.(game.ConditionalEvent))
+		case game.SetConditionalEvent:		event_set_conditional(&curChain.(game.SetConditionalEvent))
 
-		case game.SetTileEvent:			event_set_tile(&curChain.(game.SetTileEvent))
+		case game.SetTileEvent:				event_set_tile(&curChain.(game.SetTileEvent))
 
-		case game.GetMonsterEvent:		event_receive_monster(&curChain.(game.GetMonsterEvent))
+		case game.GetMonsterEvent:			event_receive_monster(&curChain.(game.GetMonsterEvent))
 		
-		case game.StartBattleEvent:		event_start_battle(&curChain.(game.StartBattleEvent))
-		case game.EndBattleEvent:		event_end_battle(&curChain.(game.EndBattleEvent))
+		case game.StartBattleEvent:			event_start_battle(&curChain.(game.StartBattleEvent))
+		case game.EndBattleEvent:			event_end_battle(&curChain.(game.EndBattleEvent))
+
+		case game.PlaySoundEvent:			event_play_sound(&curChain.(game.PlaySoundEvent))
+		case game.PlayMusicEvent:			event_play_music(&curChain.(game.PlayMusicEvent))
 			
 		case game.EmoteEvent:
 				emotingEnt : ^game.Entity
@@ -81,89 +85,12 @@ parse_events :: proc() {
 					game.eventmanager.uses = 0
 					game.eventmanager.currentChain += 1
 				}
-				
 
+		case game.OverlayAnimationEvent:	event_animation_overlay(&curChain.(game.OverlayAnimationEvent))
 			
+		case game.GiveExperience:			event_gain_exp(&curChain.(game.GiveExperience))
 
-		
-
-		case game.PlaySoundEvent:
-				audio.play_sound(curChain.(game.PlaySoundEvent).name, curChain.(game.PlaySoundEvent).pitch)
-				game.eventmanager.currentChain += 1
-
-		case game.PlayMusicEvent:
-				audio.play_music(curChain.(game.PlayMusicEvent).name, curChain.(game.PlayMusicEvent).pitch)
-				game.eventmanager.currentChain += 1
-
-		case game.OverlayAnimationEvent:
-				if game.eventmanager.uses == 0 {
-					game.overlayTexture = curChain.(game.OverlayAnimationEvent).texture
-					game.overlayActive	= true
-				}
-				if game.eventmanager.uses >= curChain.(game.OverlayAnimationEvent).length {
-					game.eventmanager.uses = 0
-					game.eventmanager.currentChain += 1
-
-					if !curChain.(game.OverlayAnimationEvent).stay {
-						game.overlayTexture = {}
-						game.overlayActive = false
-						game.overlayRectangle = {}
-					}
-				} else {
-					game.eventmanager.uses += 1
-					mod := game.eventmanager.uses / curChain.(game.OverlayAnimationEvent).timer
-					game.overlayRectangle = {
-						f32(curChain.(game.OverlayAnimationEvent).animation[mod % (len(curChain.(game.OverlayAnimationEvent).animation))] * 256),
-						0,
-						255,
-						144,
-					}
-
-				}
-			
-		case game.GiveExperience:
-				if game.eventmanager.uses >= curChain.(game.GiveExperience).amount * 3 {
-					game.eventmanager.currentChain += 1
-					break
-				}
-				if game.eventmanager.uses % 3 == 0 && game.eventmanager.uses > 0 {
-					//audio.play_sound("experience") //TODO experience gain noise
-					result := monsters.give_experience(&game.player.pokemon[curChain.(game.GiveExperience).member], 1)
-					if result {
-						chn := &curChain.(game.GiveExperience)
-						chn.amount -= game.eventmanager.uses / 3
-						game.eventmanager.uses = -170
-					}
-				}
-				game.eventmanager.uses += 1
-
-		case game.ShowLevelUp:
-				if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
-					str := strings.clone_from_cstring(game.localization["level_up"])
-					ui.open_textbox(str)
-					game.levelUpDisplay = &curChain.(game.ShowLevelUp)
-				}
-				if game.eventmanager.textbox.state == .finished {
-					game.eventmanager.currentChain += 1
-					if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
-						_, ok1 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.TextEvent)
-						_, ok2 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ChoiceEvent)
-						_, ok3 := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.ShowLevelUp)
-						if ok1 || ok2 || ok3 {
-							game.levelUpDisplay = nil
-							ui.reset_textbox()
-						} else {
-							game.levelUpDisplay = nil
-							ui.close_textbox()
-						}
-					} else {
-						game.levelUpDisplay = nil
-						ui.close_textbox()
-					}
-				}
-
-		case game.SkipEvent:
-			game.eventmanager.currentChain = game.eventmanager.currentEvent.chain[game.eventmanager.currentChain].(game.SkipEvent).event
+		case game.SkipEvent:				event_skip(&curChain.(game.SkipEvent))
 	}
 }
 
@@ -219,6 +146,35 @@ event_text_choice :: proc( curChain : ^game.ChoiceEvent ) {
 		//* Reset if next event is also text-based, else close
 		if ok1 || ok2 || ok3 do ui.reset_textbox()
 		else do ui.close_textbox()
+	}
+}
+
+event_show_levelup :: proc( curChain : ^game.ShowLevelUp ) {
+	//* Check if textbox is inactive or reset, open it if so.
+	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
+		str := strings.clone_from_cstring(game.localization["level_up"])
+		ui.open_textbox(str)
+		game.levelUpDisplay = curChain
+	}
+	//* Check if textbox is finished
+	if game.eventmanager.textbox.state == .finished {
+		game.eventmanager.currentChain += 1
+		if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
+			newChain := &game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
+			_, ok1 := newChain.(game.TextEvent)
+			_, ok2 := newChain.(game.ChoiceEvent)
+			_, ok3 := newChain.(game.ShowLevelUp)
+			if ok1 || ok2 || ok3 {
+				game.levelUpDisplay = nil
+				ui.reset_textbox()
+			} else {
+				game.levelUpDisplay = nil
+				ui.close_textbox()
+			}
+		} else {
+			game.levelUpDisplay = nil
+			ui.close_textbox()
+		}
 	}
 }
 
@@ -325,4 +281,66 @@ event_start_battle :: proc( curChain : ^game.StartBattleEvent ) {
 event_end_battle :: proc( curChain : ^game.EndBattleEvent ) {
 	battle.close()
 	game.eventmanager.currentChain += 1
+}
+
+event_play_sound :: proc( curChain : ^game.PlaySoundEvent ) {
+	audio.play_sound(curChain.name, curChain.pitch)
+	game.eventmanager.currentChain += 1
+}
+
+event_play_music :: proc( curChain : ^game.PlayMusicEvent ) {
+	audio.play_music(curChain.name, curChain.pitch)
+	game.eventmanager.currentChain += 1
+}
+
+event_animation_overlay :: proc( curChain : ^game.OverlayAnimationEvent ) {
+	//* Initial
+	if game.eventmanager.uses == 0 {
+		game.overlayTexture = curChain.texture
+		game.overlayActive	= true
+	}
+
+	//* Ending
+	if game.eventmanager.uses >= curChain.length {
+		game.eventmanager.uses = 0
+		game.eventmanager.currentChain += 1
+
+		if !curChain.stay {
+			game.overlayTexture = {}
+			game.overlayActive = false
+			game.overlayRectangle = {}
+		}
+	} else {
+		//* Ongoing
+		game.eventmanager.uses += 1
+		mod := game.eventmanager.uses / curChain.timer
+		game.overlayRectangle = {
+			f32(curChain.animation[mod % (len(curChain.animation))] * 256),
+			0,
+			255,
+			144,
+		}
+
+	}
+}
+
+event_skip :: proc( curChain : ^game.SkipEvent ) {
+	//TODO Rework to allow different types of skips
+	game.eventmanager.currentChain = curChain.event
+}
+
+event_gain_exp :: proc( curChain : ^game.GiveExperience ) {
+	if game.eventmanager.uses >= curChain.amount * 3 {
+		game.eventmanager.currentChain += 1
+		return
+	}
+	if game.eventmanager.uses % 3 == 0 && game.eventmanager.uses > 0 {
+		//audio.play_sound("experience") //TODO experience gain noise
+		result := monsters.give_experience(&game.player.pokemon[curChain.member], 1)
+		if result {
+			curChain.amount -= game.eventmanager.uses / 3
+			game.eventmanager.uses = -170
+		}
+	}
+	game.eventmanager.uses += 1
 }
