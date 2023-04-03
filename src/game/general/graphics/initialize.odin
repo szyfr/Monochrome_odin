@@ -54,7 +54,10 @@ init :: proc() {
 		game.attackModels[strName] = raylib.LoadModel(strings.clone_to_cstring(strings.concatenate({"data/attacks/",strLoc})))
 	}
 
-	//game.emotes	= raylib.LoadTexture("data/sprites/spr_emotes.png")
+	game.indicator = raylib.LoadMaterialDefault()
+	game.indicator.maps[0].texture = raylib.LoadTexture("data/sprites/spr_indicator.png")
+
+	
 	game.emotes			= raylib.LoadImage("data/sprites/spr_emotes.png")
 	game.emoteMeshDef	= raylib.GenMeshPlane(0.75,0.75,1,1)
 

@@ -82,6 +82,21 @@ draw :: proc() {
 		standee.draw(enemy.standee)
 	}
 
+	mat : raylib.Matrix = {
+		1.00,  0.00, 0.00, 0.00,
+		0.00,  0.78, 0.80, 0.00,
+		0.00, -0.80, 0.78, 0.00,
+		0.00,  0.00, 0.00, 1.00,
+	}
+	mat[3,0] = player.position.x + 0.5
+	mat[3,1] = player.position.y + 1.5
+	mat[3,2] = player.position.z +0.1
+	raylib.DrawMesh(
+		game.emoteMeshDef,
+		game.indicator,
+		mat,
+	)
+
 	//* 
 	for i in game.battleStruct.attackEntities {
 		switch in i {

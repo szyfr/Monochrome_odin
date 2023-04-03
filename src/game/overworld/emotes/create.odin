@@ -33,5 +33,4 @@ create :: proc(
 	}
 
 	append(&game.emoteList, emote)
-	fmt.printf("%v\n",emote)
 }

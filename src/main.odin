@@ -42,7 +42,8 @@ main_logic :: proc() {
 
 	if settings.is_key_pressed("debug") {
 		for i in game.region.events {
-			fmt.printf("%v:%v\n",i,game.region.events[i])
+			monsters.add_to_team(monsters.create(.chikorita, 5))
+			battle.init(&game.battles["rival_battle_cyndaquil"])
 		}
 	}
 }

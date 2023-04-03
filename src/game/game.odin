@@ -46,9 +46,11 @@ font			: raylib.Font
 
 pokemonSprites	: map[MonsterSpecies]raylib.Texture
 
-emotes			: raylib.Image
+//* Targeter
 targeter		: raylib.Model
 attackOverlays	: map[PokemonAttack]AttackOverlay
+
+indicator		: raylib.Material
 
 overlayActive		: bool
 overlayTexture		: raylib.Texture
@@ -74,6 +76,8 @@ battleStruct	: ^BattleStructure
 lastBattleOutcome : bool = false
 pokemonData		: json.Array
 
+//* Emotes
+emotes			: raylib.Image
 emoteList		: [dynamic]EmoteStruct
 emoteMaterials	: [8]raylib.Material
 emoteMeshDef	: raylib.Mesh
