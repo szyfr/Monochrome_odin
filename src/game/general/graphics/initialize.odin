@@ -54,7 +54,16 @@ init :: proc() {
 		game.attackModels[strName] = raylib.LoadModel(strings.clone_to_cstring(strings.concatenate({"data/attacks/",strLoc})))
 	}
 
-	game.emotes	= raylib.LoadTexture("data/sprites/spr_emotes.png")
+	//game.emotes	= raylib.LoadTexture("data/sprites/spr_emotes.png")
+	game.emotes			= raylib.LoadImage("data/sprites/spr_emotes.png")
+	game.emoteMeshDef	= raylib.GenMeshPlane(0.75,0.75,1,1)
+
+	for i:=0;i<8;i+=1 {
+		game.emoteMaterials[i] = raylib.LoadMaterialDefault()
+		img	:= raylib.ImageFromImage(game.emotes,{f32(i)*16,0,16,16})
+		game.emoteMaterials[i].maps[0].texture = raylib.LoadTextureFromImage(img)
+		raylib.UnloadImage(img)
+	}
 
 	trgTex	:= raylib.LoadTexture("data/sprites/spr_targeter.png")
 	mesh	:= raylib.GenMeshPlane(1,1,1,1)

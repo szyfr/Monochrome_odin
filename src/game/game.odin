@@ -46,7 +46,7 @@ font			: raylib.Font
 
 pokemonSprites	: map[MonsterSpecies]raylib.Texture
 
-emotes			: raylib.Texture
+emotes			: raylib.Image
 targeter		: raylib.Model
 attackOverlays	: map[PokemonAttack]AttackOverlay
 
@@ -67,13 +67,16 @@ tilesTexture	:  [8]raylib.Texture
 tiles			:  map[string]raylib.Model
 attackModels	:  map[string]raylib.Model
 region			: ^Region
-emoteList		: [dynamic]EmoteStruct
 localization	:  map[string]cstring
 eventmanager	: ^EventManager
 battles			:  map[string]BattleData
 battleStruct	: ^BattleStructure
 lastBattleOutcome : bool = false
 pokemonData		: json.Array
+
+emoteList		: [dynamic]EmoteStruct
+emoteMaterials	: [8]raylib.Material
+emoteMeshDef	: raylib.Mesh
 
 battleTrainerWinEvent	: Event
 battleWildWinEvent		: Event

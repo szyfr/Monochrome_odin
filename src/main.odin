@@ -18,6 +18,7 @@ import "game/general/audio"
 
 import "game/overworld/map/tiles"
 import "game/overworld/map/region"
+import "game/overworld/emotes"
 import "game/overworld/entity"
 import "game/overworld/player"
 import "game/overworld/events"
@@ -54,10 +55,10 @@ main_draw :: proc() {
 	//* Region
 	region.draw()
 	if game.battleStruct != nil do battle.draw()
+	emotes.draw()
 
 	raylib.EndMode3D()
 
-	entity.draw_emotes()
 	ui.draw_menus()
 	ui.draw_textbox()
 	if game.overlayActive {

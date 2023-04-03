@@ -8,6 +8,7 @@ import "core:strings"
 import "vendor:raylib"
 
 import "../../../game"
+import "../emotes"
 import "../entity"
 import "../../battle"
 import "../../battle/monsters"
@@ -45,46 +46,46 @@ parse_events :: proc() {
 		case game.PlaySoundEvent:			event_play_sound(&curChain.(game.PlaySoundEvent))
 		case game.PlayMusicEvent:			event_play_music(&curChain.(game.PlayMusicEvent))
 			
-		case game.EmoteEvent:
-				emotingEnt : ^game.Entity
-				for ent in game.region.entities do if game.region.entities[ent].id == curChain.(game.EmoteEvent).entityid do emotingEnt = &game.region.entities[ent]
-				if curChain.(game.EmoteEvent).entityid == "player" do emotingEnt = game.player.entity
-				
-				if game.eventmanager.uses == 0 && emotingEnt != nil {
-					position : raylib.Vector2 = raylib.GetWorldToScreen(emotingEnt.position + {0,2.25,0}, game.camera)
-					src : raylib.Rectangle = {
-						16 * f32(curChain.(game.EmoteEvent).emote),
-						0,
-						16,16,
-					}
-					dest : raylib.Rectangle = {
-						position.x,
-						position.y,
-						80,80,
-					}
-					strc : game.EmoteStruct = {
-						src			= src,
-						dest		= dest,
-						charPos		= {
-							emotingEnt.position.x,
-							emotingEnt.position.z,
-						},
-						duration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
-						maxDuration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
-					}
-					if curChain.(game.EmoteEvent).entityid == "player" do strc.player = true
-					append(&game.emoteList, strc)
-					//TODO Noise
+		case game.EmoteEvent:				event_emote(&curChain.(game.EmoteEvent))
+			//emotingEnt : ^game.Entity
+			//for ent in game.region.entities do if game.region.entities[ent].id == curChain.(game.EmoteEvent).entityid do emotingEnt = &game.region.entities[ent]
+			//if curChain.(game.EmoteEvent).entityid == "player" do emotingEnt = game.player.entity
+			//
+			//if game.eventmanager.uses == 0 && emotingEnt != nil {
+			//	position : raylib.Vector2 = raylib.GetWorldToScreen(emotingEnt.position + {0,2.25,0}, game.camera)
+			//	src : raylib.Rectangle = {
+			//		16 * f32(curChain.(game.EmoteEvent).emote),
+			//		0,
+			//		16,16,
+			//	}
+			//	dest : raylib.Rectangle = {
+			//		position.x,
+			//		position.y,
+			//		80,80,
+			//	}
+			//	strc : game.EmoteStruct = {
+			//		src			= src,
+			//		dest		= dest,
+			//		charPos		= {
+			//			emotingEnt.position.x,
+			//			emotingEnt.position.z,
+			//		},
+			//		duration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
+			//		maxDuration	= int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier),
+			//	}
+			//	if curChain.(game.EmoteEvent).entityid == "player" do strc.player = true
+			//	append(&game.emoteList, strc)
+			//	//TODO Noise
 
-					if !curChain.(game.EmoteEvent).skipwait do game.eventmanager.currentChain += 1
-					
-					game.eventmanager.uses += 1
-				} else if game.eventmanager.uses < int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier) && emotingEnt != nil {
-					game.eventmanager.uses += 1
-				} else {
-					game.eventmanager.uses = 0
-					game.eventmanager.currentChain += 1
-				}
+			//	if !curChain.(game.EmoteEvent).skipwait do game.eventmanager.currentChain += 1
+			//	
+			//	game.eventmanager.uses += 1
+			//} else if game.eventmanager.uses < int(f32(EMOTE_DURATION) * curChain.(game.EmoteEvent).multiplier) && emotingEnt != nil {
+			//	game.eventmanager.uses += 1
+			//} else {
+			//	game.eventmanager.uses = 0
+			//	game.eventmanager.currentChain += 1
+			//}
 
 		case game.OverlayAnimationEvent:	event_animation_overlay(&curChain.(game.OverlayAnimationEvent))
 			
@@ -343,4 +344,31 @@ event_gain_exp :: proc( curChain : ^game.GiveExperience ) {
 		}
 	}
 	game.eventmanager.uses += 1
+}
+
+event_emote :: proc( curChain : ^game.EmoteEvent ) {
+	time := int(curChain.multiplier * 50)
+	if game.eventmanager.uses == 0 {
+		emotingEnt := entity.get_entity(curChain.entityid)
+		fmt.printf("%v\n",emotingEnt.position)
+		if emotingEnt == nil {
+			game.eventmanager.currentChain += 1
+			return
+		}
+		emotes.create(
+			emotingEnt.position,
+			time,
+			curChain.emote,
+		)
+		game.eventmanager.uses += 1
+	} else if game.eventmanager.uses < time {
+		game.eventmanager.uses += 1
+	} else {
+		game.eventmanager.currentChain += 1
+		game.eventmanager.uses = 0
+	}
+	if !curChain.skipwait {
+		game.eventmanager.currentChain += 1
+		game.eventmanager.uses = 0
+	}
 }
