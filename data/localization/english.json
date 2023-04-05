@@ -3,7 +3,7 @@
 	"title":"Monochrome",
 
 	"pokedex": "Pokedex",
-	"pokemon": "Pokemon",
+	"monster": "Pokemon",
 	"inventory": "Bag",
 	"player": "Player",
 	"options": "Options",
@@ -128,7 +128,7 @@
 
 	"event_1_1": "I can't leave town\n\nwithout a Pokemon...",
 	
-	"event_2_1": "Yo, {PLAYER_NAME}!\n\n{POKEMON_0_NAME}/{POKEMON_0_LEVEL}/{EXPERIENCE}",
+	"event_2_1": "Yo, {PLAYER_NAME}!\n\n{MONSTER_0_NAME}/{MONSTER_0_LEVEL}/{EXPERIENCE}",
 	"event_2_2": "I hear Prof. Elm\n\nfound some new Pokemon.",
 	
 	"event_3_1": "Wow, your PokeGear\n\nis impressive!",
@@ -136,16 +136,16 @@
 
 	//* Battle
 	"trainer_battle_win_1":"You've beaten\n\n{ENEMY_TRAINER}!",
-	"trainer_battle_win_2":"{POKEMON_0_NAME} gained\n\n{EXPERIENCE} experience!",
+	"trainer_battle_win_2":"{MONSTER_0_NAME} gained\n\n{EXPERIENCE} experience!",
 	"trainer_battle_lose_1":"All of your pokemon have fainted.",
 	"trainer_battle_lose_2":"You run home to heal\nyour wounded pokemon.",
 
-	"wild_battle_win_1":"Wild {ENEMY_POKEMON_0_NAME}\n\nfainted!",
-	"wild_battle_win_2":"{POKEMON_0_NAME} gained\n\n{EXPERIENCE} experience!",
+	"wild_battle_win_1":"Wild {ENEMY_MONSTER_0_NAME}\n\nfainted!",
+	"wild_battle_win_2":"{MONSTER_0_NAME} gained\n\n{EXPERIENCE} experience!",
 
-	"level_up":"{POKEMON_0_NAME} has\n\nreached level {POKEMON_0_LEVEL}"
+	"level_up":"{MONSTER_0_NAME} has\n\nreached level {MONSTER_0_LEVEL}"
 
-	// Pokemon
+	// Monster
 	"chikorita":"Chikorita",
 	"bayleaf":"Bayleaf",
 	"meganium":"Meganium",

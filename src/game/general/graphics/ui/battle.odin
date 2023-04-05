@@ -20,8 +20,8 @@ STATUS_HEIGHT :: 200
 
 //= Procedures
 draw_battle :: proc() {
-	player	:= &game.battleStruct.playerPokemon
-	enemy	:= &game.battleStruct.enemyPokemon
+	player	:= &game.battleStruct.playerMonster
+	enemy	:= &game.battleStruct.enemyMonster
 	builder : strings.Builder
 
 	//* Player
@@ -33,7 +33,7 @@ draw_battle :: proc() {
 		0,
 		raylib.WHITE,
 	)
-	str		:= strings.to_pascal_case(reflect.enum_string(player.pokemonInfo.species))
+	str		:= strings.to_pascal_case(reflect.enum_string(player.monsterInfo.species))
 	cstr	:= strings.clone_to_cstring(str)
 	raylib.DrawTextEx(
 		game.font,
@@ -45,7 +45,7 @@ draw_battle :: proc() {
 	)
 
 	img		:= raylib.GenImageColor(100, 1, raylib.WHITE)
-	percent	:= (f32(player.pokemonInfo.hpCur) / f32(player.pokemonInfo.hpMax)) * 100
+	percent	:= (f32(player.monsterInfo.hpCur) / f32(player.monsterInfo.hpMax)) * 100
 	raylib.ImageDrawLineV(&img, {0,0}, {percent,0}, raylib.GREEN)
 	raylib.UnloadTexture(game.battleStruct.playerHPBar)
 	game.battleStruct.playerHPBar = raylib.LoadTextureFromImage(img)
@@ -59,7 +59,7 @@ draw_battle :: proc() {
 		raylib.WHITE,
 	)
 
-	fmt.sbprintf(&builder, "%v/%v", player.pokemonInfo.hpCur, player.pokemonInfo.hpMax)
+	fmt.sbprintf(&builder, "%v/%v", player.monsterInfo.hpCur, player.monsterInfo.hpMax)
 	delete(cstr)
 	str		= strings.to_string(builder)
 	cstr	= strings.clone_to_cstring(str)
@@ -76,7 +76,7 @@ draw_battle :: proc() {
 	)
 	strings.builder_reset(&builder)
 
-	fmt.sbprintf(&builder, "lv%v", player.pokemonInfo.level)
+	fmt.sbprintf(&builder, "lv%v", player.monsterInfo.level)
 	delete(cstr)
 	str		= strings.to_string(builder)
 	cstr	= strings.clone_to_cstring(str)
@@ -94,7 +94,7 @@ draw_battle :: proc() {
 	strings.builder_reset(&builder)
 
 	img		= raylib.GenImageColor(100, 1, raylib.WHITE)
-	percent	= math.floor(monsters.exp_ratio(player.pokemonInfo.experience, player.pokemonInfo.level) * 100)
+	percent	= math.floor(monsters.exp_ratio(player.monsterInfo.experience, player.monsterInfo.level) * 100)
 	raylib.ImageDrawLineV(&img, {0,0}, {percent,0}, raylib.BLUE)
 	raylib.UnloadTexture(game.battleStruct.playerEXPBar)
 	game.battleStruct.playerEXPBar = raylib.LoadTextureFromImage(img)
@@ -122,7 +122,7 @@ draw_battle :: proc() {
 		raylib.WHITE,
 	)
 	delete(cstr)
-	str		= strings.to_pascal_case(reflect.enum_string(enemy.pokemonInfo.species))
+	str		= strings.to_pascal_case(reflect.enum_string(enemy.monsterInfo.species))
 	cstr	= strings.clone_to_cstring(str)
 	raylib.DrawTextEx(
 		game.font,
@@ -137,7 +137,7 @@ draw_battle :: proc() {
 	)
 
 	img		= raylib.GenImageColor(100, 1, raylib.WHITE)
-	percent	= (f32(enemy.pokemonInfo.hpCur) / f32(enemy.pokemonInfo.hpMax)) * 100
+	percent	= (f32(enemy.monsterInfo.hpCur) / f32(enemy.monsterInfo.hpMax)) * 100
 	raylib.ImageDrawLineV(&img, {0,0}, {percent,0}, raylib.GREEN)
 	raylib.UnloadTexture(game.battleStruct.enemyHPBar)
 	game.battleStruct.enemyHPBar = raylib.LoadTextureFromImage(img)
@@ -154,7 +154,7 @@ draw_battle :: proc() {
 		raylib.WHITE,
 	)
 
-	fmt.sbprintf(&builder, "%v/%v", enemy.pokemonInfo.hpCur, enemy.pokemonInfo.hpMax)
+	fmt.sbprintf(&builder, "%v/%v", enemy.monsterInfo.hpCur, enemy.monsterInfo.hpMax)
 	delete(cstr)
 	str		= strings.to_string(builder)
 	cstr	= strings.clone_to_cstring(str)
@@ -171,7 +171,7 @@ draw_battle :: proc() {
 	)
 	strings.builder_reset(&builder)
 
-	fmt.sbprintf(&builder, "lv%v", enemy.pokemonInfo.level)
+	fmt.sbprintf(&builder, "lv%v", enemy.monsterInfo.level)
 	delete(cstr)
 	str		= strings.to_string(builder)
 	cstr	= strings.clone_to_cstring(str)
@@ -189,7 +189,7 @@ draw_battle :: proc() {
 	strings.builder_reset(&builder)
 
 	//* Attack UI
-	count := monsters.number_attacks(player.pokemonInfo.attacks)
+	count := monsters.number_attacks(player.monsterInfo.attacks)
 	switch count {
 		case 1:
 			raylib.DrawTextureNPatch(
@@ -204,7 +204,7 @@ draw_battle :: proc() {
 				raylib.WHITE,
 			)
 			delete(cstr)
-			str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[0].type),"_name"})
+			str		= strings.concatenate({reflect.enum_string(player.monsterInfo.attacks[0].type),"_name"})
 			raylib.DrawTextPro(
 				game.font,
 				game.localization[str],
@@ -228,7 +228,7 @@ draw_battle :: proc() {
 					raylib.WHITE,
 				)
 				delete(cstr)
-				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
+				str		= strings.concatenate({reflect.enum_string(player.monsterInfo.attacks[atk].type),"_name"})
 				raylib.DrawTextPro(
 					game.font,
 					game.localization[str],
@@ -253,7 +253,7 @@ draw_battle :: proc() {
 					raylib.WHITE,
 				)
 				delete(cstr)
-				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
+				str		= strings.concatenate({reflect.enum_string(player.monsterInfo.attacks[atk].type),"_name"})
 				//cstr	= strings.clone_to_cstring(str)
 				raylib.DrawTextPro(
 					game.font,
@@ -279,7 +279,7 @@ draw_battle :: proc() {
 					raylib.WHITE,
 				)
 				delete(cstr)
-				str		= strings.concatenate({reflect.enum_string(player.pokemonInfo.attacks[atk].type),"_name"})
+				str		= strings.concatenate({reflect.enum_string(player.monsterInfo.attacks[atk].type),"_name"})
 				raylib.DrawTextPro(
 					game.font,
 					game.localization[str],

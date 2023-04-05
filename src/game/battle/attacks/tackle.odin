@@ -33,7 +33,7 @@ use_tackle :: proc(
 	dir := reflect.enum_string(player.direction)
 	animations.set_animation(&player.standee.animator, strings.concatenate({"walk_", dir}))
 
-	player.pokemonInfo.attacks[player.selectedAtk].cooldown = 100
+	player.monsterInfo.attacks[player.selectedAtk].cooldown = 100
 
 	ent : game.AttackFollow = {
 		attackModel = "tackle",
@@ -48,7 +48,7 @@ use_tackle :: proc(
 		power = 40,
 
 		life = 15,
-		user = player.pokemonInfo,
+		user = player.monsterInfo,
 		player = playerUsed,
 	}
 	append(&game.battleStruct.attackEntities, ent)

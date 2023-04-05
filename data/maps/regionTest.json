@@ -3530,7 +3530,7 @@
 				["conditional",["tut_elm_series",2],["leave_chain"]],
 				["conditional",["tut_elm_series",3],["leave_chain"]],
 				["choice","newbarktown_starter_event_1",[2,["yes","no"],[4,7]]]
-				["getpokemon","chikorita",5],
+				["getmonster","chikorita",5],
 				["setcon","chose_chikorita",true],
 				["setcon","tut_elm_series",2]
 				["wait",1],
@@ -3544,7 +3544,7 @@
 				["conditional",["tut_elm_series",2],["leave_chain"]],
 				["conditional",["tut_elm_series",3],["leave_chain"]],
 				["choice","newbarktown_starter_event_2",[2,["yes","no"],[4,7]]]
-				["getpokemon","cyndaquil",5],
+				["getmonster","cyndaquil",5],
 				["setcon","chose_cyndaquil",true],
 				["setcon","tut_elm_series",2]
 				["wait",1],
@@ -3558,7 +3558,7 @@
 				["conditional",["tut_elm_series",2],["leave_chain"]],
 				["conditional",["tut_elm_series",3],["leave_chain"]],
 				["choice","newbarktown_starter_event_3",[2,["yes","no"],[4,7]]]
-				["getpokemon","totodile",5],
+				["getmonster","totodile",5],
 				["setcon","chose_totodile",true],
 				["setcon","tut_elm_series",2]
 				["wait",1],
@@ -3706,7 +3706,7 @@
 				["emote","rival_1","shocked",1.0,true],
 			//	["conditional","variable_1",true,[ 11,5 ]],
 			//	["setcon","variable_1",true],
-			//	["getpokemon","chikorita",5],
+			//	["getmonster","chikorita",5],
 			//	["settile",[ 4,4 ],"tile_flower_bottom",true,false],
 				["text","event_0_3"],
 				["move","player","down",1,true],

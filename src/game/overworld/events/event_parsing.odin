@@ -273,7 +273,7 @@ event_receive_monster :: proc( curChain : ^game.GetMonsterEvent ) {
 }
 
 event_start_battle :: proc( curChain : ^game.StartBattleEvent ) {
-	if game.player.pokemon[0].species == .empty do return
+	if game.player.monster[0].species == .empty do return
 
 	battle.init(&game.battles[curChain.id])
 	game.eventmanager.currentChain += 1
@@ -337,7 +337,7 @@ event_gain_exp :: proc( curChain : ^game.GiveExperience ) {
 	}
 	if game.eventmanager.uses % 3 == 0 && game.eventmanager.uses > 0 {
 		//audio.play_sound("experience") //TODO experience gain noise
-		result := monsters.give_experience(&game.player.pokemon[curChain.member], 1)
+		result := monsters.give_experience(&game.player.monster[curChain.member], 1)
 		if result {
 			curChain.amount -= game.eventmanager.uses / 3
 			game.eventmanager.uses = -170

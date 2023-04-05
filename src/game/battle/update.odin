@@ -28,9 +28,9 @@ ARENA_MAX_Z :: 62.75
 
 //= Procedures
 update :: proc() {
-	player	:= &game.battleStruct.playerPokemon
-	enemy	:= &game.battleStruct.enemyPokemon
-	pkmn	:=  game.battleStruct.playerPokemon.pokemonInfo
+	player	:= &game.battleStruct.playerMonster
+	enemy	:= &game.battleStruct.enemyMonster
+	pkmn	:=  game.battleStruct.playerMonster.monsterInfo
 	
 	//* Player movement
 	if player.canMove && game.eventmanager.currentEvent == nil {
@@ -88,7 +88,7 @@ update :: proc() {
 
 
 	//* Attack UI
-	count	:= monsters.number_attacks(player.pokemonInfo.attacks)
+	count	:= monsters.number_attacks(player.monsterInfo.attacks)
 	rot		:= 360 - game.battleStruct.playerAttackRot
 
 	interval := f32(360 / count)
@@ -110,8 +110,8 @@ update :: proc() {
 		if player.timer < 0 {
 			player.canMove		= true
 			player.forcedMove	= false
-			if settings.is_key_pressed("attack") && player.pokemonInfo.attacks[player.selectedAtk].cooldown <= 0 {
-				#partial switch player.pokemonInfo.attacks[player.selectedAtk].type {
+			if settings.is_key_pressed("attack") && player.monsterInfo.attacks[player.selectedAtk].cooldown <= 0 {
+				#partial switch player.monsterInfo.attacks[player.selectedAtk].type {
 					case .tackle:		attacks.use_tackle(player,enemy,true)
 					case .scratch:
 					case .growl:		attacks.use_growl(player,enemy,true)
@@ -120,8 +120,8 @@ update :: proc() {
 					case .ember:
 					case .watergun:
 				}
-			} else if player.pokemonInfo.attacks[player.selectedAtk].cooldown > 0 {
-				player.pokemonInfo.attacks[player.selectedAtk].cooldown -= 1
+			} else if player.monsterInfo.attacks[player.selectedAtk].cooldown > 0 {
+				player.monsterInfo.attacks[player.selectedAtk].cooldown -= 1
 			}
 		} else {
 			player.timer -= 1
@@ -145,7 +145,7 @@ update :: proc() {
 					damage : f32
 					switch follow.attackType {
 						case .physical:
-							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.pokemonInfo.def))) / 50) + 2)
+							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.monsterInfo.def))) / 50) + 2)
 							if	follow.elementalType == follow.user.elementalType1 || follow.elementalType == follow.user.elementalType2 do damage *= 1.5
 
 							fmt.printf("Player hit for %v damage\n", damage)
@@ -168,21 +168,21 @@ update :: proc() {
 							enemy.timer				= 20
 							for i in follow.effects {
 								#partial switch i {
-									case .atkDown_enemy: player.pokemonInfo.statChanges[1] -= 1
-									case .atkDown_self: enemy.pokemonInfo.statChanges[1] -= 1
+									case .atkDown_enemy: player.monsterInfo.statChanges[1] -= 1
+									case .atkDown_self: enemy.monsterInfo.statChanges[1] -= 1
 								}
 							}
 					}
 					
 					damage = math.ceil(damage)
-					player.pokemonInfo.hpCur -= int(damage)
+					player.monsterInfo.hpCur -= int(damage)
 				}
 				//* Enemy
 				if raylib.CheckCollisionBoxes(enemy.bounds, get_bounds(&game.battleStruct.attackEntities[i])) && follow.player {
 					damage : f32
 					switch follow.attackType {
 						case .physical:
-							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.pokemonInfo.def))) / 50) + 2)
+							damage = (((((2*f32(follow.user.level)) / 5) * follow.power * (f32(follow.user.atk) / f32(enemy.monsterInfo.def))) / 50) + 2)
 							if	follow.elementalType == follow.user.elementalType1 || follow.elementalType == follow.user.elementalType2 do damage *= 1.5
 
 							fmt.printf("Enemy hit for %v damage\n", damage)
@@ -205,14 +205,14 @@ update :: proc() {
 							enemy.timer				= 20
 							for i in follow.effects {
 								#partial switch i {
-									case .atkDown_enemy: enemy.pokemonInfo.statChanges[1] -= 1
-									case .atkDown_self: player.pokemonInfo.statChanges[1] -= 1
+									case .atkDown_enemy: enemy.monsterInfo.statChanges[1] -= 1
+									case .atkDown_self: player.monsterInfo.statChanges[1] -= 1
 								}
 							}
 					}
 					
 					damage = math.ceil(damage)
-					enemy.pokemonInfo.hpCur -= int(damage)
+					enemy.monsterInfo.hpCur -= int(damage)
 				}
 		} 
 		
@@ -221,9 +221,9 @@ update :: proc() {
 	delete(game.battleStruct.attackEntities)
 	game.battleStruct.attackEntities = temp
 
-	if enemy.pokemonInfo.hpCur <= 0 {
-		//experience := ((monsters.get_exp_yield(enemy.pokemonInfo.species) * f32(enemy.pokemonInfo.level)) / 5) * math.pow(((2 * f32(enemy.pokemonInfo.level) + 10) / (f32(enemy.pokemonInfo.level) + f32(player.pokemonInfo.level) + 10)), 2.5) + 1
-		experience := ((monsters.get_exp_yield(enemy.pokemonInfo.species) * f32(enemy.pokemonInfo.level)) / 5)
+	if enemy.monsterInfo.hpCur <= 0 {
+		//experience := ((monsters.get_exp_yield(enemy.monsterInfo.species) * f32(enemy.monsterInfo.level)) / 5) * math.pow(((2 * f32(enemy.monsterInfo.level) + 10) / (f32(enemy.monsterInfo.level) + f32(player.monsterInfo.level) + 10)), 2.5) + 1
+		experience := ((monsters.get_exp_yield(enemy.monsterInfo.species) * f32(enemy.monsterInfo.level)) / 5)
 		if !enemy.wild do experience = f32(experience) * 1.5
 		game.battleStruct.experience = int(experience)
 		//EXP share
@@ -235,32 +235,32 @@ update :: proc() {
 			chn1 := &game.battleTrainerWinEvent.chain[3].(game.GiveExperience)
 			chn2 := &game.battleTrainerWinEvent.chain[4].(game.ShowLevelUp)
 			chn1.amount = int(experience)
-			chn2.level	= player.pokemonInfo.level
-			chn2.hp		= player.pokemonInfo.hpMax
-			chn2.atk	= player.pokemonInfo.atk
-			chn2.def	= player.pokemonInfo.def
-			chn2.spatk	= player.pokemonInfo.spAtk
-			chn2.spdef	= player.pokemonInfo.spDef
-			chn2.spd	= player.pokemonInfo.spd
+			chn2.level	= player.monsterInfo.level
+			chn2.hp		= player.monsterInfo.hpMax
+			chn2.atk	= player.monsterInfo.atk
+			chn2.def	= player.monsterInfo.def
+			chn2.spatk	= player.monsterInfo.spAtk
+			chn2.spdef	= player.monsterInfo.spDef
+			chn2.spd	= player.monsterInfo.spd
 			game.eventmanager.currentEvent = &game.battleTrainerWinEvent
 		} else if enemy.wild && game.eventmanager.currentEvent == nil {
 			chn1 := &game.battleWildWinEvent.chain[3].(game.GiveExperience)
 			chn2 := &game.battleWildWinEvent.chain[4].(game.ShowLevelUp)
 			chn1.amount	= int(experience)
-			chn2.level	= player.pokemonInfo.level
-			chn2.hp		= player.pokemonInfo.hpMax
-			chn2.atk	= player.pokemonInfo.atk
-			chn2.def	= player.pokemonInfo.def
-			chn2.spatk	= player.pokemonInfo.spAtk
-			chn2.spdef	= player.pokemonInfo.spDef
-			chn2.spd	= player.pokemonInfo.spd
+			chn2.level	= player.monsterInfo.level
+			chn2.hp		= player.monsterInfo.hpMax
+			chn2.atk	= player.monsterInfo.atk
+			chn2.def	= player.monsterInfo.def
+			chn2.spatk	= player.monsterInfo.spAtk
+			chn2.spdef	= player.monsterInfo.spDef
+			chn2.spd	= player.monsterInfo.spd
 			game.eventmanager.currentEvent = &game.battleWildWinEvent
 		}
 		//switch
 		game.lastBattleOutcome = true
 		return
 	}
-	if player.pokemonInfo.hpCur <= 0 {
+	if player.monsterInfo.hpCur <= 0 {
 		//switch
 		game.lastBattleOutcome = false
 		close()
@@ -269,7 +269,7 @@ update :: proc() {
 	
 
 	if settings.is_key_pressed("debug") {
-		fmt.printf("%v/%v\n",player.pokemonInfo.experience,monsters.exp_needed(player.pokemonInfo.level))
+		fmt.printf("%v/%v\n",player.monsterInfo.experience,monsters.exp_needed(player.monsterInfo.level))
 	}
 }
 
@@ -277,7 +277,7 @@ update_bounds :: proc{ update_bounds_battle_entity, update_bounds_attack_entity,
 update_bounds_battle_entity :: proc(
 	ent : ^game.BattleEntity,
 ) {
-	switch ent.pokemonInfo.size {
+	switch ent.monsterInfo.size {
 		case .small:
 			ent.bounds = {
 				{ent.position.x, 0, ent.position.z},
@@ -336,7 +336,7 @@ get_bounds_battle_entity :: proc(
 	ent : ^game.BattleEntity,
 ) -> raylib.BoundingBox {
 	bounds : raylib.BoundingBox
-	switch ent.pokemonInfo.size {
+	switch ent.monsterInfo.size {
 		case .small:
 			bounds = {
 				{ent.position.x, 0, ent.position.z},

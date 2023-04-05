@@ -214,11 +214,11 @@ init :: proc(
 								surf		= chain[i].(json.Array)[4].(bool),
 							}
 						
-						case "getpokemon":
-							pokemon, res := reflect.enum_from_name(game.MonsterSpecies, chain[i].(json.Array)[1].(string))
+						case "getmonster":
+							monster, res := reflect.enum_from_name(game.MonsterSpecies, chain[i].(json.Array)[1].(string))
 							if res {
 								chn = game.GetMonsterEvent{
-									species	= pokemon,
+									species	= monster,
 									level	= int(chain[i].(json.Array)[2].(f64)),
 								}
 							} else {
@@ -336,8 +336,8 @@ init :: proc(
 				btl.id				= battleList[count].(json.Object)["id"].(string)
 				btl.trainerName		= battleList[count].(json.Object)["trainer"].(string)
 				btl.arena			= arena
-				btl.pokemonNormal	= load_pokemon(battleList[count].(json.Object)["mon_normal"].(json.Array))
-				btl.pokemonHard		= load_pokemon(battleList[count].(json.Object)["mon_hard"].(json.Array))
+				btl.monsterNormal	= load_monster(battleList[count].(json.Object)["mon_normal"].(json.Array))
+				btl.monsterHard		= load_monster(battleList[count].(json.Object)["mon_hard"].(json.Array))
 				game.battles[btl.id] = btl
 			}
 		}
@@ -351,18 +351,18 @@ close :: proc() {
 	free(game.region)
 }
 
-load_pokemon :: proc(
+load_monster :: proc(
 	input : json.Array,
-) -> [4]game.Pokemon {
-	output : [4]game.Pokemon
+) -> [4]game.Monster {
+	output : [4]game.Monster
 	for i in 0..<4 {
-		pokemon, res := reflect.enum_from_name(game.MonsterSpecies, input[i].(json.Array)[0].(string))
-		if pokemon == .empty do break
+		monster, res := reflect.enum_from_name(game.MonsterSpecies, input[i].(json.Array)[0].(string))
+		if monster == .empty do break
 
-		pkmn : game.Pokemon = monsters.create(pokemon, int(input[i].(json.Array)[1].(f64)))
+		pkmn : game.Monster = monsters.create(monster, int(input[i].(json.Array)[1].(f64)))
 		//pkmn.experience = int(math.pow(input[i].(json.Array)[1].(f64), 3))
 		for o in 0..<4 {
-			attack, resu := reflect.enum_from_name(game.PokemonAttack, input[i].(json.Array)[3+o].(string))
+			attack, resu := reflect.enum_from_name(game.MonsterAttack, input[i].(json.Array)[3+o].(string))
 			pkmn.attacks[o] = {attack, 0}
 		}
 		output[i] = pkmn

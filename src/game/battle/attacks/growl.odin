@@ -19,7 +19,7 @@ use_growl :: proc(
 	user.timer = 40
 
 	animations.set_animation(&user.standee.animator, "walk_down")
-	user.pokemonInfo.attacks[user.selectedAtk].cooldown = 100
+	user.monsterInfo.attacks[user.selectedAtk].cooldown = 100
 
 	effects := make([dynamic]game.AttackEffect)
 	append(&effects, game.AttackEffect.atkDown_enemy)
@@ -38,7 +38,7 @@ use_growl :: proc(
 		effects = effects,
 
 		life = 40,
-		user = user.pokemonInfo,
+		user = user.monsterInfo,
 		player = playerUsed,
 	}
 	append(&game.battleStruct.attackEntities, ent)

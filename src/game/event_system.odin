@@ -6,6 +6,32 @@ import "vendor:raylib"
 
 
 //= Structures
+EventManager :: struct {
+	currentEvent	: ^Event,
+	textbox			:  Textbox,
+	currentChain	:  int,
+	uses			:  int,
+
+	eventVariables	: map[string]union{ int, bool, string },
+	
+	playerName		: string,
+	playerPronouns	: [3]string,
+	rivalName		: string,
+}
+
+Textbox :: struct {
+	state		: TextboxState,
+	currentText	: string,
+	targetText	: string,
+	timer		: int,
+	pause		: int,
+	position	: int,
+	
+	hasChoice	: bool,
+	choiceList	: [dynamic]Choice,
+	curPosition	: int,
+}
+
 Event :: struct {
 	position		: raylib.Vector3,
 	interactable	: bool,
@@ -132,10 +158,24 @@ SkipEvent :: struct {
 
 
 //= Enumerations
+EventType :: enum {
+	null,
+	warp,
+	trigger,
+	interact,
+}
+
 ConditionalType :: enum {
 	new_event,
 	jump_chain,
 	set_chain,
 	leave_chain,
 	start_battle,
+}
+
+TextboxState :: enum {
+	inactive,
+	active,
+	finished,
+	reset,
 }

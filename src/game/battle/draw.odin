@@ -16,8 +16,8 @@ import "../overworld/standee"
 
 //= Procedures
 draw :: proc() {
-	player	:= &game.battleStruct.playerPokemon
-	enemy	:= &game.battleStruct.enemyPokemon
+	player	:= &game.battleStruct.playerMonster
+	enemy	:= &game.battleStruct.enemyMonster
 
 	//* Targeter
 	ray := raylib.GetMouseRay(raylib.GetMousePosition(), game.camera)
@@ -36,7 +36,7 @@ draw :: proc() {
 
 	//* Drawing attack overlay
 	if settings.is_key_down("show_overlay") {
-		overlay := &game.attackOverlays[player.pokemonInfo.attacks[player.selectedAtk].type]
+		overlay := &game.attackOverlays[player.monsterInfo.attacks[player.selectedAtk].type]
 		switch in overlay {
 			case game.AttackOverlayGeneral:
 				rot	:= -math.atan2(

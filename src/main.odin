@@ -91,13 +91,13 @@ main_draw :: proc() {
 		str := fmt.sbprintf(
 			&builder,
 			" Level %v-%v\n\nHP:    %v-%v\nAtk:   %v-%v\nDef:   %v-%v\nSpAtk: %v-%v\nSpDef: %v-%v\nSpd:   %v-%v",
-			game.levelUpDisplay.level, game.player.pokemon[0].level,
-			game.levelUpDisplay.hp, game.player.pokemon[0].hpMax,
-			game.levelUpDisplay.atk, game.player.pokemon[0].atk,
-			game.levelUpDisplay.def, game.player.pokemon[0].def,
-			game.levelUpDisplay.spatk, game.player.pokemon[0].spAtk,
-			game.levelUpDisplay.spdef, game.player.pokemon[0].spDef,
-			game.levelUpDisplay.spd, game.player.pokemon[0].spd,
+			game.levelUpDisplay.level, game.player.monster[0].level,
+			game.levelUpDisplay.hp, game.player.monster[0].hpMax,
+			game.levelUpDisplay.atk, game.player.monster[0].atk,
+			game.levelUpDisplay.def, game.player.monster[0].def,
+			game.levelUpDisplay.spatk, game.player.monster[0].spAtk,
+			game.levelUpDisplay.spdef, game.player.monster[0].spDef,
+			game.levelUpDisplay.spd, game.player.monster[0].spd,
 		)
 		cstr := strings.clone_to_cstring(str)
 		raylib.DrawTextEx(
@@ -118,10 +118,10 @@ main_draw :: proc() {
 
 	builder : strings.Builder
 	last : raylib.Vector3 = {}
-	if game.battleStruct != nil do last = game.battleStruct.playerPokemon.position
+	if game.battleStruct != nil do last = game.battleStruct.playerMonster.position
 	cstr := strings.clone_to_cstring(fmt.sbprintf(
 		&builder,
-		"Previous: %v\nCurrent: %v\nTarget: %v\n\nPokemon:%v\n",
+		"Previous: %v\nCurrent: %v\nTarget: %v\n\nMonster:%v\n",
 		game.player.entity.previous,
 		game.player.entity.position,
 		game.player.entity.target,

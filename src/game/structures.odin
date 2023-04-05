@@ -9,110 +9,12 @@ import "vendor:raylib"
 
 
 //= Structures
-Camera :: struct {
-	using data   :  raylib.Camera3D,
-	targetEntity : ^Entity,
-}
-
-Player :: struct {
-	entity		: ^Entity,
-	moveTimer	:  u8,
-	canMove		:  bool,
-	menu		:  MenuState,
-	menuSel		:  u8,
-	pokeSel		:  u8,
-
-	pokemon		: [4]Pokemon,
-}
-
-Entity :: struct {
-	previous	: raylib.Vector3,
-	position	: raylib.Vector3,
-	target		: raylib.Vector3,
-
-	conditional : map[string]bool,
-
-	id			: string,
-
-	isMoving	: bool,
-	isSurfing	: bool,
-
-	direction	: Direction,
-
-	standee		: ^Standee,
-
-	interactionEvent : raylib.Vector2,
-}
-
 BattleData :: struct {
 	id				: string,
 	trainerName		: string,
 	arena			: Arena,
-	pokemonNormal	: [4]Pokemon,
-	pokemonHard		: [4]Pokemon,
-}
-
-Standee :: struct {
-	animator	: StandeeAnimation,
-
-	mesh		: raylib.Mesh,
-	material	: raylib.Material,
-	position	: raylib.Matrix,
-}
-
-StandeeAnimation :: struct {
-	rawImage : raylib.Image,
-
-	currentAnimation : string,
-	frame : u32,
-	timer : u32,
-
-	animations : map[string]Animation,
-}
-
-Animation :: struct {
-	animationSpeed : u32,
-	frames : [dynamic]u32,
-}
-
-Tile :: struct {
-	model : string,
-	pos   : raylib.Vector3,
-	solid : bool,
-	surf  : bool, 
-}
-Region :: struct {
-	size		: raylib.Vector2,
-	tiles		: map[raylib.Vector2]Tile,
-	entities	: map[raylib.Vector2]Entity,
-	events		: map[raylib.Vector2]Event,
-	aniTimer	: int,
-	frame		: int,
-}
-
-EventManager :: struct {
-	currentEvent	: ^Event,
-	textbox			:  Textbox,
-	currentChain	:  int,
-	uses			:  int,
-
-	eventVariables	: map[string]union{ int, bool, string },
-	
-	playerName		: string,
-	playerPronouns	: [3]string,
-	rivalName		: string,
-}
-Textbox :: struct {
-	state		: TextboxState,
-	currentText	: string,
-	targetText	: string,
-	timer		: int,
-	pause		: int,
-	position	: int,
-	
-	hasChoice	: bool,
-	choiceList	: [dynamic]Choice,
-	curPosition	: int,
+	monsterNormal	: [4]Monster,
+	monsterHard		: [4]Monster,
 }
 
 Keybinding :: struct {
@@ -125,46 +27,12 @@ Keybinding :: struct {
 	key    : u32,
 }
 
-Pokemon :: struct {
-	species : MonsterSpecies,
-	elementalType1	: ElementalType,
-	elementalType2	: ElementalType,
-
-	nickname: cstring,
-
-	iv		: [6]int,
-	ev		: [6]int,
-
-	hpMax	: int,
-	hpCur	: int,
-
-	atk		: int,
-	def		: int,
-	spAtk	: int,
-	spDef	: int,
-	spd		: int,
-	
-	statChanges : [6]int,
-
-	size	: Size,
-
-	experience	: int,
-	level		: int,
-	//TODO Nature
-
-	attacks : [4]Attack,
-}
-Attack :: struct {
-	type : PokemonAttack,
-	cooldown : int,
-}
-
 BattleStructure :: struct {
 	arena		: Arena,
 
-	playerPokemon	: BattleEntity,
-	enemyPokemon	: BattleEntity,
-	enemyPokemonList: [4]^Pokemon,
+	playerMonster	: BattleEntity,
+	enemyMonster	: BattleEntity,
+	enemyMonsterList: [4]^Monster,
 	enemyName		: string,
 
 	experience		: int,
@@ -196,7 +64,7 @@ BattleEntity :: struct {
 
 	standee		: ^Standee,
 
-	pokemonInfo	: ^Pokemon,
+	monsterInfo	: ^Monster,
 
 	target	: raylib.Vector3,
 }
@@ -217,7 +85,7 @@ AttackFollow :: struct {
 	effects			: [dynamic]AttackEffect,
 
 	life	: int,
-	user	: ^Pokemon,
+	user	: ^Monster,
 	player	: bool,
 }
 
@@ -231,90 +99,12 @@ AttackOverlayGeneral :: struct {
 	texture	: raylib.Texture,
 }
 
-AudioSystem :: struct {
-	musicFilenames	: map[string]cstring,
-	soundFilenames	: map[string]cstring,
-
-	musicCurrentName: string,
-	musicCurrent	: raylib.Music,
-
-	soundCurrentName: string,
-	soundCurrent	: raylib.Sound,
-}
-
 
 //= Enumerations
-Direction :: enum {
-	up,
-	down,
-	left,
-	right,
-}
 
-EventType :: enum {
-	null,
-	warp,
-	trigger,
-	interact,
-}
 
-TextboxState :: enum {
-	inactive,
-	active,
-	finished,
-	reset,
-}
 
-Emote :: enum {
-	shocked,
-	confused,
-	sad,
-	heart,
-	happy,
-	poison,
-}
 
-MonsterSpecies :: enum {
-	empty,
-
-	chikorita,
-	bayleef,
-	meganium,
-
-	cyndaquil,
-	quilava,
-	typhlosion,
-
-	totodile,
-	croconaw,
-	feraligatr,
-}
-
-PokemonAttack :: enum {
-	empty,
-
-	tackle,
-	scratch,
-
-	growl,
-	leer,
-
-	leafage,
-	ember,
-	watergun,
-}
-AttackType :: enum {
-	physical,
-	special,
-	other,
-}
-ElementalType :: enum {
-	none,
-	normal,
-	water,
-	fire,
-	grass,
-}
 
 AttackEffect :: enum {
 	atkDown_enemy,
@@ -344,12 +134,6 @@ AIType :: enum {
 	physical_close_range,
 }
 
-Size :: enum {
-	small,
-	medium,
-	large,
-}
-
 Arena :: enum {
 	empty,
 	grass,
@@ -364,7 +148,7 @@ MenuState :: enum {
 	none,
 	pause,
 	pokedex,
-	pokemon,
+	monster,
 	bag,
 	player,
 	options,

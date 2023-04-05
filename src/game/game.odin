@@ -14,8 +14,8 @@ DRAW_MAP  :: true
 
 
 //= Globals
+//* Core
 running		: bool = true
-
 camera		: ^Camera
 player		: ^Player
 
@@ -23,19 +23,24 @@ player		: ^Player
 //* Settings
 screenWidth		: i32
 screenHeight	: i32
+
 textSpeed		: i32
+
 fpsLimit		: i32
+
 language		: string
+
 masterVolume	: f32
 musicVolume		: f32
 soundVolume		: f32
+
 keybindings		: map[string]Keybinding
 
 
 //* Graphics
 box_ui			: raylib.Texture
 box_ui_npatch	: raylib.NPatchInfo
-pokemon_info_ui	: raylib.Texture
+monster_info_ui	: raylib.Texture
 typeTexture		: raylib.Texture
 pointer			: raylib.Texture
 barHP			: raylib.Texture
@@ -44,11 +49,11 @@ barImg			: raylib.Image
 
 font			: raylib.Font
 
-pokemonSprites	: map[MonsterSpecies]raylib.Texture
+monsterSprites	: map[MonsterSpecies]raylib.Texture
 
 //* Targeter
 targeter		: raylib.Model
-attackOverlays	: map[PokemonAttack]AttackOverlay
+attackOverlays	: map[MonsterAttack]AttackOverlay
 
 indicator		: raylib.Material
 
@@ -74,7 +79,7 @@ eventmanager	: ^EventManager
 battles			:  map[string]BattleData
 battleStruct	: ^BattleStructure
 lastBattleOutcome : bool = false
-pokemonData		: json.Array
+monsterData		: json.Array
 
 //* Emotes
 emotes			: raylib.Image
@@ -82,10 +87,12 @@ emoteList		: [dynamic]EmoteStruct
 emoteMaterials	: [8]raylib.Material
 emoteMeshDef	: raylib.Mesh
 
+//* Pre-defined Events
 battleTrainerWinEvent	: Event
 battleWildWinEvent		: Event
 battleTrainerLoseEvent	: Event
 battleWildLoseEvent		: Event
+
 levelUpDisplay : ^ShowLevelUp
 
 

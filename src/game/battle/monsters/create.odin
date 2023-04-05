@@ -17,8 +17,8 @@ import "../../../debug"
 create :: proc(
 	species : game.MonsterSpecies,
 	level	: int,
-) -> game.Pokemon {
-	pkmn : game.Pokemon = {}
+) -> game.Monster {
+	pkmn : game.Monster = {}
 	pkmn.species	= species
 	pkmn.level		= level
 	pkmn.experience = exp_needed(level-1)//int(math.pow(f32(level), 3))
@@ -32,22 +32,22 @@ create :: proc(
 	pkmn.iv[4]		= int(rand.int31_max(30))
 	pkmn.iv[5]		= int(rand.int31_max(30))
 
-	pokemonData := game.pokemonData[int(species)].(json.Array)
-	pkmn.elementalType1, _ = reflect.enum_from_name(game.ElementalType, pokemonData[0].(string))
-	pkmn.elementalType2, _ = reflect.enum_from_name(game.ElementalType, pokemonData[1].(string))
-	pkmn.hpMax	= calculate_hp(  int(pokemonData[2].(f64)), pkmn.ev[0], pkmn.iv[0], pkmn.level)
+	monsterData := game.monsterData[int(species)].(json.Array)
+	pkmn.elementalType1, _ = reflect.enum_from_name(game.ElementalType, monsterData[0].(string))
+	pkmn.elementalType2, _ = reflect.enum_from_name(game.ElementalType, monsterData[1].(string))
+	pkmn.hpMax	= calculate_hp(  int(monsterData[2].(f64)), pkmn.ev[0], pkmn.iv[0], pkmn.level)
 	pkmn.hpCur	= pkmn.hpMax
-	pkmn.atk	= calculate_stat(int(pokemonData[3].(f64)), pkmn.ev[1], pkmn.iv[1], pkmn.level)
-	pkmn.def	= calculate_stat(int(pokemonData[4].(f64)), pkmn.ev[2], pkmn.iv[2], pkmn.level)
-	pkmn.spAtk	= calculate_stat(int(pokemonData[5].(f64)), pkmn.ev[3], pkmn.iv[3], pkmn.level)
-	pkmn.spDef	= calculate_stat(int(pokemonData[6].(f64)), pkmn.ev[4], pkmn.iv[4], pkmn.level)
-	pkmn.spd	= calculate_stat(int(pokemonData[7].(f64)), pkmn.ev[5], pkmn.iv[5], pkmn.level)
+	pkmn.atk	= calculate_stat(int(monsterData[3].(f64)), pkmn.ev[1], pkmn.iv[1], pkmn.level)
+	pkmn.def	= calculate_stat(int(monsterData[4].(f64)), pkmn.ev[2], pkmn.iv[2], pkmn.level)
+	pkmn.spAtk	= calculate_stat(int(monsterData[5].(f64)), pkmn.ev[3], pkmn.iv[3], pkmn.level)
+	pkmn.spDef	= calculate_stat(int(monsterData[6].(f64)), pkmn.ev[4], pkmn.iv[4], pkmn.level)
+	pkmn.spd	= calculate_stat(int(monsterData[7].(f64)), pkmn.ev[5], pkmn.iv[5], pkmn.level)
 
-	pkmn.size, _ = reflect.enum_from_name(game.Size, pokemonData[8].(string))
+	pkmn.size, _ = reflect.enum_from_name(game.Size, monsterData[8].(string))
 
-	for atk in pokemonData[9].(json.Array) {
+	for atk in monsterData[9].(json.Array) {
 		if level >= int(atk.(json.Array)[0].(f64)) {
-			attack, _ := reflect.enum_from_name(game.PokemonAttack, atk.(json.Array)[1].(string))
+			attack, _ := reflect.enum_from_name(game.MonsterAttack, atk.(json.Array)[1].(string))
 			add_attack(
 				&pkmn.attacks,
 				attack,
@@ -84,7 +84,7 @@ calculate_stat_base :: proc(
 
 add_attack :: proc(
 	atkList : ^[4]game.Attack,
-	atk		:  game.PokemonAttack,
+	atk		:  game.MonsterAttack,
 ) {
 	//* Find end
 	end := 0
@@ -107,7 +107,7 @@ add_attack :: proc(
 }
 
 reset :: proc(
-	monster : ^game.Pokemon,
+	monster : ^game.Monster,
 ) {
 	monster.hpCur = monster.hpMax
 }  

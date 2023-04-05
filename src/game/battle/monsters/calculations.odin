@@ -50,27 +50,27 @@ number_attacks :: proc(
 }
 
 level_up :: proc(
-	pokemon : ^game.Pokemon,
+	monster : ^game.Monster,
 ) {
 	audio.play_sound("level_up")
 
-	pokemon.level += 1
-	pokemonData := game.pokemonData[int(pokemon.species)].(json.Array)
-	newHPMax	:= calculate_hp(int(pokemonData[2].(f64)), pokemon.ev[0], pokemon.iv[0], pokemon.level)
-	pokemon.hpCur	+= newHPMax - pokemon.hpMax
-	pokemon.hpMax	= newHPMax
-	pokemon.atk	= calculate_stat(int(pokemonData[3].(f64)), pokemon.ev[1], pokemon.iv[1], pokemon.level)
-	pokemon.def	= calculate_stat(int(pokemonData[4].(f64)), pokemon.ev[2], pokemon.iv[2], pokemon.level)
-	pokemon.spAtk	= calculate_stat(int(pokemonData[5].(f64)), pokemon.ev[3], pokemon.iv[3], pokemon.level)
-	pokemon.spDef	= calculate_stat(int(pokemonData[6].(f64)), pokemon.ev[4], pokemon.iv[4], pokemon.level)
-	pokemon.spd	= calculate_stat(int(pokemonData[7].(f64)), pokemon.ev[5], pokemon.iv[5], pokemon.level)
+	monster.level += 1
+	monsterData := game.monsterData[int(monster.species)].(json.Array)
+	newHPMax	:= calculate_hp(int(monsterData[2].(f64)), monster.ev[0], monster.iv[0], monster.level)
+	monster.hpCur	+= newHPMax - monster.hpMax
+	monster.hpMax	= newHPMax
+	monster.atk	= calculate_stat(int(monsterData[3].(f64)), monster.ev[1], monster.iv[1], monster.level)
+	monster.def	= calculate_stat(int(monsterData[4].(f64)), monster.ev[2], monster.iv[2], monster.level)
+	monster.spAtk	= calculate_stat(int(monsterData[5].(f64)), monster.ev[3], monster.iv[3], monster.level)
+	monster.spDef	= calculate_stat(int(monsterData[6].(f64)), monster.ev[4], monster.iv[4], monster.level)
+	monster.spd	= calculate_stat(int(monsterData[7].(f64)), monster.ev[5], monster.iv[5], monster.level)
 
-	for atk in pokemonData[9].(json.Array) {
-		if pokemon.level == int(atk.(json.Array)[0].(f64)) {
-			attack, _ := reflect.enum_from_name(game.PokemonAttack, atk.(json.Array)[1].(string))
+	for atk in monsterData[9].(json.Array) {
+		if monster.level == int(atk.(json.Array)[0].(f64)) {
+			attack, _ := reflect.enum_from_name(game.MonsterAttack, atk.(json.Array)[1].(string))
 			//TODO Make choice screen
 			add_attack(
-				&pokemon.attacks,
+				&monster.attacks,
 				attack,
 			)
 		}
@@ -78,14 +78,14 @@ level_up :: proc(
 }
 
 give_experience :: proc(
-	pokemon : ^game.Pokemon,
+	monster : ^game.Monster,
 	total : int,
 ) -> bool {
 	val := false
-	pokemon.experience += total
+	monster.experience += total
 	for {
-		if pokemon.experience >= exp_needed(pokemon.level) {
-			level_up(pokemon)
+		if monster.experience >= exp_needed(monster.level) {
+			level_up(monster)
 			val = true
 		} else do break
 	}

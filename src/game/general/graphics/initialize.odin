@@ -27,9 +27,9 @@ init :: proc() {
 		.NINE_PATCH,
 	}
 
-	img = raylib.LoadImage("data/sprites/ui/spr_pokemon_info.png")
+	img = raylib.LoadImage("data/sprites/ui/spr_monster_info.png")
 	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
-	game.pokemon_info_ui = raylib.LoadTextureFromImage(img)
+	game.monster_info_ui = raylib.LoadTextureFromImage(img)
 	raylib.UnloadImage(img)
 
 	game.pointer = raylib.LoadTexture("data/sprites/ui/spr_pointer.png")
@@ -40,7 +40,7 @@ init :: proc() {
 
 	for pk in game.MonsterSpecies {
 		str := reflect.enum_string(pk)
-		game.pokemonSprites[pk] = raylib.LoadTexture(strings.clone_to_cstring(strings.concatenate({"data/sprites/pokemon/pk_",str,".png"})))
+		game.monsterSprites[pk] = raylib.LoadTexture(strings.clone_to_cstring(strings.concatenate({"data/sprites/monster/pk_",str,".png"})))
 	}
 
 	count : i32 = 0
@@ -99,7 +99,7 @@ init :: proc() {
 				overlay.model.transform[3,2] = f32(i.(json.Array)[2].(json.Array)[2].(f64))
 		}
 
-		atk, _ := reflect.enum_from_name(game.PokemonAttack, i.(json.Array)[1].(string))
+		atk, _ := reflect.enum_from_name(game.MonsterAttack, i.(json.Array)[1].(string))
 		game.attackOverlays[atk] = overlay
 	}
 }

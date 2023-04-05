@@ -172,8 +172,8 @@ open_textbox :: proc(
 	textbox.targetText = newText
 
 	refName	: string
-	if game.player.pokemon[0].nickname != "" do refName = strings.clone_from_cstring(game.player.pokemon[0].nickname)
-	else do refName = strings.to_pascal_case(reflect.enum_string(game.player.pokemon[0].species))
+	if game.player.monster[0].nickname != "" do refName = strings.clone_from_cstring(game.player.monster[0].nickname)
+	else do refName = strings.to_pascal_case(reflect.enum_string(game.player.monster[0].species))
 
 	refEnemy : string
 	if game.battleStruct == nil do refEnemy = "TRAINER NOT FOUND"
@@ -181,12 +181,12 @@ open_textbox :: proc(
 	
 
 	refEnemyName : string
-	if game.battleStruct == nil do refEnemyName = "POKEMON NOT FOUND"
-	else do refEnemyName = strings.to_pascal_case(reflect.enum_string(game.battleStruct.enemyPokemonList[0].species))
+	if game.battleStruct == nil do refEnemyName = "MONSTER NOT FOUND"
+	else do refEnemyName = strings.to_pascal_case(reflect.enum_string(game.battleStruct.enemyMonsterList[0].species))
 
 	builder : strings.Builder
 
-	refLevel := strings.clone(fmt.sbprintf(&builder,"%v",game.player.pokemon[0].level))
+	refLevel := strings.clone(fmt.sbprintf(&builder,"%v",game.player.monster[0].level))
 	strings.builder_reset(&builder)
 
 	refExperience : string
@@ -194,9 +194,9 @@ open_textbox :: proc(
 	else do refExperience = fmt.sbprintf(&builder,"%v",game.battleStruct.experience)
 	
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_TRAINER}",	refEnemy)
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_POKEMON_0_NAME}",	refName)
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_NAME}",	refName)
-	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{POKEMON_0_LEVEL}",refLevel)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_MONSTER_0_NAME}",	refName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{MONSTER_0_NAME}",	refName)
+	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{MONSTER_0_LEVEL}",refLevel)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{EXPERIENCE}",		refExperience)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{PLAYER_NAME}",	game.eventmanager.playerName)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{RIVAL_NAME}",		game.eventmanager.rivalName)

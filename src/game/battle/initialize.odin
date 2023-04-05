@@ -33,12 +33,12 @@ init :: proc(
 }
 
 close :: proc() {
-	for i in game.battleStruct.enemyPokemonList {
+	for i in game.battleStruct.enemyMonsterList {
 		if i != nil do monsters.reset(i)
 	}
 	if !game.lastBattleOutcome {
 		for i:=0;i<4;i+=1 {
-			monsters.reset(&game.player.pokemon[i])
+			monsters.reset(&game.player.monster[i])
 		}
 	}
 
@@ -51,25 +51,25 @@ close :: proc() {
 }
 
 configure_player_battle_entity :: proc() {
-	game.battleStruct.playerPokemon.position	= {14,0,60}
-	game.battleStruct.playerPokemon.standee		= standee.create(reflect.enum_string(game.player.pokemon[0].species), "pokemon", 2)
-	game.battleStruct.playerPokemon.pokemonInfo	= &game.player.pokemon[0]
-	game.battleStruct.playerPokemon.canMove		= true
+	game.battleStruct.playerMonster.position	= {14,0,60}
+	game.battleStruct.playerMonster.standee		= standee.create(reflect.enum_string(game.player.monster[0].species), "monster", 2)
+	game.battleStruct.playerMonster.monsterInfo	= &game.player.monster[0]
+	game.battleStruct.playerMonster.canMove		= true
 }
 configure_enemy_battle_entity :: proc(
 	event	: ^game.BattleData,
 	wild	: bool,
 ) {
-	game.battleStruct.enemyPokemon.position	= {18,0,60}
-	game.battleStruct.enemyPokemon.standee		= standee.create("chikorita", "pokemon", 2)
-	game.battleStruct.enemyPokemon.canMove		= true
-	game.battleStruct.enemyPokemon.wild			= wild
+	game.battleStruct.enemyMonster.position	= {18,0,60}
+	game.battleStruct.enemyMonster.standee		= standee.create("chikorita", "monster", 2)
+	game.battleStruct.enemyMonster.canMove		= true
+	game.battleStruct.enemyMonster.wild			= wild
 
-	game.battleStruct.enemyPokemonList[0] = &event.pokemonNormal[0]
-	game.battleStruct.enemyPokemonList[1] = &event.pokemonNormal[1]
-	game.battleStruct.enemyPokemonList[2] = &event.pokemonNormal[2]
-	game.battleStruct.enemyPokemonList[3] = &event.pokemonNormal[3]
-	game.battleStruct.enemyPokemon.pokemonInfo	= &event.pokemonNormal[0]
+	game.battleStruct.enemyMonsterList[0] = &event.monsterNormal[0]
+	game.battleStruct.enemyMonsterList[1] = &event.monsterNormal[1]
+	game.battleStruct.enemyMonsterList[2] = &event.monsterNormal[2]
+	game.battleStruct.enemyMonsterList[3] = &event.monsterNormal[3]
+	game.battleStruct.enemyMonster.monsterInfo	= &event.monsterNormal[0]
 
 	game.battleStruct.enemyName = event.trainerName
 }
