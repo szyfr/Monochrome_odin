@@ -61,7 +61,7 @@ configure_enemy_battle_entity :: proc(
 	wild	: bool,
 ) {
 	game.battleStruct.enemyMonster.position	= {18,0,60}
-	game.battleStruct.enemyMonster.standee		= standee.create("chikorita", "monster", 2)
+	game.battleStruct.enemyMonster.standee		= standee.create("starter_grass", "monster", 2)
 	game.battleStruct.enemyMonster.canMove		= true
 	game.battleStruct.enemyMonster.wild			= wild
 

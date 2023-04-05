@@ -22,13 +22,13 @@ init :: proc() {
 	game.eventmanager.eventVariables["talked_elm_2"] = false
 	game.eventmanager.eventVariables["talked_elm_3"] = false
 	
-	game.eventmanager.eventVariables["chose_chikorita"] = false
-	game.eventmanager.eventVariables["chose_cyndaquil"] = false
-	game.eventmanager.eventVariables["chose_totodile"] = false
+	game.eventmanager.eventVariables["chose_starter_grass"] = false
+	game.eventmanager.eventVariables["chose_starter_fire"] = false
+	game.eventmanager.eventVariables["chose_starter_water"] = false
 	
-	game.eventmanager.eventVariables["rival_chikorita"] = false
-	game.eventmanager.eventVariables["rival_cyndaquil"] = false
-	game.eventmanager.eventVariables["rival_totodile"] = false
+	game.eventmanager.eventVariables["rival_starter_grass"] = false
+	game.eventmanager.eventVariables["rival_starter_fire"] = false
+	game.eventmanager.eventVariables["rival_starter_water"] = false
 
 
 	game.eventmanager.playerName = "Gold"

@@ -51,15 +51,15 @@
 	"newbarktown_elm_event1_6":"I haven't really done this\nbefore. The league is so\npicky with who they\nchoose in Johto these days.",
 	"newbarktown_elm_event1_7":"Not to mention they only\nreally seem to choose\npeople who seem like\nthey're going to fail...",
 	"newbarktown_elm_event1_8":"Here we have three pokemon,\nand it is up to you to\nchoose which one will be\nyour partner.",
-	"newbarktown_elm_event1_9":"Chikorita, the Grass-type.\nthey've got high defenses\nand health, but fall a\nlittle short on offense.",
-	"newbarktown_elm_event1_10":"Cyndaquil, the Fire-type.\nA real glass cannon, this\none. High special attack\nand speed, but no bulk.",
+	"newbarktown_elm_event1_9":"starter_grass, the Grass-type.\nthey've got high defenses\nand health, but fall a\nlittle short on offense.",
+	"newbarktown_elm_event1_10":"starter_fire, the Fire-type.\nA real glass cannon, this\none. High special attack\nand speed, but no bulk.",
 	"newbarktown_elm_event1_11":"Last but not least,",
-	"newbarktown_elm_event1_12":"Totodile, the Water-type.\nThey have strong physical\nabilities and defenses\nbut is lacking in speed.",
+	"newbarktown_elm_event1_12":"starter_water, the Water-type.\nThey have strong physical\nabilities and defenses\nbut is lacking in speed.",
 	"newbarktown_elm_event1_13":"It's all up to you.",
 	
-	"newbarktown_starter_event_1":"Do you choose\nChikorita?",
-	"newbarktown_starter_event_2":"Do you choose\nCyndaquil?",
-	"newbarktown_starter_event_3":"Do you choose\nTotodile?",
+	"newbarktown_starter_event_1":"Do you choose\nstarter_grass?",
+	"newbarktown_starter_event_2":"Do you choose\nstarter_fire?",
+	"newbarktown_starter_event_3":"Do you choose\nstarter_water?",
 
 	"newbarktown_elm_event2_1":"Now, i'm not supposed to\ngive you any help aside\nfrom encouraging \nGood luck out there!",
 	"newbarktown_elm_event2_8":"But i want you to do well,\nso here...",
@@ -143,18 +143,18 @@
 	"wild_battle_win_1":"Wild {ENEMY_MONSTER_0_NAME}\n\nfainted!",
 	"wild_battle_win_2":"{MONSTER_0_NAME} gained\n\n{EXPERIENCE} experience!",
 
-	"level_up":"{MONSTER_0_NAME} has\n\nreached level {MONSTER_0_LEVEL}"
+	"level_up":"{MONSTER_0_NAME} has\n\nreached level {MONSTER_0_LEVEL}",
 
 	// Monster
-	"chikorita":"Chikorita",
-	"bayleaf":"Bayleaf",
-	"meganium":"Meganium",
-	"cyndaquil":"Cyndaquil",
-	"quilava":"Quilava",
-	"typhlosian":"Typhlosian",
-	"totodile":"Totodile",
-	"croconaw":"Croconaw",
-	"feraligatr":"Feraligatr",
+	"starter_grass":"Chikorita",
+	"starter_grass_1":"Bayleaf",
+	"starter_grass_2":"Meganium",
+	"starter_fire":"Cyndaquil",
+	"starter_fire_1":"Quilava",
+	"starter_fire_2":"Typhlosian",
+	"starter_water":"Totodile",
+	"starter_water_1":"Croconaw",
+	"starter_water_2":"Feraligatr",
 
 	// Attacks
 	"tackle_name":"Tackle",

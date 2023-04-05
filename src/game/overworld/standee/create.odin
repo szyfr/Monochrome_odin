@@ -53,6 +53,7 @@ create :: proc(
 	//* Parse aniamtion data
 	raw, er := os.read_entire_file_from_filename(fullpath_animation)
 	js, err := json.parse(raw)
+	fmt.printf("%v\n",fullpath_animation)
 	for animation in js.(json.Object) {
 		standee.animator.animations[animation] = animations.create(js.(json.Object)[animation].(json.Array))
 	}

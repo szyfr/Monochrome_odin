@@ -42,8 +42,8 @@ main_logic :: proc() {
 
 	if settings.is_key_pressed("debug") {
 		for i in game.region.events {
-			monsters.add_to_team(monsters.create(.chikorita, 5))
-			battle.init(&game.battles["rival_battle_cyndaquil"])
+			monsters.add_to_team(monsters.create(.starter_grass, 5))
+			battle.init(&game.battles["rival_battle_starter_fire"])
 		}
 	}
 }

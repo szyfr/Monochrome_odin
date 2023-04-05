@@ -5,9 +5,6 @@ package game
 import "vendor:raylib"
 
 
-//= Globals
-
-
 //= Structures
 BattleData :: struct {
 	id				: string,
@@ -15,16 +12,6 @@ BattleData :: struct {
 	arena			: Arena,
 	monsterNormal	: [4]Monster,
 	monsterHard		: [4]Monster,
-}
-
-Keybinding :: struct {
-	origin : u8,
-		// 0 - Keyboard
-		// 1 - Mouse
-		// 2 - MouseWheel
-		// 3 - Gamepad Button
-		// 4 - Gamepad Axis
-	key    : u32,
 }
 
 BattleStructure :: struct {
@@ -99,13 +86,7 @@ AttackOverlayGeneral :: struct {
 	texture	: raylib.Texture,
 }
 
-
 //= Enumerations
-
-
-
-
-
 AttackEffect :: enum {
 	atkDown_enemy,
 	atkDown_self,
@@ -142,14 +123,4 @@ Arena :: enum {
 	city,
 	beach,
 	water,
-}
-
-MenuState :: enum {
-	none,
-	pause,
-	pokedex,
-	monster,
-	bag,
-	player,
-	options,
 }

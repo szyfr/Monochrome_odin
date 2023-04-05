@@ -46,17 +46,17 @@ Attack :: struct {
 MonsterSpecies :: enum {
 	empty,
 
-	chikorita,
-	bayleef,
-	meganium,
+	starter_grass,
+	starter_grass_1,
+	starter_grass_2,
 
-	cyndaquil,
-	quilava,
-	typhlosion,
+	starter_fire,
+	starter_fire_1,
+	starter_fire_2,
 
-	totodile,
-	croconaw,
-	feraligatr,
+	starter_water,
+	starter_water_1,
+	starter_water_2,
 }
 
 ElementalType :: enum {
