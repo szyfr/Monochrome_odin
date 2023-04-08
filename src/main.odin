@@ -13,6 +13,7 @@ import "game/events"
 import "game/camera"
 import "game/player"
 import "game/graphics"
+import "game/entity"
 import "debug"
 
 
@@ -26,14 +27,20 @@ logic :: proc() {
 draw :: proc() {
 	raylib.BeginDrawing()
 	raylib.ClearBackground({57,57,57,255})
+
+	raylib.BeginMode3D(game.camera)
+
+	entity.draw(game.player.entity)
+
+	raylib.EndMode3D()
+
 	raylib.EndDrawing()
 }
 
 init :: proc() {
-	//* Settings / Localization / Graphics
+	//* Settings / Localization
 	settings.init()
 	localization.init()
-	graphics.init()
 
 	//* Raylib
 	raylib.SetTraceLogLevel(.NONE)
@@ -46,6 +53,7 @@ init :: proc() {
 	raylib.SetExitKey(.KEY_NULL)
 
 	//* Core
+	graphics.init()
 	camera.init()
 	player.init()
 

@@ -5,13 +5,14 @@ package entity
 import "vendor:raylib"
 
 import "../../game"
+import "../graphics/animator"
 
 
 //= Procedures
 create :: proc(
-	spriteName		: string,
-	animationName	: string = "",
 	position		: raylib.Vector3,
+	spriteName		: string,
+	animationName	: string,
 	id				: string = "",
 ) -> ^game.Entity {
 	data := new(game.Entity)
@@ -32,5 +33,5 @@ create :: proc(
 	data.mesh = &game.standeeMesh
 	data.animator = animator.create(spriteName, animationName)
 
-	return nil
+	return data
 }
