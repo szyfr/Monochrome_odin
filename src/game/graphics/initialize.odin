@@ -19,5 +19,4 @@ init :: proc() {
 	
 	//* Standee mesh
 	game.standeeMesh = raylib.GenMeshPlane(1,1,1,1)
-	// /fmt.printf("fuck")
 }

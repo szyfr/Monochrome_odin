@@ -7,13 +7,15 @@ import "core:fmt"
 import "vendor:raylib"
 
 import "game"
-import "settings"
-import "localization"
 import "game/events"
 import "game/camera"
 import "game/player"
 import "game/graphics"
 import "game/entity"
+import "game/tiles"
+import "game/region"
+import "settings"
+import "localization"
 import "debug"
 
 
@@ -30,6 +32,7 @@ draw :: proc() {
 
 	raylib.BeginMode3D(game.camera)
 
+	region.draw()
 	entity.draw(game.player.entity)
 
 	raylib.EndMode3D()
@@ -54,6 +57,9 @@ init :: proc() {
 
 	//* Core
 	graphics.init()
+	tiles.init()
+	region.init("data/core/regions/regionTest.json")
+
 	camera.init()
 	player.init()
 

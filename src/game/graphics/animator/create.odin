@@ -21,7 +21,7 @@ create :: proc(
 	data : game.Animator = {}
 
 	//* Defaults
-	data.currentAnimation = "idle_down"
+	data.currentAnimation = "walk_down"
 	data.frame = 0
 	data.timer = 0
 
@@ -97,6 +97,5 @@ create :: proc(
 		data.animations[animation] = ani
 	}
 
-	fmt.printf("%v\n",data)
 	return data
 }

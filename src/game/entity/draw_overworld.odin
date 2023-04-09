@@ -11,6 +11,7 @@ import "../../game"
 
 //= Procedures
 draw :: proc( entity : ^game.Entity ) {
+	//* Draw mesh with material
 	transform : raylib.Matrix = {
 		1.00,  0.00, 0.00, 0.00,
 		0.00,  0.78, 0.80, 0.00,
@@ -26,4 +27,15 @@ draw :: proc( entity : ^game.Entity ) {
 		entity.animator.material,
 		transform,
 	)
+
+	//* Update animations
+	entity.animator.timer += 1
+	curAni := &entity.animator.animations[entity.animator.currentAnimation]
+	if entity.animator.timer >= curAni.animationSpeed {
+		entity.animator.timer = 0
+		entity.animator.frame += 1
+		if entity.animator.frame >= u32(len(curAni.frames)) do entity.animator.frame = 0
+
+		entity.animator.material.maps[0].texture = entity.animator.textures[curAni.frames[entity.animator.frame]]
+	}
 }

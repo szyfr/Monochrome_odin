@@ -5,4 +5,6 @@ package player
 
 
 //= Procedures
-update :: proc() {}
+update :: proc() {
+	
+}

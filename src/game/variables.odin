@@ -29,22 +29,28 @@ soundVolume		: f32
 
 
 //* Core data
-camera : ^Camera
-player : ^Player
+camera	: ^Camera
+player	: ^Player
+
+region	: ^Region
+tiles	: map[string]raylib.Model
+tilesTest	: map[string]raylib.Mesh
+tilesMaterial	: raylib.Material
+tilesTexture	: raylib.Texture
 
 
 //* Graphics
 standeeMesh		: raylib.Mesh
 
-boxUI			: raylib.Texture
-boxUI_npatch	: raylib.NPatchInfo
-monsterInfoUI	: raylib.Texture
-typeTexture		: raylib.Texture
-pointer			: raylib.Texture
-barHP			: raylib.Texture
-barEXP			: raylib.Texture
-barImg			: raylib.Image
+//boxUI			: raylib.Texture
+//boxUI_npatch	: raylib.NPatchInfo
+//monsterInfoUI	: raylib.Texture
+//typeTexture		: raylib.Texture
+//pointer			: raylib.Texture
+//barHP			: raylib.Texture
+//barEXP			: raylib.Texture
+//barImg			: raylib.Image
 
-font			: raylib.Font
+//font			: raylib.Font
 
 //monsterSprites	: map[MonsterSpecies]raylib.Texture
