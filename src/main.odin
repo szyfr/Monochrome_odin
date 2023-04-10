@@ -37,6 +37,8 @@ draw :: proc() {
 
 	raylib.EndMode3D()
 
+	raylib.DrawFPS(5,20)
+
 	raylib.EndDrawing()
 }
 
