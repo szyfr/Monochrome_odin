@@ -21,7 +21,7 @@ update :: proc() {
 		//TODO Triggers
 		//TODO Interaction
 
-		// Player Movement
+		//* Player Movement
 		if vertical > 0 {
 			if game.player.moveTimer > 6 do entity.move(game.player.entity, .up)
 			else do game.player.entity.direction = .up

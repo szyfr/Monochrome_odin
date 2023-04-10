@@ -19,5 +19,6 @@ play_animation :: proc( entity : ^game.Entity, animation : string ) {
 		entity.animator.currentAnimation = newAnimation
 		entity.animator.frame = 0
 		entity.animator.timer = 0
+		entity.animator.material.maps[0].texture = entity.animator.textures[entity.animator.animations[entity.animator.currentAnimation].frames[entity.animator.frame]]
 	}
 }

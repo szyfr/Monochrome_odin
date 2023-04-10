@@ -70,6 +70,7 @@ create_default :: proc() {
 	
 	game.keybindings["interact"] = {0,32}
 	game.keybindings["cancel"] = {0,256}
+	game.keybindings["pause"] = {0,257}
 
 	save_settings()
 }
