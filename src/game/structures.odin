@@ -58,7 +58,7 @@ Animator :: struct {
 	material	: raylib.Material,
 	textures	: [dynamic]raylib.Texture,
 
-	currentAnimation	: string
+	currentAnimation	: string,
 	animations			: map[string]Animation,
 	frame				: u32,
 	timer				: u32,
