@@ -82,5 +82,6 @@ init :: proc(
 			entityList[i].(json.Object)["sprite"].(string),
 			"general",
 		)
+		game.region.entities[entityList[i].(json.Object)["id"].(string)] = ent^
 	}
 }
