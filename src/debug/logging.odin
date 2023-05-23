@@ -84,6 +84,9 @@ logf :: proc( format : string, args: ..any ) {
 
 	//* Append to file
 	os.write_entire_file(filename, bytes.buffer_to_bytes(&buffer))
+
+	//* Onscreen
+	if onscreenErrors do create_onscreen(formattedString)
 }
 log :: proc( format : string ) {
 	filename := check_log()
@@ -107,4 +110,7 @@ log :: proc( format : string ) {
 
 	//* Append to file
 	os.write_entire_file(filename, bytes.buffer_to_bytes(&buffer))
+
+	//* Onscreen
+	if onscreenErrors do create_onscreen(format)
 }

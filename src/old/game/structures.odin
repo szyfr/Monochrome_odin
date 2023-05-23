@@ -40,8 +40,8 @@ Entity :: struct {
 
 	//* NPC
 	id			: string,
-//	conditional : map[string]bool,
-//	interactionEvent : raylib.Vector2,
+	conditional : map[string]bool,
+	interactionEvent : raylib.Vector2,
 
 	//* Conditions
 	//TODO AI movement
@@ -65,8 +65,8 @@ Animator :: struct {
 }
 
 Animation :: struct {
+	animationSpeed : u32,
 	frames	: [dynamic]u32,
-	speed	: u32,
 }
 
 Region :: struct {

@@ -91,7 +91,7 @@ create :: proc(
 	for animation in js.(json.Object) {
 		array := js.(json.Object)[animation].(json.Array)
 		ani : game.Animation = {
-			speed = u32(array[0].(f64)),
+			animationSpeed = u32(array[0].(f64)),
 		}
 		for i:=1;i<len(array);i+=1 do append(&ani.frames, u32(array[i].(f64)))
 		data.animations[animation] = ani

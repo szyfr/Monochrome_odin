@@ -2,47 +2,53 @@ package main
 
 
 //= Imports
-import "core:fmt"
-
 import "vendor:raylib"
 
 import "game"
-import "game/events"
 import "game/camera"
 import "game/player"
 import "game/graphics"
-import "game/entity"
-import "game/tiles"
-import "game/region"
+import "game/entity/overworld"
+
 import "settings"
 import "localization"
+
 import "debug"
 
 
+//= Constants
+DEBUG :: true
+
+
 //= Main
+
 logic :: proc() {
 	//* Core
 	camera.update()
 	player.update()
 }
-
 draw :: proc() {
 	raylib.BeginDrawing()
-	raylib.ClearBackground({57,57,57,255})
+	raylib.ClearBackground( {57,57,57,255} )
 
+	//* 3D
 	raylib.BeginMode3D(game.camera)
 
-	region.draw()
-	entity.draw(game.player.entity)
+	overworld.draw(game.player.entity)
 
 	raylib.EndMode3D()
 
-	raylib.DrawFPS(5,20)
+	//* 2D
+	//* DEBUG
+	if DEBUG do debug.update_onscreen(game.screenHeight)
 
 	raylib.EndDrawing()
 }
 
 init :: proc() {
+	//* Debug
+	debug.onscreenErrors = DEBUG
+
 	//* Settings / Localization
 	settings.init()
 	localization.init()
@@ -59,29 +65,13 @@ init :: proc() {
 
 	//* Core
 	graphics.init()
-	tiles.init()
-	region.init("data/core/regions/regionTest.json")
 
 	camera.init()
 	player.init()
-
-	//* World
-	events.init()
 }
-
 close :: proc() {
-	//* Localization
-	localization.close()
-
 	//* Raylib
 	raylib.CloseWindow()
-
-	//* Core
-	camera.close()
-	player.close()
-
-	//* World
-	events.init()
 }
 
 main :: proc() {

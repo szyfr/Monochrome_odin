@@ -20,7 +20,7 @@ init :: proc() {
 		return
 	}
 
-	//* Parsing JSON5
+	//* Parse JSON5
 	jsonFile, jsResult := json.parse(rawFile)
 	if jsResult != .None {
 		debug.log("[ERROR] - Settings file invalid.")
@@ -46,8 +46,6 @@ init :: proc() {
 		}
 		game.keybindings[mem.(json.Array)[0].(string)] = binding
 	}
-	//TODO Debug
-	game.keybindings["debug"] = {0,79}
 
 	delete(rawFile)
 }

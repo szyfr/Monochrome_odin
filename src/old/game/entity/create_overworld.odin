@@ -22,7 +22,7 @@ create :: proc(
 	data.position	= position
 	data.target		= position
 
-	//* NPC data
+	//* Entity data
 	data.id	= id
 
 	//* Standee
