@@ -25,11 +25,11 @@ Player :: struct {
 	entity		: ^Entity,
 	moveTimer	:  u8,
 	canMove		:  bool,
-//	menu		:  MenuState,
+	//	menu		:  MenuState,
 	menuSel		:  u8,
 	pokeSel		:  u8,
 
-//	monster		: [4]Monster,
+	//	monster		: [4]Monster,
 }
 
 Entity :: struct {
@@ -40,8 +40,8 @@ Entity :: struct {
 
 	//* NPC
 	id			: string,
-//	conditional : map[string]bool,
-//	interactionEvent : raylib.Vector2,
+	//	conditional : map[string]bool,
+	//	interactionEvent : raylib.Vector2,
 
 	//* Conditions
 	//TODO AI movement
@@ -72,9 +72,9 @@ Animation :: struct {
 Region :: struct {
 	size		: raylib.Vector2,
 	tiles		: map[raylib.Vector2]Tile,
-//	entities	: map[raylib.Vector2]Entity,
-	entities	: map[string]Entity,
-	//	events		: map[raylib.Vector2]Event,
+	entities	: map[raylib.Vector2]Entity,
+	triggers	: map[raylib.Vector2]string,
+	events		: [dynamic]Event
 	aniTimer	: int,
 	frame		: int,
 }
@@ -93,4 +93,13 @@ Direction :: enum {
 	down,
 	left,
 	right,
+}
+
+Emote :: enum {
+	shocked,
+	confused,
+	sad,
+	heart,
+	happy,
+	poison,
 }

@@ -2,6 +2,8 @@ package player
 
 
 //= Imports
+import "core:fmt"
+
 import "../../game"
 import "../entity/overworld"
 import "../../settings"
@@ -17,6 +19,10 @@ update :: proc() {
 	if can_move() {
 		//TODO Events
 		//TODO Triggers
+		event, result := game.region.triggers[{game.player.entity.position.x, game.player.entity.position.z}]
+		if result {
+			// TODO: Call event
+		}
 		//TODO Interaction
 
 		//* Player Movement

@@ -8,6 +8,8 @@ import "game"
 import "game/camera"
 import "game/player"
 import "game/graphics"
+import "game/region"
+import "game/events"
 import "game/entity/overworld"
 
 import "settings"
@@ -34,7 +36,7 @@ draw :: proc() {
 	//* 3D
 	raylib.BeginMode3D(game.camera)
 
-	overworld.draw(game.player.entity)
+	region.draw()
 
 	raylib.EndMode3D()
 
@@ -65,11 +67,22 @@ init :: proc() {
 
 	//* Core
 	graphics.init()
+	events.init()
+	region.init("data/core/regions/region1/")
 
 	camera.init()
 	player.init()
 }
 close :: proc() {
+	//* Localization
+	localization.close()
+
+	//* Core
+	graphics.close()
+
+	camera.close()
+	player.close()
+
 	//* Raylib
 	raylib.CloseWindow()
 }

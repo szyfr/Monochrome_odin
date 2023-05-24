@@ -16,6 +16,8 @@ fpsLimit		: i32
 
 keybindings		: map[string]Keybinding
 
+eventmanager	: ^EventManager
+
 //* Text
 textSpeed		: i32
 language		: string

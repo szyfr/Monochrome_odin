@@ -13,7 +13,7 @@ init :: proc() {
 
 	game.player.entity		= overworld.create( { 32, 0, 41 }, "player_1", "player" )
 	game.player.moveTimer	= 0
-	game.player.canMove		= false
+	game.player.canMove		= true
 
 	camera.focus( game.player.entity )
 }
