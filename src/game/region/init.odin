@@ -93,6 +93,7 @@ load_entities :: proc ( filename : string ) {
 	entityList := jsonfile.(json.Object)["entities"].(json.Array)
 
 	for i:=0;i<len(entityList);i+=1 {
+		//* Position
 		locationX := f32(entityList[i].(json.Object)["location"].(json.Array)[0].(f64))
 		locationZ := f32(entityList[i].(json.Object)["location"].(json.Array)[1].(f64))
 		height := game.region.tiles[{
@@ -109,8 +110,17 @@ load_entities :: proc ( filename : string ) {
 			entityList[i].(json.Object)["sprite"].(string),
 			"general",
 		)
+
+		for event in entityList[i].(json.Object)["event"].(json.Array) {
+			evt : game.EntityEvent
+			for cond in event.(json.Object)["conditions"].(json.Array) {
+				// TODO
+				//event.conditions[cond.(json.Array)[0].(string)] = cond.(json.Array)[0].(string)
+			}
+			evt.id = event.(json.Object)["id"].(string)
+			append(&ent.events, evt)
+		}
 		game.region.entities[{locationX,locationZ}] = ent^
-	//	game.region.entities[entityList[i].(json.Object)["id"].(string)] = ent^
 	}
 }
 
@@ -311,7 +321,7 @@ load_events :: proc ( filename : string ) {
 			}
 			append(&event.chain, chn)
 		}
-		append(&game.region.events, event)
+		game.region.events[event.id] = event
 	}
 
 	//* Triggers
@@ -322,7 +332,6 @@ load_events :: proc ( filename : string ) {
 		}
 		game.region.triggers[location] = triggerList[i].(json.Object)["event"].(string)
 	}
-	fmt.printf("%v\n",game.region.triggers)
 
 	//* Variables
 	for i:=0;i<len(variableList);i+=1 {

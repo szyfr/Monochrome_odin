@@ -4,6 +4,8 @@ package player
 //= Imports
 import "core:fmt"
 
+import "vendor:raylib"
+
 import "../../game"
 import "../entity/overworld"
 import "../../settings"
@@ -18,12 +20,57 @@ update :: proc() {
 
 	if can_move() {
 		//TODO Events
-		//TODO Triggers
+		//* Triggers
 		event, result := game.region.triggers[{game.player.entity.position.x, game.player.entity.position.z}]
 		if result {
-			// TODO: Call event
+			game.player.canMove = false
+			game.eventmanager.currentEvent = &game.region.events[event]
 		}
 		//TODO Interaction
+		if interact {
+			front : raylib.Vector2
+			switch game.player.entity.direction {
+				case .up:
+					front = {
+						game.player.entity.position.x,
+						game.player.entity.position.z - 1,
+					}
+				case .down:
+					front = {
+						game.player.entity.position.x,
+						game.player.entity.position.z + 1,
+					}
+				case .left:
+					front = {
+						game.player.entity.position.x - 1,
+						game.player.entity.position.z,
+					}
+				case .right:
+					front = {
+						game.player.entity.position.x + 1,
+						game.player.entity.position.z,
+					}
+			}
+			entity, result := game.region.entities[front]
+			if result {
+				evt : string
+				for event in entity.events {
+					// TODO: check for conditionals
+					if len(event.conditions) == 0 {
+						evt = event.id
+						break
+					}
+				}
+				game.player.canMove = false
+				game.eventmanager.currentEvent = &game.region.events[evt]
+				switch game.player.entity.direction {
+					case .up: entity.direction = .down
+					case .down: entity.direction = .up
+					case .left: entity.direction = .right
+					case .right: entity.direction = .left
+				}
+			}
+		}
 
 		//* Player Movement
 		if vertical > 0 {

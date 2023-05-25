@@ -29,7 +29,7 @@ Player :: struct {
 	menuSel		:  u8,
 	pokeSel		:  u8,
 
-	//	monster		: [4]Monster,
+	monster		: [4]Monster,
 }
 
 Entity :: struct {
@@ -40,6 +40,7 @@ Entity :: struct {
 
 	//* NPC
 	id			: string,
+	events		: [dynamic]EntityEvent,
 	//	conditional : map[string]bool,
 	//	interactionEvent : raylib.Vector2,
 
@@ -52,6 +53,19 @@ Entity :: struct {
 	//* Standee
 	mesh		: ^raylib.Mesh,
 	animator	:  Animator,
+}
+
+EntityEvent :: struct {
+	conditions : map[string]union{ int, bool, string },
+	id : string,
+}
+
+EmoteStruct :: struct {
+	transform	:  raylib.Matrix,
+	mesh		: ^raylib.Mesh,
+	material	: ^raylib.Material,
+
+	duration	: int,
 }
 
 Animator :: struct {
@@ -74,7 +88,7 @@ Region :: struct {
 	tiles		: map[raylib.Vector2]Tile,
 	entities	: map[raylib.Vector2]Entity,
 	triggers	: map[raylib.Vector2]string,
-	events		: [dynamic]Event
+	events		: map[string]Event,
 	aniTimer	: int,
 	frame		: int,
 }
@@ -84,6 +98,17 @@ Tile :: struct {
 	pos   : raylib.Vector3,
 	solid : bool,
 	surf  : bool, 
+}
+
+AudioSystem :: struct {
+	musicFilenames	: map[string]cstring,
+	soundFilenames	: map[string]cstring,
+
+	musicCurrentName: string,
+	musicCurrent	: raylib.Music,
+
+	soundCurrentName: string,
+	soundCurrent	: raylib.Sound,
 }
 
 

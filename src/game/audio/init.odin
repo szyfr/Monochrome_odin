@@ -7,7 +7,7 @@ import "core:strings"
 
 import "vendor:raylib"
 
-import "../../../game"
+import "../../game"
 
 
 //= Procedures
@@ -17,30 +17,32 @@ init :: proc() {
 	raylib.InitAudioDevice()
 	raylib.SetMasterVolume(game.masterVolume)
 
-	musicCount	: i32 = 0
-	musicList	:= raylib.GetDirectoryFiles("data/audio/music", &musicCount)
+	musicList := raylib.LoadDirectoryFiles("data/private/audio/music")
 
-	for i in 2..<musicCount {
-		str := strings.clone_from_cstring(musicList[i])
-		value := strings.concatenate({"data/audio/music/",str})
+	for i in 0..<musicList.count {
+		str := strings.clone_from_cstring(musicList.paths[i])
+		value := str
 
 		str, _ = strings.remove_all(str, "aud_")
 		str, _ = strings.remove_all(str, ".wav")
+		str, _ = strings.remove_all(str, "data/private/audio/music/")
 		game.audio.musicFilenames[str] = strings.clone_to_cstring(value)
 	}
 
-	raylib.ClearDirectoryFiles()
-	soundCount	: i32 = 0
-	soundList	:= raylib.GetDirectoryFiles("data/audio/sfx", &soundCount)
+	raylib.UnloadDirectoryFiles(musicList)
+	soundList := raylib.LoadDirectoryFiles("data/private/audio/sfx")
 
-	for i in 2..<soundCount {
-		str := strings.clone_from_cstring(soundList[i])
-		value := strings.concatenate({"data/audio/sfx/",str})
+	for i in 0..<soundList.count {
+		str := strings.clone_from_cstring(soundList.paths[i])
+		value := str
 
 		str, _ = strings.remove_all(str, "sfx_")
 		str, _ = strings.remove_all(str, ".wav")
+		str, _ = strings.remove_all(str, "data/private/audio/sfx/")
 		game.audio.soundFilenames[str] = strings.clone_to_cstring(value)
 	}
+
+	raylib.UnloadDirectoryFiles(soundList)
 }
 
 close :: proc() {

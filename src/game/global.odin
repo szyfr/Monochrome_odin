@@ -2,6 +2,8 @@ package game
 
 
 //= Imports
+import "core:encoding/json"
+
 import "vendor:raylib"
 
 
@@ -29,7 +31,25 @@ masterVolume	: f32
 musicVolume		: f32
 soundVolume		: f32
 
+audio			: ^AudioSystem
+
 //* Graphics
+boxUI			: raylib.Texture
+boxUI_npatch	: raylib.NPatchInfo
+
+font			: raylib.Font
+
+pointer			: raylib.Texture
+
+overlayActive	: bool
+overlayTexture	: raylib.Texture
+overlayRectangle: raylib.Rectangle
+
+emotes			: raylib.Image
+emoteList		: [dynamic]EmoteStruct
+emoteMaterials	: [8]raylib.Material
+emoteMeshDef	: raylib.Mesh
+
 standeeMesh		: raylib.Mesh
 tiles			: map[string]raylib.Model
 
@@ -39,3 +59,5 @@ player			: ^Player
 
 //* Map
 region			: ^Region
+
+//* Monsters

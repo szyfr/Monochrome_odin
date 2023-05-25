@@ -8,6 +8,8 @@ import "../../../game"
 
 
 //= Procedures
+
+//* Standard move
 move :: proc(
 	entity    : ^game.Entity,
 	direction :  game.Direction,
@@ -61,11 +63,47 @@ move :: proc(
 	}
 }
 
+//* Push
 push :: proc(
 	entity		: ^game.Entity,
 	direction	:  game.Direction,
 ) {
 
+}
+
+//* Teleport entity
+teleport :: proc(
+	entity		: ^game.Entity,
+	location	:  raylib.Vector3,
+) {
+	entity.previous = entity.position
+	entity.position = location
+	entity.target   = location
+
+	if game.player.entity != entity {
+		value := entity^
+		position : raylib.Vector2
+		position.x = value.previous.x
+		position.y = value.previous.z
+		delete_key(&game.region.entities, position)
+		position.x = value.target.x
+		position.y = value.target.z
+		game.region.entities[position] = value
+	}
+}
+
+//* Turn
+turn :: proc(
+	entity		: ^game.Entity,
+	direction	:  game.Direction,
+) {
+	switch direction {
+		case .up:		play_animation(entity, "idle_up")
+		case .down:		play_animation(entity, "idle_down")
+		case .left:		play_animation(entity, "idle_left")
+		case .right:	play_animation(entity, "idle_right")
+	}
+	entity.direction = direction
 }
 
 check_visible :: proc(entity : ^game.Entity) -> bool {

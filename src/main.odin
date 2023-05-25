@@ -8,9 +8,12 @@ import "game"
 import "game/camera"
 import "game/player"
 import "game/graphics"
+import "game/graphics/ui"
+import "game/audio"
 import "game/region"
 import "game/events"
 import "game/entity/overworld"
+import "game/entity/emotes"
 
 import "settings"
 import "localization"
@@ -28,6 +31,9 @@ logic :: proc() {
 	//* Core
 	camera.update()
 	player.update()
+
+	region.update()
+	raylib.UpdateMusicStream(game.audio.musicCurrent)
 }
 draw :: proc() {
 	raylib.BeginDrawing()
@@ -37,10 +43,22 @@ draw :: proc() {
 	raylib.BeginMode3D(game.camera)
 
 	region.draw()
+	emotes.draw()
 
 	raylib.EndMode3D()
 
 	//* 2D
+	ui.draw_textbox()
+	if game.overlayActive {
+		raylib.DrawTexturePro(
+			game.overlayTexture,
+			game.overlayRectangle,
+			{0,0,f32(game.screenWidth),f32(game.screenHeight)},
+			{0,0},
+			0,
+			raylib.WHITE,
+		)
+	}
 	//* DEBUG
 	if DEBUG do debug.update_onscreen(game.screenHeight)
 
@@ -67,6 +85,8 @@ init :: proc() {
 
 	//* Core
 	graphics.init()
+	audio.init()
+	audio.play_music("new_bark_town") // TODO: TEMP
 	events.init()
 	region.init("data/core/regions/region1/")
 

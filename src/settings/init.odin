@@ -51,11 +51,15 @@ init :: proc() {
 }
 
 create_default :: proc() {
-	game.screenWidth  = 1280
-	game.screenHeight =  720
-	game.textSpeed    =    1
-	game.fpsLimit     =   80
-	game.language     = "english"
+	game.screenWidth	= 1280
+	game.screenHeight	=  720
+	game.textSpeed		=    1
+	game.fpsLimit		=   80
+	game.language		= "english"
+
+	game.masterVolume	= 0.25
+	game.musicVolume	= 0.25
+	game.soundVolume	= 0.25
 
 	game.keybindings["up"] = {0,87}
 	game.keybindings["down"] = {0,83}
@@ -98,15 +102,15 @@ save_settings :: proc() {
 	strings.write_string(&builder, ",\n")
 
 	strings.write_string(&builder, "\t\"mastervolume\":")
-	strings.write_int(&builder, int(game.masterVolume))
+	strings.write_int(&builder, int(game.masterVolume * 100))
 	strings.write_string(&builder, ",\n")
 
 	strings.write_string(&builder, "\t\"musicvolume\":")
-	strings.write_int(&builder, int(game.musicVolume))
+	strings.write_int(&builder, int(game.musicVolume * 100))
 	strings.write_string(&builder, ",\n")
 
 	strings.write_string(&builder, "\t\"soundvolume\":")
-	strings.write_int(&builder, int(game.soundVolume))
+	strings.write_int(&builder, int(game.soundVolume * 100))
 	strings.write_string(&builder, ",\n")
 
 	strings.write_string(&builder, "\t\"language\":\"")
