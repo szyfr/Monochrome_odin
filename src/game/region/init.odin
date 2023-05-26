@@ -292,20 +292,17 @@ load_events :: proc ( filename : string ) {
 				case "choice":
 					choiceList := make([dynamic]game.Choice)
 					for o:=0;o<int(chain[n].(json.Array)[2].(json.Array)[0].(f64));o+=1 {
-						array1 := chain[n].(json.Array)[2].(json.Array)[1].(json.Array)
-						array2 := chain[n].(json.Array)[2].(json.Array)[2].(json.Array)
-						ev : union{ int, raylib.Vector2 }
-						#partial switch in array2[o] {
-							case (json.Array):
-								ev = raylib.Vector2{
-									f32(array2[o].(json.Array)[0].(f64)),
-									f32(array2[o].(json.Array)[1].(f64)),
-								}
+						array	:= chain[n].(json.Array)[2].(json.Array)[1].(json.Array)
+						text	:= chain[n].(json.Array)[2].(json.Array)[2]
+						ev : union{ int, string }
+						#partial switch in text {
+							case (string):
+								ev = text.(string)
 							case (f64):
-								ev = int(array2[o].(f64))
+								ev = int(text.(f64))
 						}
 						choice : game.Choice = {
-							text	= &game.localization[array1[o].(string)],
+							text	= &game.localization[text.(string)],
 							event	= ev,
 						}
 						append(&choiceList, choice)

@@ -20,8 +20,6 @@ parse_events :: proc() {
 	curLink		:=  game.eventmanager.currentChain
 	curChain	:= &game.eventmanager.currentEvent.chain[curLink]
 
-	fmt.printf("%v\n",curChain)
-
 	#partial switch in curChain {
 		case game.TextEvent: event_text(&curChain.(game.TextEvent))
 		case game.ChoiceEvent: event_text_choice(&curChain.(game.ChoiceEvent))
@@ -80,36 +78,36 @@ event_text :: proc( curChain : ^game.TextEvent ) {
 
 // TODO
 event_text_choice :: proc( curChain : ^game.ChoiceEvent ) {
-//	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
-//		str := strings.clone_from_cstring(curChain.text^)
-//		ui.open_textbox(str, true, curChain.choices)
-//	}
-//	if game.eventmanager.textbox.state == .finished {
+	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
+		str := strings.clone_from_cstring(curChain.text^)
+		ui.open_textbox(str, true, curChain.choices)
+	}
+	if game.eventmanager.textbox.state == .finished {
 		game.eventmanager.currentChain += 1
-//		evt := curChain.choices[game.eventmanager.textbox.curPosition].event
-//		#partial switch in evt {
-//			case (raylib.Vector2):
-//				evnt, res := game.region.events[curChain.choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-//				if !res {
-//					game.eventmanager.currentChain += 1
-//					return
-//				}
-//				game.eventmanager.currentChain = 0
-//				game.eventmanager.currentEvent = &game.region.events[curChain.choices[game.eventmanager.textbox.curPosition].event.(raylib.Vector2)]
-//			case (int):
-//				game.eventmanager.currentChain = evt.(int)
-//		}
-//		game.eventmanager.textbox.curPosition = 0
-//
-//		newChain := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
-//		_, ok1 := newChain.(game.TextEvent)
-//		_, ok2 := newChain.(game.ChoiceEvent)
-//		_, ok3 := newChain.(game.ShowLevelUp)
-//		
-//		//* Reset if next event is also text-based, else close
-//		if ok1 || ok2 || ok3 do ui.reset_textbox()
-//		else do ui.close_textbox()
-//	}
+		evt := curChain.choices[game.eventmanager.textbox.curPosition].event
+		#partial switch in evt {
+			case (string):
+				evnt, res := game.region.events[evt.(string)]
+				if !res {
+					game.eventmanager.currentChain += 1
+					return
+				}
+				game.eventmanager.currentChain = 0
+				game.eventmanager.currentEvent = &game.region.events[evt.(string)]
+			case (int):
+				game.eventmanager.currentChain = evt.(int)
+		}
+		game.eventmanager.textbox.curPosition = 0
+
+		newChain := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
+		_, ok1 := newChain.(game.TextEvent)
+		_, ok2 := newChain.(game.ChoiceEvent)
+		_, ok3 := newChain.(game.ShowLevelUp)
+		
+		//* Reset if next event is also text-based, else close
+		if ok1 || ok2 || ok3 do ui.reset_textbox()
+		else do ui.close_textbox()
+	}
 }
 
 // TODO
@@ -319,7 +317,6 @@ event_emote :: proc( curChain : ^game.EmoteEvent ) {
 	time := int(curChain.multiplier * 50)
 	if game.eventmanager.uses == 0 {
 		emotingEnt := overworld.get_entity(curChain.entityid)
-		fmt.printf("%v\n",emotingEnt.position)
 		if emotingEnt == nil {
 			game.eventmanager.currentChain += 1
 			return

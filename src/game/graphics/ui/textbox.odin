@@ -10,7 +10,7 @@ import "vendor:raylib"
 
 import "../../../game"
 import "../../../settings"
-//import "../../audio"
+import "../../audio"
 
 
 //= Procedures
@@ -28,13 +28,13 @@ draw_textbox :: proc() {
 		)
 
 		nlCount := f32(strings.count(game.eventmanager.textbox.targetText, "\n"))
-		textY	:= (posY + 75) + ((2 - nlCount) * 15)
+		textY	:= (posY + (50 * (f32(game.screenHeight) / 720))) + ((2 - nlCount) * 15)
 		text	:= strings.clone_to_cstring(game.eventmanager.textbox.currentText)
 		raylib.DrawTextEx(
 			game.font,
 			text,
 			{posX + 50, textY},
-			32,
+			21.3333 * (f32(game.screenHeight) / 720),
 			1,
 			{56,56,56,255},
 		)
@@ -62,7 +62,7 @@ draw_textbox :: proc() {
 						posX + (f32(game.screenWidth) / 3) + 100,
 						posY - (f32(game.screenHeight) / 4) + 90 + (64*f32(i)),
 					},
-					32,
+					21.33 * (f32(game.screenHeight) / 720),
 					5,
 					{56,56,56,255},
 				)
@@ -119,7 +119,7 @@ draw_textbox :: proc() {
 		if settings.is_key_pressed("interact") && game.eventmanager.textbox.pause >= 2 {
 			if game.eventmanager.textbox.position > len(game.eventmanager.textbox.targetText) {
 				game.eventmanager.textbox.state = .finished
-			//	audio.play_sound("button") // TODO
+				audio.play_sound("button")
 			} else {
 				game.eventmanager.textbox.position = len(game.eventmanager.textbox.targetText)
 				game.eventmanager.textbox.currentText = game.eventmanager.textbox.targetText

@@ -133,7 +133,7 @@ ChoiceEvent :: struct {
 }
 Choice :: struct {
 	text	: ^cstring,
-	event	: union{ int, raylib.Vector2 },
+	event	: union{ int, string },
 }
 GiveExperience :: struct {
 	amount : int,

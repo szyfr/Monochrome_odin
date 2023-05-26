@@ -8,6 +8,7 @@ import "vendor:raylib"
 
 import "../../game"
 import "../entity/overworld"
+import "../audio"
 import "../../settings"
 
 
@@ -53,6 +54,8 @@ update :: proc() {
 			}
 			entity, result := game.region.entities[front]
 			if result {
+				audio.play_sound("button")
+
 				evt : string
 				for event in entity.events {
 					// TODO: check for conditionals
@@ -63,11 +66,13 @@ update :: proc() {
 				}
 				game.player.canMove = false
 				game.eventmanager.currentEvent = &game.region.events[evt]
+
+				ent := &game.region.entities[front]
 				switch game.player.entity.direction {
-					case .up: entity.direction = .down
-					case .down: entity.direction = .up
-					case .left: entity.direction = .right
-					case .right: entity.direction = .left
+					case .up:		ent.direction = .down
+					case .down:		ent.direction = .up
+					case .left:		ent.direction = .right
+					case .right:	ent.direction = .left
 				}
 			}
 		}
