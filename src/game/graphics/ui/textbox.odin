@@ -16,25 +16,32 @@ import "../../audio"
 //= Procedures
 draw_textbox :: proc() {
 	if game.eventmanager.textbox.state != .inactive {
-		posX := f32(game.screenWidth) / 4
-		posY := f32(game.screenHeight) - (f32(game.screenHeight) / 4)
+		screenWidth_2	:= (f32(game.screenWidth) / 2)
+		screenWidth_3	:= (f32(game.screenWidth) / 3)
+		screenWidth_4	:= (f32(game.screenWidth) / 4)
+		screenHeight_4	:= (f32(game.screenHeight) / 4)
+		screenRatio		:= (f32(game.screenHeight) / 720)
+
+		posX := screenWidth_4
+		posY := f32(game.screenHeight) - screenHeight_4
+		
 		raylib.DrawTextureNPatch(
 			game.boxUI,
 			game.boxUI_npatch,
-			{posX, posY, f32(game.screenWidth) / 2, f32(game.screenHeight) / 4},
+			{posX, posY, screenWidth_2, screenHeight_4},
 			{0,0},
 			0,
 			raylib.WHITE,
 		)
 
 		nlCount := f32(strings.count(game.eventmanager.textbox.targetText, "\n"))
-		textY	:= (posY + (50 * (f32(game.screenHeight) / 720))) + ((2 - nlCount) * 15)
+		textY	:= (posY + (50 * screenRatio)) + ((2 - nlCount) * 15)
 		text	:= strings.clone_to_cstring(game.eventmanager.textbox.currentText)
 		raylib.DrawTextEx(
 			game.font,
 			text,
 			{posX + 50, textY},
-			21.3333 * (f32(game.screenHeight) / 720),
+			21.3333 * screenRatio,
 			1,
 			{56,56,56,255},
 		)
@@ -45,10 +52,11 @@ draw_textbox :: proc() {
 				game.boxUI,
 				game.boxUI_npatch,
 				{
-					posX + (f32(game.screenWidth) / 3),
-					posY - (f32(game.screenHeight) / 4),
-					(f32(game.screenWidth) / 2) - (f32(game.screenWidth) / 3),
-					f32(game.screenHeight) / 4},
+					posX + screenWidth_3,
+					posY - screenHeight_4,
+					screenWidth_2 - screenWidth_3,
+					screenHeight_4,
+				},
 				{0,0},
 				0,
 				raylib.WHITE,
@@ -59,21 +67,20 @@ draw_textbox :: proc() {
 					game.font,
 					game.eventmanager.textbox.choiceList[i].text^,
 					{
-						posX + (f32(game.screenWidth) / 3) + 100,
-						posY - (f32(game.screenHeight) / 4) + 90 + (64*f32(i)),
+						posX + screenWidth_3 + (80 * screenRatio),
+						posY - screenHeight_4 + ((60 + (64*f32(i))) * screenRatio),
 					},
-					21.33 * (f32(game.screenHeight) / 720),
+					21.3333 * screenRatio,
 					5,
 					{56,56,56,255},
 				)
 			}
-
 			raylib.DrawTexturePro(
 				game.pointer,
 				{0,0,8,8},
 				{
-					posX + (f32(game.screenWidth) / 3) + 60,
-					posY - (f32(game.screenHeight) / 4) + 90 + (64*f32(game.eventmanager.textbox.curPosition)),
+					posX + screenWidth_3 + (40 * screenRatio),
+					posY - screenHeight_4 + ((60 + (64*f32(game.eventmanager.textbox.curPosition))) * screenRatio),
 					32,32,
 				},
 				{0,0},
@@ -172,8 +179,8 @@ open_textbox :: proc(
 	textbox.targetText = newText
 
 	refName	: string
-	if game.player.monster[0].nickname != "" do refName = strings.clone_from_cstring(game.player.monster[0].nickname)
-	else do refName = strings.to_pascal_case(reflect.enum_string(game.player.monster[0].species))
+	if game.player.monsters[0].nickname != "" do refName = strings.clone_from_cstring(game.player.monsters[0].nickname)
+	else do refName = strings.to_pascal_case(reflect.enum_string(game.player.monsters[0].species))
 
 	refEnemy : string
 	// TODO
@@ -188,7 +195,7 @@ open_textbox :: proc(
 
 	builder : strings.Builder
 
-	refLevel := strings.clone(fmt.sbprintf(&builder,"%v",game.player.monster[0].level))
+	refLevel := strings.clone(fmt.sbprintf(&builder,"%v",game.player.monsters[0].level))
 	strings.builder_reset(&builder)
 
 	refExperience : string

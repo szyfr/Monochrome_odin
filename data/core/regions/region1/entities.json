@@ -7,13 +7,31 @@
 			"movement":"random",
 			"direction":"right",
 			"event":[
-				{
-					"conditions":[],
-					"id":"int_mom_normal_1",
-				}
+				{ "conditions":[],"id":"warp_elmlab_in" }
 			],
 			"conditional":[],
 		},
+		{
+			"id":"mom_1",
+			"location": [ 22,42 ],
+			"sprite":"mom",
+			"movement":"random",
+			"direction":"left",
+			"event":[
+				{ "conditions":[],"id":"int_mom_normal_1" }
+			],
+			"conditional":[],
+		},
+//		//* Mom
+//		{
+//			"id":"mom_1",
+//			"location": [ 22,42 ],
+//			"sprite":"mom",
+//			"movement":"random",
+//			"direction":"left",
+//			"event":[0,3],
+//			"conditional":[],
+//		},
 //		//* Rival
 //		{
 //			"id":"rival_1",

@@ -13,11 +13,8 @@ Monster :: struct {
 
 	nickname: cstring,
 
-	iv		: [6]int,
-	ev		: [6]int,
-
-	hpMax	: int,
-	hpCur	: int,
+	hpMax, hpCur	: int,
+	stMax, stCur	: int,
 
 	atk		: int,
 	def		: int,
@@ -33,13 +30,12 @@ Monster :: struct {
 	level		: int,
 	//TODO Nature
 
-	attacks : [4]Attack,
+	attacks : [4]MonsterAttack,
 }
 
-Attack :: struct {
-	type : MonsterAttack,
-	cooldown : int,
-}
+//Attack :: struct {
+//	type : MonsterAttack,
+//}
 
 
 //= Enumerations
@@ -68,7 +64,7 @@ ElementalType :: enum {
 }
 
 MonsterAttack :: enum {
-	empty,
+	none,
 
 	tackle,
 	scratch,

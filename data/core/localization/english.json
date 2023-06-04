@@ -7,6 +7,9 @@
 	"inventory": "Bag",
 	"phone": "Phone",
 	"player": "Player",
+	"save": "Save",
+	"load": "Load",
+	"quickload": "Reload",
 	"options": "Options",
 	"quit": "Quit",
 

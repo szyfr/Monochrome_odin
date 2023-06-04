@@ -1,47 +1,75 @@
 {
 	"events":[
-		{
+		//= Warps
+		//* Elm's Lab
+		{ // warp_elmlab_in
 			"id": "warp_elmlab_in",
 			"chain": [
 				["sound","inside",1],
 				["animation","flash",23,8,[0,1,2],true],
 				["warp","player",[ 5,42 ],true,"up"],
 				["animation","flash",23,8,[2,1,0],false],
-			],
-		},
-		{
+			]},
+		{ // warp_elmlab_out
+			"id": "warp_elmlab_out",
+			"chain": [
+				["sound","outside",1],
+				["animation","flash",23,8,[0,1,2],true],
+				["warp","player",[ 20,9 ],true,"down"],
+				["animation","flash",23,8,[2,1,0],false],
+			]},
+		//* Player's house
+		{ // warp_playershouse_ground
 			"id": "warp_playershouse_ground",
 			"chain": [
 				["sound","outside",1],
 				["animation","flash",23,8,[0,1,2],true],
 				["warp","player",[ 24,39 ],true,"down"],
 				["animation","flash",23,8,[2,1,0],false],
-			],
-		},
-		{
+			]},
+		{ // warp_playershouse_room
 			"id": "warp_playershouse_room",
 			"chain": [
 				["sound","outside",1],
 				["animation","flash",23,8,[0,1,2],true],
 				["warp","player",[ 37,39 ],true,"down"],
 				["animation","flash",23,8,[2,1,0],false],
-			],
-		},
-		{
+			]},
+		{ // warp_playershouse_in
+			"id": "warp_playershouse_in",
+			"chain": [
+				["sound","inside",1],
+				["animation","flash",23,8,[0,1,2],true],
+				["warp","player",[ 21,47 ],true,"up"],
+				["animation","flash",23,8,[2,1,0],false],
+			]},
+		{ // warp_playershouse_out
+			"id": "warp_playershouse_out",
+			"chain": [
+				["sound","outside",1],
+				["animation","flash",23,8,[0,1,2],true],
+				["warp","player",[ 27,11 ],true,"down"],
+				["animation","flash",23,8,[2,1,0],false],
+			]},
+
+		{ // int_mom_normal_1
 			"id": "int_mom_normal_1",
 			"chain": [
-			//	["text","newbarktown_mom_talk1_1"],
-				["choice","newbarktown_mom_event1_1",[2,["yes","no"],"int_mom_normal_2"]]
-				["turn","TEST","left"],
-			],
-		},
-		{
+				["text","newbarktown_mom_talk1_1"],
+				["conditional",["tut_elm_series",1],["new_event","int_mom_normal_2"]]
+				["setcon","tut_elm_series",1]
+			//	["choice","newbarktown_mom_event1_1",[["yes","no"],["int_mom_normal_2",""]]]
+			//	["text","newbarktown_mom_event1_bad_1"],
+			//	["text","newbarktown_mom_event1_bad_2"],
+			//	["turn","TEST","left"],
+			]},
+		{ // int_mom_normal_2
 			"id": "int_mom_normal_2",
 			"chain": [
-				["text","newbarktown_mom_talk1_2"],
+				["text","newbarktown_mom_event1_good_1"],
+				["text","newbarktown_mom_event1_good_2"],
 				["turn","TEST","left"],
-			],
-		},
+			]},
 
 	//	{	 // Elm's Lab
 	//		"location": [ 17,9 ],
@@ -502,12 +530,16 @@
 	],
 	"triggers":[
 		//* Warps: Elm's lab
-		{ "location": [ 5,42 ], "event": "warp_elmlab_in" },
+		{ "location": [ 5,42 ], "event": "warp_elmlab_out" },
+		{ "location": [ 6,42 ], "event": "warp_elmlab_out" },
 		{ "location": [ 6,42 ], "event": "warp_elmlab_in" },
 		
 		//* Warps: Player's house
 		{ "location": [ 37,39 ], "event": "warp_playershouse_ground" },
 		{ "location": [ 24,39 ], "event": "warp_playershouse_room" },
+		{ "location": [ 21,47 ], "event": "warp_playershouse_out" },
+		{ "location": [ 22,47 ], "event": "warp_playershouse_out" },
+		{ "location": [ 27,11 ], "event": "warp_playershouse_in" },
 	],
 	"variables":[
 		["variable_1",false],

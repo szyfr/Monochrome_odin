@@ -133,7 +133,7 @@ ChoiceEvent :: struct {
 }
 Choice :: struct {
 	text	: ^cstring,
-	event	: union{ int, string },
+	event	: string,
 }
 GiveExperience :: struct {
 	amount : int,

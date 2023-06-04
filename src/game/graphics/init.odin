@@ -26,11 +26,17 @@ init :: proc() {
 		.NINE_PATCH,
 	}
 
+	//* MonsterBox
+	img = raylib.LoadImage("data/core/sprites/ui/spr_monster_info.png")
+	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
+	game.monsterBox = raylib.LoadTextureFromImage(img)
+	raylib.UnloadImage(img)
+
 	//* Font
 	game.font = raylib.LoadFont("data/core/sprites/ui/font.ttf")
 
 	//* Pointer
-	game.pointer = raylib.LoadTexture("data/sprites/ui/spr_pointer.png")
+	game.pointer = raylib.LoadTexture("data/core/sprites/ui/spr_pointer.png")
 
 	//* Emotes
 	game.emotes = raylib.LoadImage("data/private/sprites/overworld/spr_emotes.png")
@@ -61,10 +67,18 @@ init :: proc() {
 			str, _ := strings.remove(strExtension, ".obj", 1)
 			str, _  = strings.remove(str, ".gltf", 1)
 			str, _  = strings.remove(str, "data/core/tiles/", 1)
-		//	fmt.printf("%v\n",str)
 			game.tiles[str] = model
-		//	game.tilesTest[str] = model.meshes[0]
 		}
+	}
+
+	//* Monster Images
+	files := raylib.LoadDirectoryFiles("data/private/sprites/monsters")
+	for i:=0;i<int(files.count);i+=1 {
+		str := strings.clone_from_cstring(files.paths[i])
+		str, _ = strings.remove(str, "data/private/sprites/monsters/", 1)
+		str, _ = strings.remove(str, ".png", 1)
+
+		game.monsterTextures[str] = raylib.LoadTexture(files.paths[i])
 	}
 }
 

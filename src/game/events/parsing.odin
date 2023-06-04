@@ -12,6 +12,7 @@ import "../graphics/ui"
 import "../entity/overworld"
 import "../entity/emotes"
 import "../audio"
+import "../../debug"
 
 
 //= Procedures
@@ -76,29 +77,23 @@ event_text :: proc( curChain : ^game.TextEvent ) {
 	}
 }
 
-// TODO
 event_text_choice :: proc( curChain : ^game.ChoiceEvent ) {
+	//* Check if textbox is inactive or reset, open it if so.
 	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
 		str := strings.clone_from_cstring(curChain.text^)
 		ui.open_textbox(str, true, curChain.choices)
 	}
+	//* Check if textbox is finished
 	if game.eventmanager.textbox.state == .finished {
-		game.eventmanager.currentChain += 1
+		//* Check if choice has a valid event, and jumps to it if so.
 		evt := curChain.choices[game.eventmanager.textbox.curPosition].event
-		#partial switch in evt {
-			case (string):
-				evnt, res := game.region.events[evt.(string)]
-				if !res {
-					game.eventmanager.currentChain += 1
-					return
-				}
-				game.eventmanager.currentChain = 0
-				game.eventmanager.currentEvent = &game.region.events[evt.(string)]
-			case (int):
-				game.eventmanager.currentChain = evt.(int)
-		}
+		evnt, res := game.region.events[evt]
+		if res {
+			game.eventmanager.currentChain = 0
+			game.eventmanager.currentEvent = &game.region.events[evt]
+		} else do game.eventmanager.currentChain += 1
+		//* Resets text position and checks if it needs to close textbox
 		game.eventmanager.textbox.curPosition = 0
-
 		newChain := game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
 		_, ok1 := newChain.(game.TextEvent)
 		_, ok2 := newChain.(game.ChoiceEvent)
@@ -142,9 +137,10 @@ event_show_levelup :: proc( curChain : ^game.ShowLevelUp ) {
 
 
 event_warp :: proc( curChain : ^game.WarpEvent ) {
+	//* Make sure entitiy exists
 	warpingEnt : ^game.Entity = overworld.get_entity(curChain.entityid)
-
 	if warpingEnt != nil {
+		//* Teleport entity
 		overworld.teleport(warpingEnt, curChain.position)
 		if curChain.move do overworld.move(warpingEnt, curChain.direction)
 	}
@@ -153,9 +149,10 @@ event_warp :: proc( curChain : ^game.WarpEvent ) {
 }
 
 event_turn :: proc( curChain : ^game.TurnEvent ) {
+	//* Make sure entitiy exists
 	turningEnt : ^game.Entity = overworld.get_entity(curChain.entityid)
-	
 	if turningEnt != nil {
+		//* Turn entity
 		overworld.turn(turningEnt, curChain.direction)
 	}
 
@@ -163,13 +160,15 @@ event_turn :: proc( curChain : ^game.TurnEvent ) {
 }
 
 event_move :: proc( curChain : ^game.MoveEvent ) {
+	//* Make sure entitiy exists
 	movingEnt : ^game.Entity = overworld.get_entity(curChain.entityid)
-
 	if movingEnt != nil {
 		if !movingEnt.isMoving && curChain.times > game.eventmanager.uses {
+			//* Move entity
 			overworld.move(movingEnt, curChain.direction)
 			game.eventmanager.uses += 1
 		}
+		//* Wait until movement is done before moving on
 		if (!movingEnt.isMoving || !curChain.simul ) && curChain.times <= game.eventmanager.uses {
 			game.eventmanager.currentChain += 1
 			game.eventmanager.uses = 0
@@ -188,30 +187,37 @@ event_wait :: proc( curChain : ^game.WaitEvent ) {
 
 // TODO
 event_conditional :: proc( curChain : ^game.ConditionalEvent ) {
-//	if game.check_variable(curChain^) {
-//		switch curChain.eventType {
-//			case .new_event:
-//				evt, rs := game.region.events[curChain.eventData.(raylib.Vector2)]
-//				if !rs {
-//					game.eventmanager.currentChain += 1
-//					return
-//				}
-//				game.eventmanager.currentChain = 0
-//				game.eventmanager.uses = 0
-//				game.eventmanager.currentEvent = &evt
-//			case .jump_chain:
-//				game.eventmanager.currentChain += curChain.eventData.(int)
-//			case .set_chain:
-//				game.eventmanager.currentChain = curChain.eventData.(int)
-//			case .leave_chain:
-//				game.eventmanager.currentChain = 10000
-//			case .start_battle:
-//				battle.init(&game.battles[curChain.eventData.(string)])
-				game.eventmanager.currentChain += 1
-//		}
-//	} else {
-//		game.eventmanager.currentChain += 1
-//	}
+	//* Make sure variable exists
+	event, result := game.eventmanager.eventVariables[curChain.varName]
+	if !result {
+		game.eventmanager.currentChain += 1
+		return
+	}
+
+	if event == curChain.varValue {
+		#partial switch curChain.eventType {
+			case .new_event:
+				//* Make sure new event exists
+				evt, rs := game.region.events[curChain.eventData.(string)]
+				if !rs {
+					game.eventmanager.currentChain += 1
+					return
+				}
+				//* Then jump to it
+				game.eventmanager.currentChain = 0
+				game.eventmanager.uses = 0
+				game.eventmanager.currentEvent = &game.region.events[curChain.eventData.(string)]
+			case .jump_chain:
+				game.eventmanager.currentChain += curChain.eventData.(int)
+			case .set_chain:
+				game.eventmanager.currentChain = curChain.eventData.(int)
+			case .leave_chain:
+				game.eventmanager.currentChain = 10000
+			case .start_battle: // TODO
+
+			case: game.eventmanager.currentChain += 1
+		}
+	} else do game.eventmanager.currentChain += 1
 }
 
 event_set_conditional :: proc( curChain : ^game.SetConditionalEvent ) {

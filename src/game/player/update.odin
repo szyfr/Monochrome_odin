@@ -101,9 +101,16 @@ update :: proc() {
 	}
 	if vertical == 0 && horizontal == 0 do game.player.moveTimer = 0
 
+	//* Pause menu
+	if pause && game.eventmanager.currentEvent == nil {//&& game.battleStruct == nil {
+		if game.player.menu != .pause do game.player.menu = .pause
+		else if game.player.menu == .pause do game.player.menu = .none
+		audio.play_sound("menu")
+	}
+
 	overworld.update(game.player.entity)
 }
 
 can_move :: proc() -> bool {
-	return !game.player.entity.isMoving && game.player.canMove// && game.player.menu == .none && game.battleStruct == nil
+	return !game.player.entity.isMoving && game.player.canMove && game.player.menu == .none //&& game.battleStruct == nil
 }

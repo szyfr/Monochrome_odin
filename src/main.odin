@@ -48,6 +48,7 @@ draw :: proc() {
 	raylib.EndMode3D()
 
 	//* 2D
+	ui.draw_pause_menus()
 	ui.draw_textbox()
 	if game.overlayActive {
 		raylib.DrawTexturePro(
@@ -92,6 +93,24 @@ init :: proc() {
 
 	camera.init()
 	player.init()
+	game.player.monsters[0] = {
+		.starter_grass,
+		.grass,
+		.none,
+		"",
+		100,100,
+		100,100,
+		50,
+		60,
+		70,
+		80,
+		90.
+		{0,0,0,0,0,0},
+		.small
+		10,
+		99,
+		{.tackle,.growl,.leafage,.none},
+	}
 }
 close :: proc() {
 	//* Localization

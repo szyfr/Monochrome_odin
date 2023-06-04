@@ -218,7 +218,7 @@ load_events :: proc ( filename : string ) {
 					eventType, _ := reflect.enum_from_name(game.ConditionalType, chain[n].(json.Array)[2].(json.Array)[0].(string))
 					eventData : union{ int, raylib.Vector2, string } 
 					#partial switch eventType {
-						case .new_event:	eventData = raylib.Vector2{f32(chain[n].(json.Array)[2].(json.Array)[1].(json.Array)[0].(f64)), f32(chain[n].(json.Array)[2].(json.Array)[1].(json.Array)[1].(f64))}
+						case .new_event:	eventData = chain[n].(json.Array)[2].(json.Array)[1].(string)
 						case .jump_chain:	eventData = int(chain[n].(json.Array)[2].(json.Array)[1].(f64))
 						case .set_chain:	eventData = int(chain[n].(json.Array)[2].(json.Array)[1].(f64))
 						case .start_battle:	eventData = chain[n].(json.Array)[2].(json.Array)[1].(string)
@@ -291,19 +291,10 @@ load_events :: proc ( filename : string ) {
 					}
 				case "choice":
 					choiceList := make([dynamic]game.Choice)
-					for o:=0;o<int(chain[n].(json.Array)[2].(json.Array)[0].(f64));o+=1 {
-						array	:= chain[n].(json.Array)[2].(json.Array)[1].(json.Array)
-						text	:= chain[n].(json.Array)[2].(json.Array)[2]
-						ev : union{ int, string }
-						#partial switch in text {
-							case (string):
-								ev = text.(string)
-							case (f64):
-								ev = int(text.(f64))
-						}
+					for o in 0..<len(chain[n].(json.Array)[2].(json.Array)) {
 						choice : game.Choice = {
-							text	= &game.localization[text.(string)],
-							event	= ev,
+							text	= &game.localization[chain[n].(json.Array)[2].(json.Array)[0].(json.Array)[o].(string)],
+							event	= chain[n].(json.Array)[2].(json.Array)[1].(json.Array)[o].(string)
 						}
 						append(&choiceList, choice)
 					}

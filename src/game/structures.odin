@@ -25,11 +25,11 @@ Player :: struct {
 	entity		: ^Entity,
 	moveTimer	:  u8,
 	canMove		:  bool,
-	//	menu		:  MenuState,
+	menu		:  MenuState,
 	menuSel		:  u8,
 	pokeSel		:  u8,
 
-	monster		: [4]Monster,
+	monsters	: [4]Monster,
 }
 
 Entity :: struct {
@@ -127,4 +127,14 @@ Emote :: enum {
 	heart,
 	happy,
 	poison,
+}
+
+MenuState :: enum {
+	none,
+	pause,
+	pokedex,
+	monster,
+	bag,
+	player,
+	options,
 }

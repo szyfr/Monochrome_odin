@@ -37,6 +37,9 @@ audio			: ^AudioSystem
 boxUI			: raylib.Texture
 boxUI_npatch	: raylib.NPatchInfo
 
+monsterBox		: raylib.Texture
+monsterTextures	: map[string]raylib.Texture
+
 font			: raylib.Font
 
 pointer			: raylib.Texture
