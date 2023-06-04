@@ -94,21 +94,21 @@ init :: proc() {
 	camera.init()
 	player.init()
 	game.player.monsters[0] = {
-		.starter_grass,
+		.starter_water_2,
 		.grass,
-		.none,
-		"",
+		.fire,
+		"Dingus",
 		100,100,
 		100,100,
-		50,
-		60,
-		70,
-		80,
-		90.
+		500,
+		600,
+		700,
+		800,
+		900.
 		{0,0,0,0,0,0},
 		.small
 		10,
-		99,
+		9,
 		{.tackle,.growl,.leafage,.none},
 	}
 }

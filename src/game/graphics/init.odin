@@ -4,6 +4,7 @@ package graphics
 //= Imports
 import "core:fmt"
 import "core:os"
+import "core:reflect"
 import "core:strings"
 
 import "vendor:raylib"
@@ -77,9 +78,16 @@ init :: proc() {
 		str := strings.clone_from_cstring(files.paths[i])
 		str, _ = strings.remove(str, "data/private/sprites/monsters/", 1)
 		str, _ = strings.remove(str, ".png", 1)
+		spec, _ := reflect.enum_from_name(game.MonsterSpecies, str)
 
-		game.monsterTextures[str] = raylib.LoadTexture(files.paths[i])
+		game.monsterTextures[spec] = raylib.LoadTexture(files.paths[i])
 	}
+
+	//* Monster types
+	game.elementalTypes = raylib.LoadTexture("data/private/sprites/spr_types.png")
+
+	//* Bar
+	game.barImg = raylib.GenImageColor(200, 1, raylib.BLACK)
 }
 
 close :: proc() {

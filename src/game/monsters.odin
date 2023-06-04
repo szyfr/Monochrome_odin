@@ -58,8 +58,8 @@ MonsterSpecies :: enum {
 ElementalType :: enum {
 	none,
 	normal,
-	water,
 	fire,
+	water,
 	grass,
 }
 

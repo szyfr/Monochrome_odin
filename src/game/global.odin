@@ -38,11 +38,17 @@ boxUI			: raylib.Texture
 boxUI_npatch	: raylib.NPatchInfo
 
 monsterBox		: raylib.Texture
-monsterTextures	: map[string]raylib.Texture
+monsterTextures	: map[MonsterSpecies]raylib.Texture
+elementalTypes	: raylib.Texture
 
 font			: raylib.Font
 
 pointer			: raylib.Texture
+
+barImg			: raylib.Image
+barExp			: raylib.Texture
+barHp			: raylib.Texture
+barSt			: raylib.Texture
 
 overlayActive	: bool
 overlayTexture	: raylib.Texture

@@ -13,6 +13,15 @@
 	"options": "Options",
 	"quit": "Quit",
 
+	//= Stats
+	"hp":"Hp:",
+	"st":"St:",
+	"atk":"Atk:",
+	"def":"Def:",
+	"spatk":"SpAtk:",
+	"spdef":"SpDef:",
+	"spd":"Spd:",
+
 	//* Events
 	//= Responses
 	"yes":"Yes",
