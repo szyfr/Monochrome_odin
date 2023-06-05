@@ -47,15 +47,17 @@ pointer			: raylib.Texture
 
 barImg			: raylib.Image
 barExp			: raylib.Texture
-barExpRat		: f32
+barExpRat		: f32 = -20
 barHp			: raylib.Texture
-barHpRat		: f32
+barHpRat		: f32 = -20
 barSt			: raylib.Texture
-barStRat		: f32
+barStRat		: f32 = -20
 
 overlayActive	: bool
 overlayTexture	: raylib.Texture
 overlayRectangle: raylib.Rectangle
+
+levelUpDisplay : ^ShowLevelUp
 
 emotes			: raylib.Image
 emoteList		: [dynamic]EmoteStruct

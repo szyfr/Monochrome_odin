@@ -12,7 +12,6 @@ create_species :: proc( species : game.MonsterSpecies, level : int ) -> game.Mon
 
 	monster.level = level
 
-
 	#partial switch species {
 		case .starter_grass:
 			monster.species = species
@@ -25,7 +24,27 @@ create_species :: proc( species : game.MonsterSpecies, level : int ) -> game.Mon
 	}
 
 	update_stats(&monster)
+	monster.experience = calculate_experience(monster.level, monster.rate)
 
 	return monster
 }
 
+add_to_team :: proc( species : game.MonsterSpecies, level : int ) -> bool {
+	//* Check if there's any empty spots on team
+	hasSpot := false
+	openSpot : int
+	for i in 0..<4 {
+		if game.player.monsters[i].species == .empty {
+			//* Find earliest open spot
+			openSpot = i
+			hasSpot = true
+			break
+		}
+	}
+	if !hasSpot do return false
+	
+	//* create monster
+	game.player.monsters[openSpot] = create(species, level)
+	
+	return true
+}

@@ -11,20 +11,37 @@ import "../audio"
 
 //= Procedures
 update_stats :: proc(  monster : ^game.Monster ) {
-	calculate_level(100, monster.rate)
 	#partial switch monster.species {
 		case .starter_grass:
 			monster.hpMax = calculate_hp(50, monster.level)
-			monster.hpCur = monster.hpMax
 			monster.stMax = calculate_st(35, monster.level)
-			monster.stCur = monster.stMax
-			monster.atk = calculate_stat(45, monster.level)
-			monster.def = calculate_stat(65, monster.level)
+			monster.atk   = calculate_stat(45, monster.level)
+			monster.def   = calculate_stat(65, monster.level)
 			monster.spAtk = calculate_stat(45, monster.level)
 			monster.spDef = calculate_stat(65, monster.level)
-			monster.spd = calculate_stat(45, monster.level)
+			monster.spd   = calculate_stat(45, monster.level)
+			monster.hpCur = monster.hpMax
+			monster.stCur = monster.stMax
 		case .starter_fire:
+			monster.hpMax = calculate_hp(35, monster.level)
+			monster.stMax = calculate_st(55, monster.level)
+			monster.atk   = calculate_stat(55, monster.level)
+			monster.def   = calculate_stat(40, monster.level)
+			monster.spAtk = calculate_stat(60, monster.level)
+			monster.spDef = calculate_stat(40, monster.level)
+			monster.spd   = calculate_stat(65, monster.level)
+			monster.hpCur = monster.hpMax
+			monster.stCur = monster.stMax
 		case .starter_water:
+			monster.hpMax = calculate_hp(50, monster.level)
+			monster.stMax = calculate_st(45, monster.level)
+			monster.atk   = calculate_stat(65, monster.level)
+			monster.def   = calculate_stat(60, monster.level)
+			monster.spAtk = calculate_stat(40, monster.level)
+			monster.spDef = calculate_stat(45, monster.level)
+			monster.spd   = calculate_stat(45, monster.level)
+			monster.hpCur = monster.hpMax
+			monster.stCur = monster.stMax
 	}
 }
 
@@ -33,7 +50,7 @@ calculate_hp :: proc( stat, level : int, iv : int = 0, ev : int = 0 ) -> int {
 }
 
 calculate_st :: proc( stat, level : int, iv : int = 0, ev : int = 0 ) -> int {
-	return int(f32((2 * stat + iv + int(f32(ev)/4)) * level) / 100) + level + 10
+	return (int(f32((2 * stat + iv + int(f32(ev)/4)) * level) / 100) + level + 10) / 2
 }
 
 calculate_stat :: proc( stat, level : int, iv : int = 0, ev : int = 0 ) -> int {
@@ -41,44 +58,35 @@ calculate_stat :: proc( stat, level : int, iv : int = 0, ev : int = 0 ) -> int {
 	return (int(f32((2 * stat + iv + int(f32(ev)/4)) * level) / 100) + 5) * nature
 }
 
-// TODO Basically everything past this point is on thin fucking ice
-// TODO I need a clear head to work on this
-calculate_experience :: proc( level : int, rate : game.ExperienceRate ) -> int {}
-check_level :: proc( monster : ^game.Monster ) {
-	calc : int
+calculate_experience :: proc( level : int, rate : game.ExperienceRate ) -> int {
+	total : int
 
-	switch monster.rate {
-		case .fast:
-			calc = int(((math.pow(monster.level + 1, 3) * 4) / 5))
-		case .medium:
-			calc = int(math.pow(monster.level + 1, 3))
-		case .slow:
-			calc = int(((math.pow(monster.level + 1, 3) * 5) / 4))
+	switch rate {
+		case .fast:		total = int((math.pow(f32(level), 3) * 4) / 5)
+		case .medium:	total = int(math.pow(f32(level), 3))
+		case .slow:		total = int((math.pow(f32(level), 3) * 5) / 4)
 	}
 
-	if calc < monster.experience do level_up()
+	return total
 }
 
-level_up :: proc( monster : ^game.Monster ) {
-	audio.play_sound("level_up")
-
+level_up :: proc( monster :^game.Monster ) {
 	monster.level += 1
-	update_stats(monster)
 
-	// TODO Learn moves
-	// TODO Evolve
+	update_stats(monster)
 }
 
-give_experience :: proc( monster : ^game.Monster , total : int ) -> bool {
-	val := false
-	monster.experience += total
+give_experience :: proc( monster :^game.Monster, amount : int ) -> bool {
+	monster.experience += amount
 
-	for {
-		if monster.experience >= calculate_experience(monster.level,) {
-			level_up(monster)
-			val = true
-		} else do break
+	leveled := false
+	neededNext := calculate_experience(monster.level+1, monster.rate)
+
+	for neededNext < monster.experience {
+		level_up(monster)
+		neededNext = calculate_experience(monster.level+1, monster.rate)
+		leveled = true
 	}
 
-	return val
+	return leveled
 }

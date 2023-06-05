@@ -12,6 +12,7 @@ import "../graphics/ui"
 import "../entity/overworld"
 import "../entity/emotes"
 import "../audio"
+import "../monsters"
 import "../../debug"
 
 
@@ -38,6 +39,7 @@ parse_events :: proc() {
 		case game.SetTileEvent: event_set_tile(&curChain.(game.SetTileEvent))
 
 		case game.GetMonsterEvent: event_receive_monster(&curChain.(game.GetMonsterEvent))
+		case game.GiveExperience: event_gain_exp(&curChain.(game.GiveExperience))
 		
 		case game.StartBattleEvent: event_start_battle(&curChain.(game.StartBattleEvent))
 		case game.EndBattleEvent: event_end_battle(&curChain.(game.EndBattleEvent))
@@ -48,8 +50,6 @@ parse_events :: proc() {
 		case game.EmoteEvent: event_emote(&curChain.(game.EmoteEvent))
 
 		case game.OverlayAnimationEvent: event_animation_overlay(&curChain.(game.OverlayAnimationEvent))
-			
-		case game.GiveExperience: event_gain_exp(&curChain.(game.GiveExperience))
 
 		case game.SkipEvent: event_skip(&curChain.(game.SkipEvent))
 	}
@@ -107,32 +107,31 @@ event_text_choice :: proc( curChain : ^game.ChoiceEvent ) {
 
 // TODO
 event_show_levelup :: proc( curChain : ^game.ShowLevelUp ) {
-//	//* Check if textbox is inactive or reset, open it if so.
-//	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
-//		str := strings.clone_from_cstring(game.localization["level_up"])
-//		ui.open_textbox(str)
-//		game.levelUpDisplay = curChain
-//	}
-//	//* Check if textbox is finished
-//	if game.eventmanager.textbox.state == .finished {
+	//* Check if textbox is inactive or reset, open it if so.
+	if game.eventmanager.textbox.state == .inactive || game.eventmanager.textbox.state == .reset {
+		str := strings.clone_from_cstring(game.localization["level_up"])
+		ui.open_textbox(str)
+		game.levelUpDisplay = curChain
+	}
+	//* Check if textbox is finished
+	if game.eventmanager.textbox.state == .finished {
 		game.eventmanager.currentChain += 1
-//		if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
-//			newChain := &game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
-//			_, ok1 := newChain.(game.TextEvent)
-//			_, ok2 := newChain.(game.ChoiceEvent)
-//			_, ok3 := newChain.(game.ShowLevelUp)
-//			if ok1 || ok2 || ok3 {
-//				game.levelUpDisplay = nil
-//				ui.reset_textbox()
-//			} else {
-//				game.levelUpDisplay = nil
-//				ui.close_textbox()
-//			}
-//		} else {
-//			game.levelUpDisplay = nil
-//			ui.close_textbox()
-//		}
-//	}
+		if !(game.eventmanager.currentChain >= len(game.eventmanager.currentEvent.chain)) {
+			newChain := &game.eventmanager.currentEvent.chain[game.eventmanager.currentChain]
+			_, ok1 := newChain.(game.TextEvent)
+			_, ok2 := newChain.(game.ChoiceEvent)
+			_, ok3 := newChain.(game.ShowLevelUp)
+
+			//* Reset if next event is also text-based, else close
+			if ok1 || ok2 || ok3 {
+				game.levelUpDisplay = nil
+				ui.reset_textbox()
+			} else {
+				game.levelUpDisplay = nil
+				ui.close_textbox()
+			}
+		} else do ui.close_textbox()
+	}
 }
 
 
@@ -185,7 +184,6 @@ event_wait :: proc( curChain : ^game.WaitEvent ) {
 	}
 }
 
-// TODO
 event_conditional :: proc( curChain : ^game.ConditionalEvent ) {
 	//* Make sure variable exists
 	event, result := game.eventmanager.eventVariables[curChain.varName]
@@ -233,13 +231,9 @@ event_set_tile :: proc( curChain : ^game.SetTileEvent ) {
 	game.eventmanager.currentChain += 1
 }
 
-// TODO
 event_receive_monster :: proc( curChain : ^game.GetMonsterEvent ) {
-//	monsters.add_to_team(monsters.create(
-//		curChain.species,
-//		curChain.level,
-//	))
-//	game.eventmanager.currentChain += 1
+	monsters.add_to_team(curChain.species, curChain.level)
+	game.eventmanager.currentChain += 1
 }
 
 // TODO
@@ -302,21 +296,21 @@ event_skip :: proc( curChain : ^game.SkipEvent ) {
 	game.eventmanager.currentChain = curChain.event
 }
 
-// TODO
+// TODO Make sure this works once battles are worked on
 event_gain_exp :: proc( curChain : ^game.GiveExperience ) {
-//	if game.eventmanager.uses >= curChain.amount * 3 {
-//		game.eventmanager.currentChain += 1
-//		return
-//	}
-//	if game.eventmanager.uses % 3 == 0 && game.eventmanager.uses > 0 {
-//		//audio.play_sound("experience") //TODO experience gain noise
-//		result := monsters.give_experience(&game.player.monster[curChain.member], 1)
-//		if result {
-//			curChain.amount -= game.eventmanager.uses / 3
-//			game.eventmanager.uses = -170
-//		}
-//	}
-//	game.eventmanager.uses += 1
+	if game.eventmanager.uses >= curChain.amount * 3 {
+		game.eventmanager.currentChain += 1
+		return
+	}
+	if game.eventmanager.uses % 3 == 0 && game.eventmanager.uses > 0 {
+		//audio.play_sound("experience") //TODO experience gain noise
+		result := monsters.give_experience(&game.player.monsters[curChain.member], 1)
+		if result {
+			curChain.amount -= game.eventmanager.uses / 3
+			game.eventmanager.uses = -170
+		}
+	}
+	game.eventmanager.uses += 1
 }
 
 event_emote :: proc( curChain : ^game.EmoteEvent ) {

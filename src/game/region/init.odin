@@ -12,6 +12,7 @@ import "vendor:raylib"
 
 import "../../game"
 import "../entity/overworld"
+import "../monsters"
 import "../../debug"
 
 
@@ -26,14 +27,6 @@ init :: proc(
 	load_entities(strings.concatenate({filename, "entities", ".json"}))
 	load_events(strings.concatenate({filename, "events", ".json"}))
 	load_battles(strings.concatenate({filename, "battles", ".json"}))
-	
-
-	//* Events
-	//for i:=0;i<len(eventList);i+=1 {
-	//	
-	//}
-	//* Entities
-	//
 }
 
 load_map :: proc( filename : string ) {
@@ -263,6 +256,12 @@ load_events :: proc ( filename : string ) {
 							level	= 0,
 						}
 					}
+				case "giveexp":
+					chn = game.GiveExperience{
+						amount = int(chain[n].(json.Array)[1].(f64)),
+						member = int(chain[n].(json.Array)[2].(f64)),
+					}
+
 				case "startbattle":
 					chn = game.StartBattleEvent{
 						id = chain[n].(json.Array)[1].(string),

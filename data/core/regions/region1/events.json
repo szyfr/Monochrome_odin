@@ -56,6 +56,7 @@
 			"id": "int_mom_normal_1",
 			"chain": [
 				["text","newbarktown_mom_talk1_1"],
+			//	["getmonster","starter_grass",5]
 				["conditional",["tut_elm_series",1],["new_event","int_mom_normal_2"]]
 				["setcon","tut_elm_series",1]
 			//	["choice","newbarktown_mom_event1_1",[["yes","no"],["int_mom_normal_2",""]]]
@@ -68,7 +69,7 @@
 			"chain": [
 				["text","newbarktown_mom_event1_good_1"],
 				["text","newbarktown_mom_event1_good_2"],
-				["turn","TEST","left"],
+				["turn","mom_1","left"],
 			]},
 
 	//	{	 // Elm's Lab

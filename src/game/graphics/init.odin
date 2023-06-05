@@ -87,7 +87,7 @@ init :: proc() {
 	game.elementalTypes = raylib.LoadTexture("data/private/sprites/spr_types.png")
 
 	//* Bar
-	game.barImg = raylib.GenImageColor(200, 1, {56,56,56,255})
+	game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})
 }
 
 close :: proc() {

@@ -10,6 +10,7 @@ import "vendor:raylib"
 
 import "../../../game"
 import "../../audio"
+import "../../monsters"
 import "../../../settings"
 
 
@@ -313,7 +314,10 @@ draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
 			barTexture = &game.barSt
 			barColor = {255,232,61,255}
 		case 2: // Experience
-			ratio = 0.75//monsters.exp_ratio(game.player.monsters[monster].experience, game.player.monsters[monster].level)
+			lv := f32(monsters.calculate_experience(game.player.monsters[monster].level, game.player.monsters[monster].rate))
+			currentExp	:= f32(game.player.monsters[monster].experience)
+			nextExp		:= f32(monsters.calculate_experience(game.player.monsters[monster].level+1, game.player.monsters[monster].rate))
+			ratio = (currentExp - lv) / (nextExp - lv)
 			str = fmt.sbprintf(&builder, "%v", game.player.monsters[monster].experience)
 			prevRatio = game.barExpRat
 			barTexture = &game.barExp
@@ -373,40 +377,6 @@ draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
 		5,
 		{56,56,56,255},
 	)
-
-	
-	////* St Bar
-	//raylib.UnloadTexture(game.barSt)
-	//img = raylib.ImageCopy(game.barImg)
-	//raylib.ImageColorReplace(&img, raylib.BLACK, raylib.WHITE)
-	//ratio = f32(game.player.monsters[0].stCur) / f32(game.player.monsters[0].stMax)
-	//for i:=0;i<int(ratio * 200);i+=1 {
-	//	raylib.ImageDrawPixel(&img, i32(i), 0, {255,232,61,255})
-	//}
-	//game.barSt = raylib.LoadTextureFromImage(img)
-	//raylib.UnloadImage(img)
-	//raylib.DrawTexturePro(
-	//	game.barSt,
-	//	{0,0,f32(img.width),f32(img.height)},
-	//	{posX + (160 * screenRatio), posY + (307 * screenRatio),(256 * screenRatio),(16 * screenRatio)},
-	//	{0,0},
-	//	0,
-	//	raylib.WHITE,
-	//)
-	////* Stamina
-	//strings.builder_reset(&builder)
-	//str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[0].stCur, game.player.monsters[0].stMax)
-	//cstr = strings.clone_to_cstring(str)
-	//raylib.DrawTextPro(
-	//	game.font,
-	//	cstr,
-	//	{posX + (288 * screenRatio), posY + (309 * screenRatio)},
-	//	{((f32(len(str)) * 1.25) * (16 * screenRatio)) / 2, 0},
-	//	0,
-	//	(16 * screenRatio),
-	//	5,
-	//	{56,56,56,255},
-	//)
 }
 
 draw_types :: proc( x, y : f32, monster : u8 ) {
