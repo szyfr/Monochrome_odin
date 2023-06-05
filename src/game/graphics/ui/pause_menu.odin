@@ -194,16 +194,8 @@ draw_pause :: proc() {
 }
 
 draw_monster :: proc() {
-	screenWidth_2	:= (f32(game.screenWidth) / 2)
-	screenWidth_3	:= (f32(game.screenWidth) / 3)
-	screenWidth_4	:= (f32(game.screenWidth) / 4)
-	screenWidth_5	:= (f32(game.screenWidth) / 5)
 	screenWidth_8	:= (f32(game.screenWidth) / 8)
-	screenHeight_4	:= (f32(game.screenHeight) / 4)
-	screenHeight_5	:= (f32(game.screenHeight) / 5)
-	screenHeight_6	:= (f32(game.screenHeight) / 6)
 	screenHeight_8	:= (f32(game.screenHeight) / 8)
-	screenRatio		:= (f32(game.screenHeight) / 720)
 	posX := f32(game.screenWidth) / 16
 	posY := f32(game.screenHeight) / 16
 
@@ -218,266 +210,295 @@ draw_monster :: proc() {
 
 	//* Position 1
 	//* Sprite
+	draw_sprite(55, 60, 0)
+
+	//* Names
+	draw_names(280, 80, 0)
+
+	//* Types
+	draw_types(280, 160, 0)
+
+	//* Level
+	draw_lv(404, 214, 0)
+
+	//* Experience bar
+	draw_bar(2, 280, 224, 0)
+
+	//* Health bar
+	draw_bar(0, 100, 286, 0)
+	//* Stamina bar
+	draw_bar(1, 100, 311, 0)
+
+	//* Atk Text
+	draw_stat(0, 100, 351, 0)
+	//* Def Text
+	draw_stat(1, 100, 381, 0)
+	//* SpAtk Text
+	draw_stat(2, 100, 411, 0)
+	//* SpDef Text
+	draw_stat(3, 100, 441, 0)
+	//* Spd Text
+	draw_stat(4, 100, 471, 0)
+}
+
+//@{private}
+draw_stat :: proc( stat : u8, x, y : f32, monster : u8 ) {
+	str : string
+	defer delete(str)
+
+	posX := f32(game.screenWidth) / 16
+	posY := f32(game.screenHeight) / 16
+	screenRatio := f32(game.screenHeight) / 720
+
+	builder : strings.Builder
+	switch stat {
+		case 0: // Atk
+			str = fmt.sbprintf(&builder, "%v   %v", game.localization["atk"], game.player.monsters[monster].atk)
+		case 1: // Def
+			str = fmt.sbprintf(&builder, "%v   %v", game.localization["def"], game.player.monsters[monster].def)
+		case 2: // SpAtk
+			str = fmt.sbprintf(&builder, "%v %v", game.localization["spatk"], game.player.monsters[monster].spAtk)
+		case 3: // SpDef
+			str = fmt.sbprintf(&builder, "%v %v", game.localization["spdef"], game.player.monsters[monster].spDef)
+		case 4: // Spd
+			str = fmt.sbprintf(&builder, "%v   %v", game.localization["spd"], game.player.monsters[monster].spd)
+	}
+
+	cstr := strings.clone_to_cstring(str)
+	defer delete(cstr)
+
+	raylib.DrawTextPro(
+		game.font,
+		cstr,
+		{posX + (x * screenRatio), posY + (y * screenRatio)},
+		{0, 0},
+		0,
+		(16 * screenRatio),
+		5,
+		{56,56,56,255},
+	)
+	
+}
+
+draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
+	barText : cstring
+	barTexture : ^raylib.Texture
+	barColor : raylib.Color
+
+	builder : strings.Builder
+	str : string
+	defer delete(str)
+	cstr : cstring
+	defer delete(cstr)
+
+	posX := f32(game.screenWidth) / 16
+	posY := f32(game.screenHeight) / 16
+	screenRatio := f32(game.screenHeight) / 720
+	ratio, prevRatio : f32
+	offset : f32
+
+	switch bar {
+		case 0: // Health
+			barText = game.localization["hp"]
+			ratio = f32(game.player.monsters[monster].hpCur) / f32(game.player.monsters[monster].hpMax)
+			str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[monster].hpCur, game.player.monsters[monster].hpMax)
+			prevRatio = game.barHpRat
+			barTexture = &game.barHp
+			barColor = {247,82,49,255}
+		case 1: // Stamina
+			barText = game.localization["st"]
+			ratio = f32(game.player.monsters[monster].stCur) / f32(game.player.monsters[monster].stMax)
+			str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[monster].stCur, game.player.monsters[monster].stMax)
+			prevRatio = game.barStRat
+			barTexture = &game.barSt
+			barColor = {255,232,61,255}
+		case 2: // Experience
+			ratio = 0.75//monsters.exp_ratio(game.player.monsters[monster].experience, game.player.monsters[monster].level)
+			str = fmt.sbprintf(&builder, "%v", game.player.monsters[monster].experience)
+			prevRatio = game.barExpRat
+			barTexture = &game.barExp
+			barColor = {99,206,8,255}
+	}
+
+	//* Bar text
+	if bar != 2 {
+		raylib.DrawTextPro(
+			game.font,
+			barText,
+			{posX + (x * screenRatio), posY + (y * screenRatio)},
+			{0, 0},
+			0,
+			(16 * screenRatio),
+			5,
+			{56,56,56,255},
+		)
+		offset = 60
+	}
+
+	//* Bar
+	if prevRatio != ratio {
+		raylib.UnloadTexture(game.barSt)
+		img := raylib.ImageCopy(game.barImg)
+		defer raylib.UnloadImage(img)
+
+		for i:=0;i<int(ratio * 200);i+=1 do raylib.ImageDrawPixel(&img, i32(i), 0, barColor)
+
+		barTexture^ = raylib.LoadTextureFromImage(img)
+
+		switch bar {
+			case 0:  game.barHpRat = ratio
+			case 1:  game.barStRat = ratio
+			case 2:  game.barExpRat = ratio
+		}
+	}
+
+	barX := x + offset
 	raylib.DrawTexturePro(
-		game.monsterTextures[game.player.monsters[0].species],
-		{0,0,64,64},
-		{posX + (55 * screenRatio), posY + (60 * screenRatio), (192 * screenRatio), (192 * screenRatio)},
+		barTexture^,
+		{0,0,f32(barTexture.width),f32(barTexture.height)},
+		{posX + (barX * screenRatio), posY + (y * screenRatio) - 4,(256 * screenRatio),(16 * screenRatio)},
 		{0,0},
 		0,
 		raylib.WHITE,
 	)
+
+	cstr = strings.clone_to_cstring(str)
+	raylib.DrawTextPro(
+		game.font,
+		cstr,
+		{posX + ((barX + (256 / 2)) * screenRatio), posY + (y * screenRatio)},
+		{((f32(len(str)) * 1.25) * (16 * screenRatio)) / 2, 0},
+		0,
+		(16 * screenRatio),
+		5,
+		{56,56,56,255},
+	)
+
+	
+	////* St Bar
+	//raylib.UnloadTexture(game.barSt)
+	//img = raylib.ImageCopy(game.barImg)
+	//raylib.ImageColorReplace(&img, raylib.BLACK, raylib.WHITE)
+	//ratio = f32(game.player.monsters[0].stCur) / f32(game.player.monsters[0].stMax)
+	//for i:=0;i<int(ratio * 200);i+=1 {
+	//	raylib.ImageDrawPixel(&img, i32(i), 0, {255,232,61,255})
+	//}
+	//game.barSt = raylib.LoadTextureFromImage(img)
+	//raylib.UnloadImage(img)
+	//raylib.DrawTexturePro(
+	//	game.barSt,
+	//	{0,0,f32(img.width),f32(img.height)},
+	//	{posX + (160 * screenRatio), posY + (307 * screenRatio),(256 * screenRatio),(16 * screenRatio)},
+	//	{0,0},
+	//	0,
+	//	raylib.WHITE,
+	//)
+	////* Stamina
+	//strings.builder_reset(&builder)
+	//str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[0].stCur, game.player.monsters[0].stMax)
+	//cstr = strings.clone_to_cstring(str)
+	//raylib.DrawTextPro(
+	//	game.font,
+	//	cstr,
+	//	{posX + (288 * screenRatio), posY + (309 * screenRatio)},
+	//	{((f32(len(str)) * 1.25) * (16 * screenRatio)) / 2, 0},
+	//	0,
+	//	(16 * screenRatio),
+	//	5,
+	//	{56,56,56,255},
+	//)
+}
+
+draw_types :: proc( x, y : f32, monster : u8 ) {
+	posX := f32(game.screenWidth) / 16
+	posY := f32(game.screenHeight) / 16
+	screenRatio := f32(game.screenHeight) / 720
+
+	rect : raylib.Rectangle = {48 * (f32(game.player.monsters[monster].elementalType1)-1),0,48,8}
+	raylib.DrawTexturePro(
+		game.elementalTypes,
+		rect,
+		{posX + (x * screenRatio), posY + (y * screenRatio),(128 * screenRatio),(21.333333 * screenRatio)},
+		{0,0},
+		0,
+		raylib.WHITE,
+	)
+
+	rect = {48 * (f32(game.player.monsters[monster].elementalType2)-1),0,48,8}
+	raylib.DrawTexturePro(
+		game.elementalTypes,
+		rect,
+		{posX + ((x + 128) * screenRatio), posY + (y * screenRatio),(128 * screenRatio),(21.333333 * screenRatio)},
+		{0,0},
+		0,
+		raylib.WHITE,
+	)
+}
+
+draw_names :: proc( x, y : f32, monster : u8 ) {
+	posX := f32(game.screenWidth) / 16
+	posY := f32(game.screenHeight) / 16
+	screenRatio := f32(game.screenHeight) / 720
 	offset : f32 = 0
+
 	//* Nickname
-	if game.player.monsters[0].nickname != "" {
+	if game.player.monsters[monster].nickname != "" {
 		raylib.DrawTextEx(
 			game.font,
-			game.player.monsters[0].nickname,
-			{posX + (280 * screenRatio), posY + (80 * screenRatio)},
+			game.player.monsters[monster].nickname,
+			{posX + (x * screenRatio), posY + (y * screenRatio)},
 			16 * screenRatio,
 			5,
 			{56,56,56,255},
 		)
 		offset += (32 * screenRatio)
 	}
+
 	//* Species
 	raylib.DrawTextEx(
 		game.font,
-		game.localization[reflect.enum_string(game.player.monsters[0].species)],
-		{posX + (280 * screenRatio), posY + (80 * screenRatio) + offset},
+		game.localization[reflect.enum_string(game.player.monsters[monster].species)],
+		{posX + (x * screenRatio), posY + (y * screenRatio) + offset},
 		16 * screenRatio,
 		5,
 		{56,56,56,255},
 	)
-	//* Types
-	rect : raylib.Rectangle = {48 * (f32(game.player.monsters[0].elementalType1)-1),0,48,8}
-	raylib.DrawTexturePro(
-		game.elementalTypes,
-		rect,
-		{posX + (280 * screenRatio), posY + (160 * screenRatio),(128 * screenRatio),(21.333333 * screenRatio)},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
-	rect = {48 * (f32(game.player.monsters[0].elementalType2)-1),0,48,8}
-	raylib.DrawTexturePro(
-		game.elementalTypes,
-		rect,
-		{posX + (408 * screenRatio), posY + (160 * screenRatio),(128 * screenRatio),(21.333333 * screenRatio)},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
-	//* Level
+}
+
+draw_lv :: proc( x, y : f32, monster : u8 ) {
+	posX := f32(game.screenWidth) / 16
+	posY := f32(game.screenHeight) / 16
+	screenRatio := f32(game.screenHeight) / 720
+
 	builder : strings.Builder
-	str := fmt.sbprintf(&builder, "Lv%v", game.player.monsters[0].level)
+	str := fmt.sbprintf(&builder, "Lv%v", game.player.monsters[monster].level)
+	defer delete(str)
 	cstr := strings.clone_to_cstring(str)
+	defer delete(cstr)
+
 	raylib.DrawTextPro(
 		game.font,
 		cstr,
-		{posX + (404 * screenRatio), posY + (214 * screenRatio)},
+		{posX + (x * screenRatio), posY + (y * screenRatio)},
 		{(f32(len(str)) * (16 * screenRatio)) / 2, 12},
 		0,
 		16 * screenRatio,
 		5,
 		{56,56,56,255},
 	)
-	//* Exp Bar
-	raylib.UnloadTexture(game.barExp)
-	img := raylib.ImageCopy(game.barImg)
-	raylib.ImageColorReplace(&img, raylib.BLACK, raylib.WHITE)
-	ratio : f32 = 0.75//monsters.exp_ratio(game.player.monsters[0].experience, game.player.monsters[0].level)
-	for i:=0;i<int(ratio * 200);i+=1 {
-		raylib.ImageDrawPixel(&img, i32(i), 0, {99,206,8,255})
-	}
-	game.barExp	 = raylib.LoadTextureFromImage(img)
-	raylib.UnloadImage(img)
+}
+
+draw_sprite :: proc( x, y : f32, monster : u8 ) {
+	posX := f32(game.screenWidth) / 16
+	posY := f32(game.screenHeight) / 16
+	screenRatio := f32(game.screenHeight) / 720
+
 	raylib.DrawTexturePro(
-		game.barExp,
-		{0,0,f32(img.width),f32(img.height)},
-		{posX + (280 * screenRatio), posY + (224 * screenRatio),(256 * screenRatio),(16 * screenRatio)},
+		game.monsterTextures[game.player.monsters[monster].species],
+		{0,0,64,64},
+		{posX + (x * screenRatio), posY + (y * screenRatio), (192 * screenRatio), (192 * screenRatio)},
 		{0,0},
 		0,
 		raylib.WHITE,
 	)
-	//* Experience
-	expNeed := 100 //monsters.exp_needed(game.player.monsters[0].level) - game.player.monsters[0].experience
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v", expNeed)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (404 * screenRatio), posY + (226 * screenRatio)},
-		{(f32(len(str)) * (16 * screenRatio)) / 2, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* Hp Text
-	raylib.DrawTextPro(
-		game.font,
-		game.localization["hp"],
-		{posX + (130 * screenRatio), posY + (286 * screenRatio)},
-		{((3 * 1.25) * (16 * screenRatio)) / 2, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-	//* Hp Bar
-	raylib.UnloadTexture(game.barHp)
-	img = raylib.ImageCopy(game.barImg)
-	raylib.ImageColorReplace(&img, raylib.BLACK, raylib.WHITE)
-	ratio = f32(game.player.monsters[0].hpCur) / f32(game.player.monsters[0].hpMax)
-	for i:=0;i<int(ratio * 200);i+=1 {
-		raylib.ImageDrawPixel(&img, i32(i), 0, {247,82,49,255})
-	}
-	game.barHp	 = raylib.LoadTextureFromImage(img)
-	raylib.UnloadImage(img)
-	raylib.DrawTexturePro(
-		game.barHp,
-		{0,0,f32(img.width),f32(img.height)},
-		{posX + (160 * screenRatio), posY + (284 * screenRatio),(256 * screenRatio),(16 * screenRatio)},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
-	//* Health
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[0].hpCur, game.player.monsters[0].hpMax)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (288 * screenRatio), posY + (286 * screenRatio)},
-		{((f32(len(str)) * 1.25) * (16 * screenRatio)) / 2, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* St Text
-	raylib.DrawTextPro(
-		game.font,
-		game.localization["st"],
-		{posX + (130 * screenRatio), posY + (311 * screenRatio)},
-		{((3 * 1.25) * (16 * screenRatio)) / 2, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-	//* St Bar
-	raylib.UnloadTexture(game.barSt)
-	img = raylib.ImageCopy(game.barImg)
-	raylib.ImageColorReplace(&img, raylib.BLACK, raylib.WHITE)
-	ratio = f32(game.player.monsters[0].stCur) / f32(game.player.monsters[0].stMax)
-	for i:=0;i<int(ratio * 200);i+=1 {
-		raylib.ImageDrawPixel(&img, i32(i), 0, {255,232,61,255})
-	}
-	game.barSt = raylib.LoadTextureFromImage(img)
-	raylib.UnloadImage(img)
-	raylib.DrawTexturePro(
-		game.barSt,
-		{0,0,f32(img.width),f32(img.height)},
-		{posX + (160 * screenRatio), posY + (307 * screenRatio),(256 * screenRatio),(16 * screenRatio)},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
-	//* Stamina
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[0].stCur, game.player.monsters[0].stMax)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (288 * screenRatio), posY + (309 * screenRatio)},
-		{((f32(len(str)) * 1.25) * (16 * screenRatio)) / 2, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* Atk Text
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v   %v", game.localization["atk"], game.player.monsters[0].atk)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (100 * screenRatio), posY + (351 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* Def Text
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v   %v", game.localization["def"], game.player.monsters[0].def)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (100 * screenRatio), posY + (381 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* SpAtk Text
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v %v", game.localization["spatk"], game.player.monsters[0].spAtk)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (100 * screenRatio), posY + (411 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* SpDef Text
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v %v", game.localization["spdef"], game.player.monsters[0].spDef)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (100 * screenRatio), posY + (441 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	//* Spd Text
-	strings.builder_reset(&builder)
-	str = fmt.sbprintf(&builder, "%v   %v", game.localization["spd"], game.player.monsters[0].spd)
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + (100 * screenRatio), posY + (471 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
-
-	delete(str)
-	delete(cstr)
 }

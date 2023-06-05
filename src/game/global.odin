@@ -47,8 +47,11 @@ pointer			: raylib.Texture
 
 barImg			: raylib.Image
 barExp			: raylib.Texture
+barExpRat		: f32
 barHp			: raylib.Texture
+barHpRat		: f32
 barSt			: raylib.Texture
+barStRat		: f32
 
 overlayActive	: bool
 overlayTexture	: raylib.Texture

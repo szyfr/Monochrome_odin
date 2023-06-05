@@ -28,6 +28,7 @@ Monster :: struct {
 
 	experience	: int,
 	level		: int,
+	rate		: ExperienceRate,
 	//TODO Nature
 
 	attacks : [4]MonsterAttack,
@@ -86,4 +87,10 @@ Size :: enum {
 	small,
 	medium,
 	large,
+}
+
+ExperienceRate :: enum {
+	fast,
+	medium,
+	slow,
 }

@@ -12,6 +12,7 @@ import "game/graphics/ui"
 import "game/audio"
 import "game/region"
 import "game/events"
+import "game/monsters"
 import "game/entity/overworld"
 import "game/entity/emotes"
 
@@ -93,24 +94,25 @@ init :: proc() {
 
 	camera.init()
 	player.init()
-	game.player.monsters[0] = {
-		.starter_water_2,
-		.grass,
-		.fire,
-		"Dingus",
-		100,100,
-		100,100,
-		500,
-		600,
-		700,
-		800,
-		900.
-		{0,0,0,0,0,0},
-		.small
-		10,
-		9,
-		{.tackle,.growl,.leafage,.none},
-	}
+	game.player.monsters[0] = monsters.create(.starter_grass, 5)
+	//game.player.monsters[0] = {
+	//	.starter_water_2,
+	//	.grass,
+	//	.fire,
+	//	"Dingus",
+	//	100,100,
+	//	100,100,
+	//	500,
+	//	600,
+	//	700,
+	//	800,
+	//	900.
+	//	{0,0,0,0,0,0},
+	//	.small
+	//	10,
+	//	9,
+	//	{.tackle,.growl,.leafage,.none},
+	//}
 }
 close :: proc() {
 	//* Localization
