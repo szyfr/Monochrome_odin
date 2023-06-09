@@ -2,6 +2,8 @@ package camera
 
 
 //= Imports
+import "vendor:raylib"
+
 import "../../game"
 
 
@@ -9,6 +11,15 @@ import "../../game"
 focus :: proc( entity : ^game.Entity ) {
 	game.camera.targetEntity = entity
 	update()
+}
+defocus :: proc() {
+	game.camera.targetEntity = nil
+	update()
+}
+
+set_position :: proc( position : raylib.Vector3 ) {
+	game.camera.position = {position.x, position.y + 7, position.z + 2.5}
+	game.camera.target = position
 }
 
 update :: proc() {

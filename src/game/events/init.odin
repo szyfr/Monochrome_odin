@@ -18,3 +18,10 @@ init :: proc() {
 	game.eventmanager.playerPronouns[2] = "theirs"
 	game.eventmanager.rivalName = "Silver"
 }
+
+reset :: proc() {
+	game.eventmanager.currentEvent	= nil
+	game.eventmanager.textbox		= {}
+	game.eventmanager.currentChain	= 0
+	game.eventmanager.uses			= 0
+}

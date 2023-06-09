@@ -261,11 +261,15 @@ load_events :: proc ( filename : string ) {
 						amount = int(chain[n].(json.Array)[1].(f64)),
 						member = int(chain[n].(json.Array)[2].(f64)),
 					}
+				case "showlevel":
+					chn = game.ShowLevelUp{}
 
-				case "startbattle":
+				case "start_battle":
 					chn = game.StartBattleEvent{
 						id = chain[n].(json.Array)[1].(string),
 					}
+				case "end_battle":
+					chn = game.EndBattleEvent{}
 				case "sound":
 					chn = game.PlaySoundEvent{
 						name	= chain[n].(json.Array)[1].(string),
@@ -347,6 +351,37 @@ load_battles :: proc ( filename : string ) {
 	}
 
 	battleList := jsonfile.(json.Object)["battles"].(json.Array)
+
+	for i:=0;i<len(battleList);i+=1 {
+		battle : game.BattleInfo
+
+		battleId := battleList[i].(json.Object)["id"].(string)
+		battle.trainerName = battleList[i].(json.Object)["id"].(string)
+		battle.arenaType, _ = reflect.enum_from_name(game.ArenaType, battleList[i].(json.Object)["arena"].(string))
+
+		easyTeam := battleList[i].(json.Object)["mon_easy"].(json.Array)
+		for o:=0;o<len(easyTeam);o+=1 {
+			//TODO Give more direct control over the monster created
+			species, _ :=reflect.enum_from_name(game.MonsterSpecies, easyTeam[o].(json.Array)[0].(string))
+			battle.teamEasy[o] = monsters.create( species, int(easyTeam[o].(json.Array)[1].(f64)) )
+		}
+
+		mediumTeam := battleList[i].(json.Object)["mon_medium"].(json.Array)
+		for o:=0;o<len(easyTeam);o+=1 {
+			//TODO Give more direct control over the monster created
+			species, _ :=reflect.enum_from_name(game.MonsterSpecies, mediumTeam[o].(json.Array)[0].(string))
+			battle.teamMedium[o] = monsters.create( species, int(mediumTeam[o].(json.Array)[1].(f64)) )
+		}
+
+		hardTeam := battleList[i].(json.Object)["mon_hard"].(json.Array)
+		for o:=0;o<len(easyTeam);o+=1 {
+			//TODO Give more direct control over the monster created
+			species, _ :=reflect.enum_from_name(game.MonsterSpecies, hardTeam[o].(json.Array)[0].(string))
+			battle.teamHard[o] = monsters.create( species, int(hardTeam[o].(json.Array)[1].(f64)) )
+		}
+
+		game.region.battles[battleId] = battle
+	}
 }
 
 // TODO

@@ -13,6 +13,7 @@ import "../entity/overworld"
 import "../entity/emotes"
 import "../audio"
 import "../monsters"
+import "../battle"
 import "../../debug"
 
 
@@ -236,18 +237,19 @@ event_receive_monster :: proc( curChain : ^game.GetMonsterEvent ) {
 	game.eventmanager.currentChain += 1
 }
 
-// TODO
 event_start_battle :: proc( curChain : ^game.StartBattleEvent ) {
-//	if game.player.monster[0].species == .empty do return
-//
-//	battle.init(&game.battles[curChain.id])
-//	game.eventmanager.currentChain += 1
+	if game.player.monsters[0].species == .empty {
+		debug.log("[ERROR] - Attempted to start battle with no monsters.")
+		game.eventmanager.currentChain += 1
+	}
+
+	battle.init(curChain.id)
+	game.eventmanager.currentChain += 1
 }
 
-// TODO
 event_end_battle :: proc( curChain : ^game.EndBattleEvent ) {
-//	battle.close()
-//	game.eventmanager.currentChain += 1
+	battle.close()
+	game.eventmanager.currentChain += 1
 }
 
 event_play_sound :: proc( curChain : ^game.PlaySoundEvent ) {

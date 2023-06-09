@@ -2,7 +2,7 @@
 	"events":[
 		//= Warps
 		//* Elm's Lab
-		{ // warp_elmlab_in
+		{ //? warp_elmlab_in
 			"id": "warp_elmlab_in",
 			"chain": [
 				["sound","inside",1],
@@ -10,7 +10,7 @@
 				["warp","player",[ 5,42 ],true,"up"],
 				["animation","flash",23,8,[2,1,0],false],
 			]},
-		{ // warp_elmlab_out
+		{ //? warp_elmlab_out
 			"id": "warp_elmlab_out",
 			"chain": [
 				["sound","outside",1],
@@ -19,7 +19,7 @@
 				["animation","flash",23,8,[2,1,0],false],
 			]},
 		//* Player's house
-		{ // warp_playershouse_ground
+		{ //? warp_playershouse_ground
 			"id": "warp_playershouse_ground",
 			"chain": [
 				["sound","outside",1],
@@ -27,7 +27,7 @@
 				["warp","player",[ 24,39 ],true,"down"],
 				["animation","flash",23,8,[2,1,0],false],
 			]},
-		{ // warp_playershouse_room
+		{ //? warp_playershouse_room
 			"id": "warp_playershouse_room",
 			"chain": [
 				["sound","outside",1],
@@ -35,7 +35,7 @@
 				["warp","player",[ 37,39 ],true,"down"],
 				["animation","flash",23,8,[2,1,0],false],
 			]},
-		{ // warp_playershouse_in
+		{ //? warp_playershouse_in
 			"id": "warp_playershouse_in",
 			"chain": [
 				["sound","inside",1],
@@ -43,7 +43,7 @@
 				["warp","player",[ 21,47 ],true,"up"],
 				["animation","flash",23,8,[2,1,0],false],
 			]},
-		{ // warp_playershouse_out
+		{ //? warp_playershouse_out
 			"id": "warp_playershouse_out",
 			"chain": [
 				["sound","outside",1],
@@ -52,26 +52,59 @@
 				["animation","flash",23,8,[2,1,0],false],
 			]},
 
-		{ // int_mom_normal_1
+		{ //? int_mom_normal_1
 			"id": "int_mom_normal_1",
 			"chain": [
 				["text","newbarktown_mom_talk1_1"],
-			//	["getmonster","starter_grass",5]
 				["conditional",["tut_elm_series",1],["new_event","int_mom_normal_2"]]
 				["setcon","tut_elm_series",1]
-			//	["choice","newbarktown_mom_event1_1",[["yes","no"],["int_mom_normal_2",""]]]
-			//	["text","newbarktown_mom_event1_bad_1"],
-			//	["text","newbarktown_mom_event1_bad_2"],
-			//	["turn","TEST","left"],
+				["choice","newbarktown_mom_event1_1",[["yes","no"],["int_mom_normal_2",""]]]
+				["text","newbarktown_mom_event1_bad_1"],
+				["text","newbarktown_mom_event1_bad_2"],
+				["turn","mom_1","left"],
 			]},
-		{ // int_mom_normal_2
+		{ //? int_mom_normal_2
 			"id": "int_mom_normal_2",
 			"chain": [
 				["text","newbarktown_mom_event1_good_1"],
 				["text","newbarktown_mom_event1_good_2"],
 				["turn","mom_1","left"],
 			]},
-
+		//* Testing
+		{ //? Test
+			"id":"test",
+			"chain": [
+				["getmonster","starter_grass",5],
+				["music","rival_battle",1],
+				["animation",
+					"trainer_battle_2",
+					230,
+					4,
+					[26,26,26,26,0,0,0,0,26,26,26,26,0,0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26],
+					false,
+				]
+				["start_battle","rival_battle_starter_grass"],
+			]},
+		
+		//* Battle
+		{ //? Win
+			"id":"trainer_battle_win",
+			"chain": [
+				["music","rival_battle",1],
+				["text","trainer_battle_win_1"],
+				["text","trainer_battle_win_2"],
+				["giveexp",0,0],
+				["endbattle"],
+			]},
+		{ //? Lose
+			"id":"trainer_battle_lose",
+			"chain": [
+				["music","trainer_battle_win",1],
+				["text","trainer_battle_lose_1"],
+				["text","trainer_battle_lose_2"],
+				["warp","player",[ 32,41 ],false,"up"],
+				["endbattle"],
+			]},
 	//	{	 // Elm's Lab
 	//		"location": [ 17,9 ],
 	//		"type":"interact",

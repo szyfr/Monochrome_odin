@@ -20,6 +20,8 @@ keybindings		: map[string]Keybinding
 
 eventmanager	: ^EventManager
 
+difficulty		: Difficulty = .medium
+
 //* Text
 textSpeed		: i32
 language		: string
@@ -74,4 +76,5 @@ player			: ^Player
 //* Map
 region			: ^Region
 
-//* Monsters
+//* Combat
+battleData		: ^BattleData

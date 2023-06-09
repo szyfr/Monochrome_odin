@@ -112,5 +112,5 @@ update :: proc() {
 }
 
 can_move :: proc() -> bool {
-	return !game.player.entity.isMoving && game.player.canMove && game.player.menu == .none //&& game.battleStruct == nil
+	return !game.player.entity.isMoving && game.player.canMove && game.player.menu == .none && game.battleData == nil
 }

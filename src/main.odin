@@ -13,6 +13,7 @@ import "game/audio"
 import "game/region"
 import "game/events"
 import "game/monsters"
+import "game/battle"
 import "game/entity/overworld"
 import "game/entity/emotes"
 
@@ -45,6 +46,8 @@ draw :: proc() {
 
 	region.draw()
 	emotes.draw()
+
+	if game.battleData != nil do battle.draw()
 
 	raylib.EndMode3D()
 

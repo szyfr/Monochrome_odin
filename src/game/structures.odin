@@ -88,6 +88,7 @@ Region :: struct {
 	tiles		: map[raylib.Vector2]Tile,
 	entities	: map[raylib.Vector2]Entity,
 	triggers	: map[raylib.Vector2]string,
+	battles		: map[string]BattleInfo,
 	events		: map[string]Event,
 	aniTimer	: int,
 	frame		: int,
@@ -137,4 +138,10 @@ MenuState :: enum {
 	bag,
 	player,
 	options,
+}
+
+Difficulty :: enum {
+	easy,
+	medium,
+	hard
 }

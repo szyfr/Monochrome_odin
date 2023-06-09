@@ -34,10 +34,6 @@ Monster :: struct {
 	attacks : [4]MonsterAttack,
 }
 
-//Attack :: struct {
-//	type : MonsterAttack,
-//}
-
 
 //= Enumerations
 MonsterSpecies :: enum {
