@@ -2,31 +2,30 @@ package battle
 
 
 //= Imports
+import "core:fmt"
+
 import "vendor:raylib"
 
 import "../../game"
+import "../entity/overworld"
 
 
 //= Procedures
 draw :: proc() {
+	//* Draw cursor
+	transform : raylib.Matrix = {
+		1.00, 0.00, 0.00, 0.00,
+		0.00, 1.00, 0.00, 0.00,
+		0.00, 0.00, 1.00, 0.00,
+		0.00, 0.00, 0.00, 1.00,
+	}
+	transform[3,0] = game.battleData.target.x + 8.5
+	transform[3,1] = 0.01
+	transform[3,2] = game.battleData.target.y + 56.5
+	raylib.DrawMesh(game.standeeMesh,game.emoteMaterials[0],transform)
 
-	for y:=0;y<8;y+=1 {
-		for x:=0;x<16;x+=1 {
-			switch in game.battleData.squares[y][x] {
-				case (^game.Monster):
-					transform : raylib.Matrix = {
-						1.00,  0.00, 0.00, 0.00,
-						0.00,  0.78, 0.80, 0.00,
-						0.00, -0.80, 0.78, 0.00,
-						0.00,  0.00, 0.00, 1.00,
-					}
-					transform[3,0] = f32(x) + 8.5
-					transform[3,1] = 0.5
-					transform[3,2] = f32(y) + 56.5
-					raylib.DrawMesh(game.standeeMesh,game.emoteMaterials[0],transform)
-				case bool:
-				case int:
-			}
-		}
+	//* Entities
+	for i:=0;i<len(game.battleData.entities);i+=1 {
+		overworld.draw(&game.battleData.entities[i], 1.5)
 	}
 }

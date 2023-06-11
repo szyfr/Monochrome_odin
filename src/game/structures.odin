@@ -17,8 +17,9 @@ Keybinding :: struct {
 }
 
 Camera :: struct {
-	using data   :  raylib.Camera3D,
-	targetEntity : ^Entity,
+	using data		:  raylib.Camera3D,
+	targetEntity	: ^Entity,
+	zoom			:  f32,
 }
 
 Player :: struct {

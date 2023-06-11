@@ -10,12 +10,12 @@ import "../../../game"
 
 
 //= Procedures
-draw :: proc( entity : ^game.Entity ) {
+draw :: proc( entity : ^game.Entity, scale : f32 = 1 ) {
 	//* Draw mesh with material
 	transform : raylib.Matrix = {
-		1.00,  0.00, 0.00, 0.00,
+		1.00 * scale,  0.00, 0.00, 0.00,
 		0.00,  0.78, 0.80, 0.00,
-		0.00, -0.80, 0.78, 0.00,
+		0.00, -0.80, 0.78 * scale, 0.00,
 		0.00,  0.00, 0.00, 1.00,
 	}
 	transform[3,0] = entity.position.x + 0.5

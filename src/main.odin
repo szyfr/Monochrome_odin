@@ -36,6 +36,10 @@ logic :: proc() {
 
 	region.update()
 	raylib.UpdateMusicStream(game.audio.musicCurrent)
+
+	battle.update()
+
+	if settings.is_key_pressed("pause") && game.battleData != nil do battle.close()
 }
 draw :: proc() {
 	raylib.BeginDrawing()

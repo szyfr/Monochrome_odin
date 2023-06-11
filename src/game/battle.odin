@@ -2,6 +2,7 @@ package game
 
 
 //= Imports
+import "vendor:raylib"
 
 
 //= Structures
@@ -23,10 +24,14 @@ BattleData :: struct {
 	playerTeam		: ^[4]Monster,
 	currentPlayer	:  int,
 
+	entities		: [dynamic]Entity,
+
 	turnNumber	: int,
 	playersTurn	: bool,
+	playerFirst	: bool,
 
 	squares : [8][16]Unit,
+	target	: raylib.Vector2,
 }
 
 Unit :: union {
@@ -41,4 +46,9 @@ ArenaType :: enum {
 	grass,
 	city,
 	indoors,
+}
+
+TurnOrder :: enum {
+	player,
+	enemy,
 }
