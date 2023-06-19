@@ -20,6 +20,12 @@ init :: proc() {
 	game.boxUI = raylib.LoadTextureFromImage(img)
 	raylib.UnloadImage(img)
 
+	//* Statusbox
+	img = raylib.LoadImage("data/core/sprites/ui/statusbox.png")
+	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
+	game.statusboxUI = raylib.LoadTextureFromImage(img)
+	raylib.UnloadImage(img)
+
 	size := game.boxUI.width / 3
 	game.boxUI_npatch = {
 		{ 0, 0, f32(game.boxUI.width), f32(game.boxUI.height)},
@@ -88,6 +94,18 @@ init :: proc() {
 
 	//* Bar
 	game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})
+
+	//* Targeter
+	game.targeter = raylib.LoadImage("data/core/sprites/spr_overlay.png")
+	img = raylib.ImageCopy(game.targeter)
+	raylib.ImageColorTint(&img, {51,142,0,255})
+	game.targeterMat = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(
+		&game.targeterMat,
+		raylib.MaterialMapIndex.ALBEDO,
+		raylib.LoadTextureFromImage(img),
+	)
+	raylib.UnloadImage(img)
 }
 
 close :: proc() {

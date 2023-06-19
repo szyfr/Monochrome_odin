@@ -42,5 +42,25 @@ update :: proc() {
 		if settings.is_key_pressed("down") && game.battleData.target.y != 8 do game.battleData.target.y += 1
 		if settings.is_key_pressed("left") && game.battleData.target.x != 0 do game.battleData.target.x -= 1
 		if settings.is_key_pressed("right") && game.battleData.target.x != 16 do game.battleData.target.x += 1
+
+		if settings.is_key_pressed("info") && game.battleData.playerAction != .info {
+			game.battleData.playerAction = .info
+			img := raylib.ImageCopy(game.targeter)
+			raylib.ImageColorTint(&img, {51,142,0,255})
+			texture := raylib.LoadTextureFromImage(img)
+			raylib.SetMaterialTexture(
+				&game.targeterMat,
+				raylib.MaterialMapIndex.ALBEDO,
+				texture,
+			)
+			raylib.UnloadImage(img)
+		}
+		if settings.is_key_pressed("move")		do game.battleData.playerAction = .move
+		if settings.is_key_pressed("attack1")	do game.battleData.playerAction = .attack1
+		if settings.is_key_pressed("attack2")	do game.battleData.playerAction = .attack2
+		if settings.is_key_pressed("attack3")	do game.battleData.playerAction = .attack3
+		if settings.is_key_pressed("attack4")	do game.battleData.playerAction = .attack4
+		if settings.is_key_pressed("item")		do game.battleData.playerAction = .item
+		if settings.is_key_pressed("switchin")	do game.battleData.playerAction = .switch_in
 	}
 }

@@ -37,6 +37,7 @@ audio			: ^AudioSystem
 
 //* Graphics
 boxUI			: raylib.Texture
+statusboxUI		: raylib.Texture
 boxUI_npatch	: raylib.NPatchInfo
 
 monsterBox		: raylib.Texture
@@ -68,6 +69,9 @@ emoteMeshDef	: raylib.Mesh
 
 standeeMesh		: raylib.Mesh
 tiles			: map[string]raylib.Model
+
+targeter		: raylib.Image
+targeterMat		: raylib.Material
 
 //* Entities
 camera			: ^Camera

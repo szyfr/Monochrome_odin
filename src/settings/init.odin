@@ -6,6 +6,8 @@ import "core:encoding/json"
 import "core:os"
 import "core:strings"
 
+import "vendor:raylib"
+
 import "../game"
 import "../debug"
 
@@ -65,10 +67,15 @@ create_default :: proc() {
 	game.keybindings["down"] = {0,83}
 	game.keybindings["left"] = {0,65}
 	game.keybindings["right"] = {0,68}
-	
-	game.keybindings["attack"] = {1,0}
-	game.keybindings["switch_attack_left"] = {0,81}
-	game.keybindings["switch_attack_right"] = {0,69}
+
+	game.keybindings["info"]		= {0, u32(raylib.KeyboardKey.ONE)}
+	game.keybindings["move"]		= {0, u32(raylib.KeyboardKey.TWO)}
+	game.keybindings["attack1"]		= {0, u32(raylib.KeyboardKey.Q)}
+	game.keybindings["attack2"]		= {0, u32(raylib.KeyboardKey.W)}
+	game.keybindings["attack3"]		= {0, u32(raylib.KeyboardKey.E)}
+	game.keybindings["attack4"]		= {0, u32(raylib.KeyboardKey.R)}
+	game.keybindings["item"]		= {0, u32(raylib.KeyboardKey.THREE)}
+	game.keybindings["switchin"]	= {0, u32(raylib.KeyboardKey.FOUR)}
 	
 	game.keybindings["interact"] = {0,32}
 	game.keybindings["cancel"] = {0,256}

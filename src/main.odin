@@ -51,13 +51,14 @@ draw :: proc() {
 	region.draw()
 	emotes.draw()
 
-	if game.battleData != nil do battle.draw()
+	battle.draw()
 
 	raylib.EndMode3D()
 
 	//* 2D
 	ui.draw_pause_menus()
 	ui.draw_textbox()
+	ui.draw_battle()
 	if game.overlayActive {
 		raylib.DrawTexturePro(
 			game.overlayTexture,

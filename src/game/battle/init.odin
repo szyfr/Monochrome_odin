@@ -31,26 +31,43 @@ init :: proc( battle : string ) -> bool {
 
 	game.battleData.playerTeam = &game.player.monsters
 
-	game.battleData.squares[4][4] = &game.battleData.playerTeam[0]
-	game.battleData.squares[4][11] = &game.battleData.enemyTeam[0]
+	append(&game.battleData.field, game.Token{
+		overworld.create(
+			{5 + 8, 0, 3 + 55.75},
+			reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species),
+			"monster",
+		)^,
+		.player,
+		0,
+	})
+	append(&game.battleData.field, game.Token{
+		overworld.create(
+			{10 + 8, 0, 3 + 55.75},
+			reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species),
+			"monster",
+		)^,
+		.enemy,
+		0,
+	})
+	
 
-	append(&game.battleData.entities, overworld.create(
-		{5 + 8, 0, 3 + 55.75},
-		reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species),
-		"monster",
-	)^)
-	append(&game.battleData.entities, overworld.create(
-		{5 + 8, 0, 10 + 55.75},
-		reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species),
-		"monster",
-	)^)
+	//append(&game.battleData.entities, overworld.create(
+	//	{5 + 8, 0, 3 + 55.75},
+	//	reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species),
+	//	"monster",
+	//)^)
+	//append(&game.battleData.entities, overworld.create(
+	//	{5 + 8, 0, 10 + 55.75},
+	//	reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species),
+	//	"monster",
+	//)^)
 
 	calc_turn_order()
 	if game.battleData.playerFirst do game.battleData.playersTurn = true
 
 	camera.defocus()
 	game.camera.zoom = 1.2
-	camera.set_position( {16,0,61} )
+	camera.set_position( {16,0,60} )
 
 	return true
 }

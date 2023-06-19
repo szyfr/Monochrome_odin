@@ -223,12 +223,12 @@ draw_monster :: proc() {
 	draw_lv(404, 214, 0)
 
 	//* Experience bar
-	draw_bar(2, 280, 224, 0)
+	draw_bar(2, 280, 224, 256, 16, 0, 0)
 
 	//* Health bar
-	draw_bar(0, 100, 286, 0)
+	draw_bar(0, 100, 286, 256, 16, 0, 1)
 	//* Stamina bar
-	draw_bar(1, 100, 311, 0)
+	draw_bar(1, 100, 311, 256, 16, 0, 1)
 
 	//* Atk Text
 	draw_stat(0, 100, 351, 0)
@@ -281,7 +281,7 @@ draw_stat :: proc( stat : u8, x, y : f32, monster : u8 ) {
 	
 }
 
-draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
+draw_bar :: proc( bar : u8, x, y : f32, width, height : f32, monster : u8, style : u8 ) {
 	barText : cstring
 	barTexture : ^raylib.Texture
 	barColor : raylib.Color
@@ -314,6 +314,7 @@ draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
 			barTexture = &game.barSt
 			barColor = {255,232,61,255}
 		case 2: // Experience
+			barText = game.localization["exp"]
 			lv := f32(monsters.calculate_experience(game.player.monsters[monster].level, game.player.monsters[monster].rate))
 			currentExp	:= f32(game.player.monsters[monster].experience)
 			nextExp		:= f32(monsters.calculate_experience(game.player.monsters[monster].level+1, game.player.monsters[monster].rate))
@@ -325,7 +326,7 @@ draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
 	}
 
 	//* Bar text
-	if bar != 2 {
+	if style == 1 {
 		raylib.DrawTextPro(
 			game.font,
 			barText,
@@ -341,9 +342,11 @@ draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
 
 	//* Bar
 	if prevRatio != ratio {
-		raylib.UnloadTexture(game.barSt)
+		raylib.UnloadTexture(barTexture^)
 		img := raylib.ImageCopy(game.barImg)
 		defer raylib.UnloadImage(img)
+
+		//if style == 2 do raylib.ImageColorReplace(&img,{173,173,173,255},{222,255,222,255})
 
 		for i:=0;i<int(ratio * 200);i+=1 do raylib.ImageDrawPixel(&img, i32(i), 0, barColor)
 
@@ -360,23 +363,25 @@ draw_bar :: proc( bar : u8, x, y : f32, monster : u8 ) {
 	raylib.DrawTexturePro(
 		barTexture^,
 		{0,0,f32(barTexture.width),f32(barTexture.height)},
-		{posX + (barX * screenRatio), posY + (y * screenRatio) - 4,(256 * screenRatio),(16 * screenRatio)},
+		{posX + (barX * screenRatio), posY + (y * screenRatio) - 4,(width * screenRatio),(height * screenRatio)},
 		{0,0},
 		0,
 		raylib.WHITE,
 	)
 
-	cstr = strings.clone_to_cstring(str)
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{posX + ((barX + (256 / 2)) * screenRatio), posY + (y * screenRatio)},
-		{((f32(len(str)) * 1.25) * (16 * screenRatio)) / 2, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
+	if style != 2 {
+		cstr = strings.clone_to_cstring(str)
+		raylib.DrawTextPro(
+			game.font,
+			cstr,
+			{posX + ((barX + (width / 2)) * screenRatio), posY + (y * screenRatio)},
+			{((f32(len(str)) * 1.25) * (height * screenRatio)) / 2, 0},
+			0,
+			(16 * screenRatio),
+			5,
+			{56,56,56,255},
+		)
+	}
 }
 
 draw_types :: proc( x, y : f32, monster : u8 ) {
