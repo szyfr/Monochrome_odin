@@ -14,30 +14,7 @@ import "../../game"
 
 //= Procedures
 init :: proc() {
-	//* Textbox
-	img := raylib.LoadImage("data/core/sprites/ui/textbox.png")
-	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
-	game.boxUI = raylib.LoadTextureFromImage(img)
-	raylib.UnloadImage(img)
-
-	//* Statusbox
-	img = raylib.LoadImage("data/core/sprites/ui/statusbox.png")
-	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
-	game.statusboxUI = raylib.LoadTextureFromImage(img)
-	raylib.UnloadImage(img)
-
-	size := game.boxUI.width / 3
-	game.boxUI_npatch = {
-		{ 0, 0, f32(game.boxUI.width), f32(game.boxUI.height)},
-		size,size,size,size,
-		.NINE_PATCH,
-	}
-
-	//* MonsterBox
-	img = raylib.LoadImage("data/core/sprites/ui/spr_monster_info.png")
-	raylib.ImageResizeNN(&img, img.width * 4, img.height * 4)
-	game.monsterBox = raylib.LoadTextureFromImage(img)
-	raylib.UnloadImage(img)
+	load_scalable_graphics()
 
 	//* Font
 	game.font = raylib.LoadFont("data/core/sprites/ui/font.ttf")
@@ -97,7 +74,7 @@ init :: proc() {
 
 	//* Targeter
 	game.targeter = raylib.LoadImage("data/core/sprites/spr_overlay.png")
-	img = raylib.ImageCopy(game.targeter)
+	img := raylib.ImageCopy(game.targeter)
 	raylib.ImageColorTint(&img, {51,142,0,255})
 	game.targeterMat = raylib.LoadMaterialDefault()
 	raylib.SetMaterialTexture(
@@ -106,6 +83,30 @@ init :: proc() {
 		raylib.LoadTextureFromImage(img),
 	)
 	raylib.UnloadImage(img)
+}
+
+load_scalable_graphics :: proc() {
+	screenRatio := f32(game.screenHeight) / 720
+	scale := 4 * screenRatio
+
+	//* Textbox
+	img := raylib.LoadImage("data/core/sprites/ui/textbox.png")
+	raylib.ImageResizeNN(&img, img.width * i32(scale), img.height * i32(scale))
+	game.boxUI = raylib.LoadTextureFromImage(img)
+	raylib.UnloadImage(img)
+
+	//* Statusbox
+	img = raylib.LoadImage("data/core/sprites/ui/statusbox.png")
+	raylib.ImageResizeNN(&img, img.width * i32(scale), img.height * i32(scale))
+	game.statusboxUI = raylib.LoadTextureFromImage(img)
+	raylib.UnloadImage(img)
+
+	size := game.boxUI.width / 3
+	game.boxUI_npatch = {
+		{ 0, 0, f32(game.boxUI.width), f32(game.boxUI.height)},
+		size,size,size,size,
+		.NINE_PATCH,
+	}
 }
 
 close :: proc() {

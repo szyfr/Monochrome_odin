@@ -2,7 +2,9 @@ package ui
 
 
 //= Imports
+import "core:fmt"
 import "core:reflect"
+import "core:strings"
 
 import "vendor:raylib"
 
@@ -14,6 +16,7 @@ draw_battle :: proc() {
 	if game.battleData != nil {
 		//* Player Status
 		draw_player_status()
+		draw_player_attacks()
 		//* Enemy Status
 		draw_enemy_status()
 		
@@ -23,42 +26,133 @@ draw_battle :: proc() {
 }
 
 draw_player_status :: proc() {
-	screenWidth_3	:= (f32(game.screenWidth) / 3.75)
-	screenHeight_5	:= (f32(game.screenHeight) / 5)
+	screenRatio := f32(game.screenHeight) / 720
 	posX : f32 = 10
 	posY : f32 = 10
-	screenRatio := f32(game.screenHeight) / 720
 
 	//* Draw box
 	raylib.DrawTextureNPatch(
 		game.statusboxUI,
 		game.boxUI_npatch,
-		{posX, posY, screenWidth_3, screenHeight_5},
+		{posX * screenRatio, posY * screenRatio, 342 * screenRatio, 144 * screenRatio},
 		{0,0},
 		0,
 		raylib.WHITE,
 	)
+
 	//* Draw name
 	monsterName := game.localization[reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species)]
 	raylib.DrawTextPro(
 		game.font,
 		monsterName,
-		{posX + (40 * screenRatio), posY + (40 * screenRatio)},
+		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
 		{0, 0},
 		0,
 		(16 * screenRatio),
 		5,
 		{56,56,56,255},
 	)
+
 	//* Draw HP bar
-	draw_bar(0, -30, 37, 197, 16, 0, 1)
+	draw_bar(0, {posX + 40, posY +  68}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], SHOW_STAT|SHOW_AMOUNT)
 	//* Draw Stamina bar
-	draw_bar(1, -30, 57, 197, 16, 0, 1)
+	draw_bar(1, {posX + 40, posY +  88}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], SHOW_STAT|SHOW_AMOUNT)
 	//* Draw Experience bar
-	draw_bar(2, -30, 85, 257, 12, 0, 2)
+	draw_bar(2, {posX + 40, posY + 116}, {258, 12}, &game.battleData.playerTeam[game.battleData.currentPlayer], 0)
 }
 
-draw_enemy_status :: proc() {}
+draw_player_attacks :: proc() {
+	screenRatio := f32(game.screenHeight) / 720
+	posX : f32 = 10
+	posY : f32 = (f32(game.screenHeight) - (166 * screenRatio)) / screenRatio
+
+	//* Draw box
+	raylib.DrawTextureNPatch(
+		game.boxUI,
+		game.boxUI_npatch,
+		{posX * screenRatio, posY * screenRatio, 342 * screenRatio, 156 * screenRatio},
+		{0,0},
+		0,
+		raylib.WHITE,
+	)
+
+	//* Compile text
+	builder : strings.Builder
+	str : string
+	defer delete(str)
+	cstr : cstring
+	defer delete(cstr)
+
+	attack1 := strings.to_pascal_case(reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].attacks[0]))
+	if attack1 == "None" do attack1 = "---"
+	attack2 := strings.to_pascal_case(reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].attacks[1]))
+	if attack2 == "None" do attack2 = "---"
+	attack3 := strings.to_pascal_case(reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].attacks[2]))
+	if attack3 == "None" do attack3 = "---"
+	attack4 := strings.to_pascal_case(reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].attacks[3]))
+	if attack4 == "None" do attack4 = "---"
+
+	str = fmt.sbprintf(
+		&builder,
+		"Q: %v\nW: %v\nE: %v\nR: %v",
+		attack1,
+		attack2,
+		attack3,
+		attack4,
+	)
+	cstr = strings.clone_to_cstring(str)
+
+
+	//* Draw text
+	raylib.DrawTextPro(
+		game.font,
+		cstr,
+		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
+		{0, 0},
+		0,
+		(16 * screenRatio),
+		5,
+		{56,56,56,255},
+	)
+}
+
+draw_enemy_status :: proc() {
+	screenRatio := f32(game.screenHeight) / 720
+	posX : f32 = (f32(game.screenWidth) - (352 * screenRatio)) / screenRatio
+	posY : f32 = 10
+
+	//* Draw box
+	raylib.DrawTextureNPatch(
+		game.boxUI,
+		game.boxUI_npatch,
+		{posX * screenRatio, posY * screenRatio, 342 * screenRatio, 144 * screenRatio},
+		{0,0},
+		0,
+		raylib.WHITE,
+	)
+
+	//* Draw name
+	monsterName := game.localization[reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species)]
+	raylib.DrawTextPro(
+		game.font,
+		monsterName,
+		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
+		{0, 0},
+		0,
+		(16 * screenRatio),
+		5,
+		{56,56,56,255},
+	)
+
+	//* Only show HP and Stamina numbers for enemies if on Easy
+	tags : u8 = SHOW_STAT
+	if game.difficulty == .easy do tags += SHOW_AMOUNT
+
+	//* Draw HP bar
+	draw_bar(0, {posX + 40, posY +  68}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], tags)
+	//* Draw Stamina bar
+	draw_bar(1, {posX + 40, posY +  88}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], tags)
+}
 
 draw_infobox :: proc() {
 	if game.battleData.playerAction == .info && game.battleData.infoText != "" {

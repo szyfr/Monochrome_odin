@@ -223,12 +223,12 @@ draw_monster :: proc() {
 	draw_lv(404, 214, 0)
 
 	//* Experience bar
-	draw_bar(2, 280, 224, 256, 16, 0, 0)
-
+	// TODO allow looking at different mons
+	draw_bar(2, {280, 224}, {256, 16}, &game.player.monsters[0], 0)
 	//* Health bar
-	draw_bar(0, 100, 286, 256, 16, 0, 1)
+	draw_bar(0, {100, 286}, {256, 16}, &game.player.monsters[0], 1)
 	//* Stamina bar
-	draw_bar(1, 100, 311, 256, 16, 0, 1)
+	draw_bar(1, {100, 311}, {256, 16}, &game.player.monsters[0], 1)
 
 	//* Atk Text
 	draw_stat(0, 100, 351, 0)
@@ -279,109 +279,6 @@ draw_stat :: proc( stat : u8, x, y : f32, monster : u8 ) {
 		{56,56,56,255},
 	)
 	
-}
-
-draw_bar :: proc( bar : u8, x, y : f32, width, height : f32, monster : u8, style : u8 ) {
-	barText : cstring
-	barTexture : ^raylib.Texture
-	barColor : raylib.Color
-
-	builder : strings.Builder
-	str : string
-	defer delete(str)
-	cstr : cstring
-	defer delete(cstr)
-
-	posX := f32(game.screenWidth) / 16
-	posY := f32(game.screenHeight) / 16
-	screenRatio := f32(game.screenHeight) / 720
-	ratio, prevRatio : f32
-	offset : f32
-
-	switch bar {
-		case 0: // Health
-			barText = game.localization["hp"]
-			ratio = f32(game.player.monsters[monster].hpCur) / f32(game.player.monsters[monster].hpMax)
-			str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[monster].hpCur, game.player.monsters[monster].hpMax)
-			prevRatio = game.barHpRat
-			barTexture = &game.barHp
-			barColor = {247,82,49,255}
-		case 1: // Stamina
-			barText = game.localization["st"]
-			ratio = f32(game.player.monsters[monster].stCur) / f32(game.player.monsters[monster].stMax)
-			str = fmt.sbprintf(&builder, "%v/%v", game.player.monsters[monster].stCur, game.player.monsters[monster].stMax)
-			prevRatio = game.barStRat
-			barTexture = &game.barSt
-			barColor = {255,232,61,255}
-		case 2: // Experience
-			barText = game.localization["exp"]
-			lv := f32(monsters.calculate_experience(game.player.monsters[monster].level, game.player.monsters[monster].rate))
-			currentExp	:= f32(game.player.monsters[monster].experience)
-			nextExp		:= f32(monsters.calculate_experience(game.player.monsters[monster].level+1, game.player.monsters[monster].rate))
-			ratio = (currentExp - lv) / (nextExp - lv)
-			str = fmt.sbprintf(&builder, "%v", game.player.monsters[monster].experience)
-			prevRatio = game.barExpRat
-			barTexture = &game.barExp
-			barColor = {99,206,8,255}
-	}
-
-	//* Bar text
-	if style == 1 {
-		raylib.DrawTextPro(
-			game.font,
-			barText,
-			{posX + (x * screenRatio), posY + (y * screenRatio)},
-			{0, 0},
-			0,
-			(16 * screenRatio),
-			5,
-			{56,56,56,255},
-		)
-		offset = 60
-	}
-
-	//* Bar
-	if prevRatio != ratio {
-		raylib.UnloadTexture(barTexture^)
-		img := raylib.ImageCopy(game.barImg)
-		defer raylib.UnloadImage(img)
-
-		//if style == 2 do raylib.ImageColorReplace(&img,{173,173,173,255},{222,255,222,255})
-
-		for i:=0;i<int(ratio * 200);i+=1 do raylib.ImageDrawPixel(&img, i32(i), 0, barColor)
-
-		barTexture^ = raylib.LoadTextureFromImage(img)
-
-		switch bar {
-			case 0:  game.barHpRat = ratio
-			case 1:  game.barStRat = ratio
-			case 2:  game.barExpRat = ratio
-		}
-	}
-
-	barX := x + offset
-	raylib.DrawTexturePro(
-		barTexture^,
-		{0,0,f32(barTexture.width),f32(barTexture.height)},
-		{posX + (barX * screenRatio), posY + (y * screenRatio) - 4,(width * screenRatio),(height * screenRatio)},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
-
-	if style != 2 {
-		cstr = strings.clone_to_cstring(str)
-		raylib.DrawTextPro(
-			game.font,
-			cstr,
-			{posX + ((barX + (width / 2)) * screenRatio), posY + (y * screenRatio)},
-			{((f32(len(str)) * 1.25) * (height * screenRatio)) / 2, 0},
-			0,
-			(16 * screenRatio),
-			5,
-			{56,56,56,255},
-		)
-	}
 }
 
 draw_types :: proc( x, y : f32, monster : u8 ) {

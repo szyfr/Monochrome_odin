@@ -19,6 +19,9 @@ create_species :: proc( species : game.MonsterSpecies, level : int ) -> game.Mon
 			monster.elementalType2 = .none
 			monster.size = .small
 			monster.rate = .medium
+			monster.attacks[0] = .tackle
+			monster.attacks[1] = .growl
+			monster.attacks[2] = .leafage
 		case .starter_fire:
 		case .starter_water:
 	}

@@ -38,10 +38,10 @@ update :: proc() {
 			}
 		}
 
-		if settings.is_key_pressed("up") && game.battleData.target.y != 0 do game.battleData.target.y -= 1
-		if settings.is_key_pressed("down") && game.battleData.target.y != 8 do game.battleData.target.y += 1
-		if settings.is_key_pressed("left") && game.battleData.target.x != 0 do game.battleData.target.x -= 1
-		if settings.is_key_pressed("right") && game.battleData.target.x != 16 do game.battleData.target.x += 1
+		//if settings.is_key_pressed("up") && game.battleData.target.y != 0 do game.battleData.target.y -= 1
+		//if settings.is_key_pressed("down") && game.battleData.target.y != 8 do game.battleData.target.y += 1
+		//if settings.is_key_pressed("left") && game.battleData.target.x != 0 do game.battleData.target.x -= 1
+		//if settings.is_key_pressed("right") && game.battleData.target.x != 16 do game.battleData.target.x += 1
 
 		if settings.is_key_pressed("info") && game.battleData.playerAction != .info {
 			game.battleData.playerAction = .info
