@@ -121,7 +121,7 @@ draw_player_attacks :: proc() {
 
 draw_player_actions :: proc() {
 	screenRatio := f32(game.screenHeight) / 720
-	posX : f32 = 310 * screenRatio
+	posX : f32 = 310
 	posY : f32 = (f32(game.screenHeight) - (134 * screenRatio)) / screenRatio
 
 	//* Draw box
@@ -153,33 +153,33 @@ draw_player_selection :: proc() {
 
 	posY : f32 = descale(f32(game.screenHeight) - scale(134))
 
-	dest : raylib.Rectangle = {0,0,16,16}
+	dest : raylib.Rectangle = {0,0,scale(16),scale(16)}
 	switch game.battleData.playerAction {
 		case .info:
-			dest.x = scale(395)
-			dest.y = scale(632)
+			dest.x = scale(394)
+			dest.y = scale(630)
 		case .move:
-			dest.x = scale(395)
-			dest.y = scale(656)
+			dest.x = scale(394)
+			dest.y = scale(654)
 		case .item:
-			dest.x = scale(395)
-			dest.y = scale(680)
+			dest.x = scale(394)
+			dest.y = scale(678)
 		case .switch_in:
-			dest.x = scale(395)
-			dest.y = scale(704)
+			dest.x = scale(394)
+			dest.y = scale(702)
 
 		case .attack1:
-			dest.x = scale( 95)
-			dest.y = scale(632)
+			dest.x = scale( 94)
+			dest.y = scale(630)
 		case .attack2:
-			dest.x = scale( 95)
-			dest.y = scale(656)
+			dest.x = scale( 94)
+			dest.y = scale(654)
 		case .attack3:
-			dest.x = scale( 95)
-			dest.y = scale(680)
+			dest.x = scale( 94)
+			dest.y = scale(678)
 		case .attack4:
-			dest.x = scale( 95)
-			dest.y = scale(704)
+			dest.x = scale( 94)
+			dest.y = scale(702)
 	}
 
 	//(texture: Texture2D, source, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color)
