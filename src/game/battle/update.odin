@@ -46,7 +46,7 @@ update :: proc() {
 		if settings.is_key_pressed("info") && game.battleData.playerAction != .info {
 			game.battleData.playerAction = .info
 			img := raylib.ImageCopy(game.targeter)
-			raylib.ImageColorTint(&img, {51,142,0,255})
+			raylib.ImageColorTint(&img, {51,142,0,126})
 			texture := raylib.LoadTextureFromImage(img)
 			raylib.SetMaterialTexture(
 				&game.targeterMat,

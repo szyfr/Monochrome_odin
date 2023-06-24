@@ -16,7 +16,10 @@ draw_battle :: proc() {
 	if game.battleData != nil {
 		//* Player Status
 		draw_player_status()
+		//* Player UI
+		draw_player_actions()
 		draw_player_attacks()
+		draw_player_selection()
 		//* Enemy Status
 		draw_enemy_status()
 		
@@ -64,7 +67,7 @@ draw_player_status :: proc() {
 draw_player_attacks :: proc() {
 	screenRatio := f32(game.screenHeight) / 720
 	posX : f32 = 10
-	posY : f32 = (f32(game.screenHeight) - (166 * screenRatio)) / screenRatio
+	posY : f32 = (f32(game.screenHeight) - (134 * screenRatio)) / screenRatio
 
 	//* Draw box
 	raylib.DrawTextureNPatch(
@@ -114,6 +117,87 @@ draw_player_attacks :: proc() {
 		5,
 		{56,56,56,255},
 	)
+}
+
+draw_player_actions :: proc() {
+	screenRatio := f32(game.screenHeight) / 720
+	posX : f32 = 310 * screenRatio
+	posY : f32 = (f32(game.screenHeight) - (134 * screenRatio)) / screenRatio
+
+	//* Draw box
+	raylib.DrawTextureNPatch(
+		game.boxUI,
+		game.boxUI_npatch,
+		{posX * screenRatio, posY * screenRatio, 278 * screenRatio, 156 * screenRatio},
+		{0,0},
+		0,
+		raylib.WHITE,
+	)
+
+	//* Draw text
+	raylib.DrawTextPro(
+		game.font,
+		"1: Info\n2: Move\n3: Item\n4: Switch",
+		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
+		{0, 0},
+		0,
+		(16 * screenRatio),
+		5,
+		{56,56,56,255},
+	)
+}
+
+draw_player_selection :: proc() {
+	element1_posX : f32 = 10
+	element2_posX : f32 = 310
+
+	posY : f32 = descale(f32(game.screenHeight) - scale(134))
+
+	dest : raylib.Rectangle = {0,0,16,16}
+	switch game.battleData.playerAction {
+		case .info:
+			dest.x = scale(395)
+			dest.y = scale(632)
+		case .move:
+			dest.x = scale(395)
+			dest.y = scale(656)
+		case .item:
+			dest.x = scale(395)
+			dest.y = scale(680)
+		case .switch_in:
+			dest.x = scale(395)
+			dest.y = scale(704)
+
+		case .attack1:
+			dest.x = scale( 95)
+			dest.y = scale(632)
+		case .attack2:
+			dest.x = scale( 95)
+			dest.y = scale(656)
+		case .attack3:
+			dest.x = scale( 95)
+			dest.y = scale(680)
+		case .attack4:
+			dest.x = scale( 95)
+			dest.y = scale(704)
+	}
+
+	//(texture: Texture2D, source, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color)
+	raylib.DrawTexturePro(
+		game.pointer,
+		{0,0,8,8},
+		dest,
+		{8,8},
+		0,
+		raylib.WHITE,
+	)
+}
+
+scale :: proc( input : f32 ) -> f32 {
+	return input * (f32(game.screenHeight) / 720)
+}
+descale :: proc( input : f32 ) -> f32 {
+	return input / (f32(game.screenHeight) / 720)
 }
 
 draw_enemy_status :: proc() {
