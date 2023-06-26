@@ -21,7 +21,6 @@ update :: proc() {
 		//* Player cursor
 		ray := raylib.GetMouseRay(raylib.GetMousePosition(), game.camera)
 		col : raylib.RayCollision
-
 		for y:=0;y<8;y+=1 {
 			for x:=0;x<16;x+=1 {
 				col = raylib.GetRayCollisionBox(
@@ -38,15 +37,25 @@ update :: proc() {
 			}
 		}
 
-		//if settings.is_key_pressed("up") && game.battleData.target.y != 0 do game.battleData.target.y -= 1
-		//if settings.is_key_pressed("down") && game.battleData.target.y != 8 do game.battleData.target.y += 1
-		//if settings.is_key_pressed("left") && game.battleData.target.x != 0 do game.battleData.target.x -= 1
-		//if settings.is_key_pressed("right") && game.battleData.target.x != 16 do game.battleData.target.x += 1
-
+		//* Mode changing
 		if settings.is_key_pressed("info") && game.battleData.playerAction != .info {
 			game.battleData.playerAction = .info
 			img := raylib.ImageCopy(game.targeter)
 			raylib.ImageColorTint(&img, {51,142,0,126})
+			texture := raylib.LoadTextureFromImage(img)
+			raylib.UnloadTexture(game.targeterMat.maps[0].texture)
+			raylib.SetMaterialTexture(
+				&game.targeterMat,
+				raylib.MaterialMapIndex.ALBEDO,
+				texture,
+			)
+			raylib.UnloadImage(img)
+		}
+		if settings.is_key_pressed("move") && game.battleData.playerAction != .move {
+			game.battleData.playerAction = .move
+			img := raylib.ImageCopy(game.targeter)
+			raylib.ImageColorTint(&img, {247,82,49,255})
+			raylib.UnloadTexture(game.targeterMat.maps[0].texture)
 			texture := raylib.LoadTextureFromImage(img)
 			raylib.SetMaterialTexture(
 				&game.targeterMat,
@@ -55,12 +64,28 @@ update :: proc() {
 			)
 			raylib.UnloadImage(img)
 		}
-		if settings.is_key_pressed("move")		do game.battleData.playerAction = .move
 		if settings.is_key_pressed("attack1")	do game.battleData.playerAction = .attack1
 		if settings.is_key_pressed("attack2")	do game.battleData.playerAction = .attack2
 		if settings.is_key_pressed("attack3")	do game.battleData.playerAction = .attack3
 		if settings.is_key_pressed("attack4")	do game.battleData.playerAction = .attack4
-		if settings.is_key_pressed("item")		do game.battleData.playerAction = .item
-		if settings.is_key_pressed("switchin")	do game.battleData.playerAction = .switch_in
+		//if settings.is_key_pressed("item")		do game.battleData.playerAction = .item
+		//if settings.is_key_pressed("switchin")	do game.battleData.playerAction = .switch_in
+
+		//* 
+		#partial switch game.battleData.playerAction {
+			case .move:
+				if settings.is_key_down("click") {
+					if game.battleData.target != game.moveArrowList[len(game.moveArrowList)-1] {
+						//TODO Create helper functions to easily remove and manipulate entries
+						append(&game.moveArrowList, game.battleData.target)
+					}
+				}
+		//	case .item:
+		//	case .switch_in:
+			case .attack1:
+			case .attack2:
+			case .attack3:
+			case .attack4:
+		}
 	}
 }

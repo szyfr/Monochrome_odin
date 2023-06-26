@@ -73,6 +73,10 @@ tiles			: map[string]raylib.Model
 targeter		: raylib.Image
 targeterMat		: raylib.Material
 
+//moveArrow		: [4]raylib.Texture
+moveArrow		: [4]raylib.Material
+moveArrowList	: [dynamic]raylib.Vector2
+
 //* Entities
 camera			: ^Camera
 player			: ^Player

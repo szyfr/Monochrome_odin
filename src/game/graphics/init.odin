@@ -83,6 +83,40 @@ init :: proc() {
 		raylib.LoadTextureFromImage(img),
 	)
 	raylib.UnloadImage(img)
+
+	//* Arrow
+	img = raylib.LoadImage("data/core/sprites/arrow.png")
+	game.moveArrow[0] = raylib.LoadMaterialDefault()
+	game.moveArrow[1] = raylib.LoadMaterialDefault()
+	game.moveArrow[2] = raylib.LoadMaterialDefault()
+	game.moveArrow[3] = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(
+		&game.moveArrow[0],
+		raylib.MaterialMapIndex.ALBEDO,
+		raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {0,0,16,16})),
+	)
+	raylib.SetMaterialTexture(
+		&game.moveArrow[1],
+		raylib.MaterialMapIndex.ALBEDO,
+		raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {16,0,16,16})),
+	)
+	raylib.SetMaterialTexture(
+		&game.moveArrow[2],
+		raylib.MaterialMapIndex.ALBEDO,
+		raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {32,0,16,16})),
+	)
+	raylib.SetMaterialTexture(
+		&game.moveArrow[3],
+		raylib.MaterialMapIndex.ALBEDO,
+		raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {48,0,16,16})),
+	)
+	//append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{1,0},raylib.Vector2{2,0},raylib.Vector2{2,1})
+	append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{1,0},raylib.Vector2{1,1},raylib.Vector2{0,1},raylib.Vector2{0,2},raylib.Vector2{1,2})
+	//append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{1,0})	//   0 deg
+	//append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{0,1})	//  90 deg
+	//append(&game.moveArrowList, raylib.Vector2{1,0},raylib.Vector2{0,0})	// 180 deg
+	//append(&game.moveArrowList, raylib.Vector2{0,1},raylib.Vector2{0,0})	// 270 deg
+	raylib.UnloadImage(img)
 }
 
 load_scalable_graphics :: proc() {

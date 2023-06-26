@@ -102,3 +102,14 @@ PlayerAction :: enum {
 	item,
 	switch_in,
 }
+
+ArrowType :: enum {
+	middle,
+	turn,
+	end,
+}
+
+ARROW_RIGHT : f32 :   0
+ARROW_DOWN	: f32 :  90
+ARROW_LEFT	: f32 : 180
+ARROW_UP	: f32 : 270

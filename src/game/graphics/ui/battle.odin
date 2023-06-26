@@ -137,7 +137,8 @@ draw_player_actions :: proc() {
 	//* Draw text
 	raylib.DrawTextPro(
 		game.font,
-		"1: Info\n2: Move\n3: Item\n4: Switch",
+		//"1: Info\n2: Move\n3: Item\n4: Switch",
+		"1: Info\n2: Move",
 		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
 		{0, 0},
 		0,
@@ -154,7 +155,7 @@ draw_player_selection :: proc() {
 	posY : f32 = descale(f32(game.screenHeight) - scale(134))
 
 	dest : raylib.Rectangle = {0,0,scale(16),scale(16)}
-	switch game.battleData.playerAction {
+	#partial switch game.battleData.playerAction {
 		case .info:
 			dest.x = scale(394)
 			dest.y = scale(630)
