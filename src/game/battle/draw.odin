@@ -20,46 +20,7 @@ draw :: proc() {
 		//* Draw cursor
 		draw_cursor()
 		#partial switch game.battleData.playerAction {
-			case .info:
-				//* Draw info
-				token : ^game.Token
-				pos : raylib.Vector3 = {game.battleData.target.x + 8, 0, game.battleData.target.y + 55.75}
-				for i:=0;i<len(game.battleData.field);i+=1 {
-					if game.battleData.field[i].entity.position == pos {
-						token = &game.battleData.field[i]
-						break
-					}
-				}
-				if token != nil {
-					str : string = ""
-					defer delete(str)
-					builder : strings.Builder
-
-					switch token.type {
-						case .player:
-							//monsterName := game.localization[reflect.enum_string(game.battleData.playerTeam[token.data.(int)].species)]
-							//str = fmt.sbprintf(
-							//	&builder,
-							//	"%v\nLv%v",
-							//	monsterName,
-							//	game.battleData.playerTeam[token.data.(int)].level,
-							//)
-						case .enemy:
-							//monsterName := game.localization[reflect.enum_string(game.battleData.enemyTeam[token.data.(int)].species)]
-							//str = fmt.sbprintf(
-							//	&builder,
-							//	"%v\nLv%v",
-							//	monsterName,
-							//	game.battleData.enemyTeam[token.data.(int)].level,
-							//)
-						case .hazard:
-						case .wall:
-					}
-					game.battleData.infoText = strings.clone_to_cstring(str)
-				} else {
-					game.battleData.infoText = ""
-				}
-			case .move:
+			case .interaction:
 				//* Draw Arrow
 				lastPosition : raylib.Vector2 = {-1,-1}
 				for i:=0;i<len(game.moveArrowList);i+=1 {
@@ -90,12 +51,16 @@ draw :: proc() {
 					}
 
 					type : game.ArrowType = .middle
-					if lastPosition != {-1,-1} && lastDifference != difference do type = .turn
-					
-					if (startDirection == game.ARROW_RIGHT && nextDirection == game.ARROW_DOWN) || (startDirection == game.ARROW_UP && nextDirection == game.ARROW_LEFT) do direction = 0
-					if (startDirection == game.ARROW_DOWN && nextDirection == game.ARROW_LEFT) || (startDirection == game.ARROW_RIGHT && nextDirection == game.ARROW_UP) do direction = 90
-					if (startDirection == game.ARROW_DOWN && nextDirection == game.ARROW_RIGHT) || (startDirection == game.ARROW_LEFT && nextDirection == game.ARROW_UP) do direction = 180
-					if (startDirection == game.ARROW_UP && nextDirection == game.ARROW_RIGHT) || (startDirection == game.ARROW_LEFT && nextDirection == game.ARROW_DOWN) do direction = 270
+					if lastPosition != {-1,-1} && lastDifference != difference {
+						type = .turn
+						if (startDirection == game.ARROW_RIGHT && nextDirection == game.ARROW_DOWN) || (startDirection == game.ARROW_UP && nextDirection == game.ARROW_LEFT) do direction = 0
+						if (startDirection == game.ARROW_DOWN && nextDirection == game.ARROW_LEFT) || (startDirection == game.ARROW_RIGHT && nextDirection == game.ARROW_UP) do direction = 90
+						if (startDirection == game.ARROW_DOWN && nextDirection == game.ARROW_RIGHT) || (startDirection == game.ARROW_LEFT && nextDirection == game.ARROW_UP) do direction = 180
+						if (startDirection == game.ARROW_UP && nextDirection == game.ARROW_RIGHT) || (startDirection == game.ARROW_LEFT && nextDirection == game.ARROW_DOWN) do direction = 270
+					} else {
+						if startDirection == game.ARROW_RIGHT || startDirection == game.ARROW_LEFT do direction = 0
+						if startDirection == game.ARROW_UP || startDirection == game.ARROW_DOWN do direction = 90
+					}
 
 					draw_arrow_tile(type, game.moveArrowList[i], direction)
 					lastPosition = game.moveArrowList[i]

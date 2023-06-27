@@ -38,31 +38,31 @@ update :: proc() {
 		}
 
 		//* Mode changing
-		if settings.is_key_pressed("info") && game.battleData.playerAction != .info {
-			game.battleData.playerAction = .info
-			img := raylib.ImageCopy(game.targeter)
-			raylib.ImageColorTint(&img, {51,142,0,126})
-			texture := raylib.LoadTextureFromImage(img)
-			raylib.UnloadTexture(game.targeterMat.maps[0].texture)
-			raylib.SetMaterialTexture(
-				&game.targeterMat,
-				raylib.MaterialMapIndex.ALBEDO,
-				texture,
-			)
-			raylib.UnloadImage(img)
-		}
-		if settings.is_key_pressed("move") && game.battleData.playerAction != .move {
-			game.battleData.playerAction = .move
-			img := raylib.ImageCopy(game.targeter)
-			raylib.ImageColorTint(&img, {247,82,49,255})
-			raylib.UnloadTexture(game.targeterMat.maps[0].texture)
-			texture := raylib.LoadTextureFromImage(img)
-			raylib.SetMaterialTexture(
-				&game.targeterMat,
-				raylib.MaterialMapIndex.ALBEDO,
-				texture,
-			)
-			raylib.UnloadImage(img)
+		//if settings.is_key_pressed("info") && game.battleData.playerAction != .info {
+		//	game.battleData.playerAction = .info
+		//	img := raylib.ImageCopy(game.targeter)
+		//	raylib.ImageColorTint(&img, {51,142,0,126})
+		//	texture := raylib.LoadTextureFromImage(img)
+		//	raylib.UnloadTexture(game.targeterMat.maps[0].texture)
+		//	raylib.SetMaterialTexture(
+		//		&game.targeterMat,
+		//		raylib.MaterialMapIndex.ALBEDO,
+		//		texture,
+		//	)
+		//	raylib.UnloadImage(img)
+		//}
+		if settings.is_key_pressed("info") && game.battleData.playerAction != .interaction {
+			game.battleData.playerAction = .interaction
+			//img := raylib.ImageCopy(game.targeter)
+			//raylib.ImageColorTint(&img, {247,82,49,255})
+			//raylib.UnloadTexture(game.targeterMat.maps[0].texture)
+			//texture := raylib.LoadTextureFromImage(img)
+			//raylib.SetMaterialTexture(
+			//	&game.targeterMat,
+			//	raylib.MaterialMapIndex.ALBEDO,
+			//	texture,
+			//)
+			//raylib.UnloadImage(img)
 		}
 		if settings.is_key_pressed("attack1")	do game.battleData.playerAction = .attack1
 		if settings.is_key_pressed("attack2")	do game.battleData.playerAction = .attack2
@@ -73,12 +73,15 @@ update :: proc() {
 
 		//* 
 		#partial switch game.battleData.playerAction {
-			case .move:
-				if settings.is_key_down("click") {
+			case .interaction:
+				if settings.is_key_down("leftclick") {
 					if game.battleData.target != game.moveArrowList[len(game.moveArrowList)-1] {
 						//TODO Create helper functions to easily remove and manipulate entries
 						append(&game.moveArrowList, game.battleData.target)
 					}
+				}
+				if settings.is_key_down("rightclick") {
+					
 				}
 		//	case .item:
 		//	case .switch_in:

@@ -93,14 +93,14 @@ TurnOrder :: enum {
 }
 
 PlayerAction :: enum {
-	info,
-	move,
+	interaction,
+	item,
+	switch_in,
+	
 	attack1,
 	attack2,
 	attack3,
 	attack4,
-	item,
-	switch_in,
 }
 
 ArrowType :: enum {

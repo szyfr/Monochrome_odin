@@ -75,7 +75,7 @@ init :: proc() {
 	//* Targeter
 	game.targeter = raylib.LoadImage("data/core/sprites/spr_overlay.png")
 	img := raylib.ImageCopy(game.targeter)
-	raylib.ImageColorTint(&img, {51,142,0,255})
+	raylib.ImageColorTint(&img, {247,82,49,255})
 	game.targeterMat = raylib.LoadMaterialDefault()
 	raylib.SetMaterialTexture(
 		&game.targeterMat,

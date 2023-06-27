@@ -138,7 +138,7 @@ draw_player_actions :: proc() {
 	raylib.DrawTextPro(
 		game.font,
 		//"1: Info\n2: Move\n3: Item\n4: Switch",
-		"1: Info\n2: Move",
+		"1: Interaction",
 		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
 		{0, 0},
 		0,
@@ -156,18 +156,15 @@ draw_player_selection :: proc() {
 
 	dest : raylib.Rectangle = {0,0,scale(16),scale(16)}
 	#partial switch game.battleData.playerAction {
-		case .info:
+		case .interaction:
 			dest.x = scale(394)
 			dest.y = scale(630)
-		case .move:
-			dest.x = scale(394)
-			dest.y = scale(654)
 		case .item:
 			dest.x = scale(394)
-			dest.y = scale(678)
+			dest.y = scale(654)
 		case .switch_in:
 			dest.x = scale(394)
-			dest.y = scale(702)
+			dest.y = scale(678)
 
 		case .attack1:
 			dest.x = scale( 94)
@@ -240,7 +237,7 @@ draw_enemy_status :: proc() {
 }
 
 draw_infobox :: proc() {
-	if game.battleData.playerAction == .info && game.battleData.infoText != "" {
+	if game.battleData.playerAction == .interaction && game.battleData.infoText != "" {
 		screenWidth_4	:= (f32(game.screenWidth) / 4)
 		screenHeight_4	:= (f32(game.screenHeight) / 4)
 		posX : f32 = 10
