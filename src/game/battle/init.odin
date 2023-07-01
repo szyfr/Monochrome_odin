@@ -31,36 +31,24 @@ init :: proc( battle : string ) -> bool {
 
 	game.battleData.playerTeam = &game.player.monsters
 
-	append(&game.battleData.field, game.Token{
+	game.battleData.field["player"] = game.Token{
 		overworld.create(
-			{5 + 8, 0, 3 + 55.75},
+			{3 + 8, 0, 3 + 55.75},
 			reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species),
 			"monster",
 		)^,
 		.player,
 		0,
-	})
-	append(&game.battleData.field, game.Token{
+	}
+	game.battleData.field["enemy"] = game.Token{
 		overworld.create(
-			{10 + 8, 0, 3 + 55.75},
+			{12 + 8, 0, 3 + 55.75},
 			reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species),
 			"monster",
 		)^,
 		.enemy,
 		0,
-	})
-	
-
-	//append(&game.battleData.entities, overworld.create(
-	//	{5 + 8, 0, 3 + 55.75},
-	//	reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species),
-	//	"monster",
-	//)^)
-	//append(&game.battleData.entities, overworld.create(
-	//	{5 + 8, 0, 10 + 55.75},
-	//	reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species),
-	//	"monster",
-	//)^)
+	}
 
 	calc_turn_order()
 	if game.battleData.playerFirst do game.battleData.playersTurn = true

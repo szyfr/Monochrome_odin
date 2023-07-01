@@ -19,30 +19,32 @@ draw :: proc() {
 	if game.battleData != nil {
 		//* Draw cursor
 		draw_cursor()
+
+		//* Draw player's current action
 		#partial switch game.battleData.playerAction {
 			case .interaction:
 				//* Draw Arrow
 				lastPosition : raylib.Vector2 = {-1,-1}
-				for i:=0;i<len(game.moveArrowList);i+=1 {
+				for i:=0;i<len(game.battleData.moveArrowList);i+=1 {
 					startDirection : f32
 					nextDirection : f32
 					direction : f32
 
-					lastDifference : raylib.Vector2 = {game.moveArrowList[i].x - lastPosition.x, game.moveArrowList[i].y - lastPosition.y}
+					lastDifference : raylib.Vector2 = {game.battleData.moveArrowList[i].x - lastPosition.x, game.battleData.moveArrowList[i].y - lastPosition.y}
 					switch lastDifference {
 						case {1,0} : startDirection = game.ARROW_RIGHT
 						case {0,1} : startDirection = game.ARROW_DOWN
 						case {-1,0}: startDirection = game.ARROW_LEFT
 						case {0,-1}: startDirection = game.ARROW_UP
 					}
-					if i == len(game.moveArrowList)-1 {
-						draw_arrow_tile(.end, game.moveArrowList[i], startDirection)
+					if i == len(game.battleData.moveArrowList)-1 {
+						draw_arrow_tile(.end, game.battleData.moveArrowList[i], startDirection)
 						break
 					}
 
 					difference : raylib.Vector2
-					difference.x = game.moveArrowList[i+1].x - game.moveArrowList[i].x
-					difference.y = game.moveArrowList[i+1].y - game.moveArrowList[i].y
+					difference.x = game.battleData.moveArrowList[i+1].x - game.battleData.moveArrowList[i].x
+					difference.y = game.battleData.moveArrowList[i+1].y - game.battleData.moveArrowList[i].y
 					switch difference {
 						case {1,0} : nextDirection = game.ARROW_RIGHT
 						case {0,1} : nextDirection = game.ARROW_DOWN
@@ -62,8 +64,8 @@ draw :: proc() {
 						if startDirection == game.ARROW_UP || startDirection == game.ARROW_DOWN do direction = 90
 					}
 
-					draw_arrow_tile(type, game.moveArrowList[i], direction)
-					lastPosition = game.moveArrowList[i]
+					draw_arrow_tile(type, game.battleData.moveArrowList[i], direction)
+					lastPosition = game.battleData.moveArrowList[i]
 				}
 			case .attack1:
 			case .attack2:
@@ -73,10 +75,10 @@ draw :: proc() {
 			case .switch_in:
 		}
 
-
 		//* Entities
-		for i:=0;i<len(game.battleData.field);i+=1 {
-			overworld.draw(&game.battleData.field[i].entity, 1.5)
+		for ent in game.battleData.field {
+			entity := &game.battleData.field[ent]
+			overworld.draw(&entity.entity, 1.5)
 		}
 	}
 }

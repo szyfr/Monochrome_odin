@@ -25,14 +25,17 @@ BattleData :: struct {
 	playerTeam		: ^[4]Monster,
 	currentPlayer	:  int,
 
-	field : [dynamic]Token,
+	field : map[string]Token,
 
 	turnNumber	: int,
 	playersTurn	: bool,
 	playerFirst	: bool,
 
-	playerAction : PlayerAction,
-	target : raylib.Vector2,
+	playerAction	: PlayerAction,
+	target			: raylib.Vector2,
+	moveArrowList	: [dynamic]raylib.Vector2,
+	moveArrowComp	: bool,
+	moveArrowDraw	: bool,
 
 	infoText : cstring,
 }

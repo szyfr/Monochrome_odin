@@ -22,6 +22,10 @@ draw_battle :: proc() {
 		draw_player_selection()
 		//* Enemy Status
 		draw_enemy_status()
+
+		//* Draw current turn marker
+		if game.battleData.playersTurn do raylib.DrawTexturePro( game.pointer, {0,0,8,8}, {scale(359),scale(119),scale(32),scale(32)}, {8,8}, 180, raylib.WHITE )
+		else do raylib.DrawTexturePro( game.pointer, {0,0,8,8}, {scale(918),scale(119),scale(32),scale(32)}, {8,8}, 0, raylib.WHITE )
 		
 		//* Infobox
 		draw_infobox()
@@ -138,7 +142,7 @@ draw_player_actions :: proc() {
 	raylib.DrawTextPro(
 		game.font,
 		//"1: Info\n2: Move\n3: Item\n4: Switch",
-		"1: Interaction",
+		"1: Move",
 		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
 		{0, 0},
 		0,

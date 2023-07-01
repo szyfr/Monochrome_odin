@@ -110,12 +110,6 @@ init :: proc() {
 		raylib.MaterialMapIndex.ALBEDO,
 		raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {48,0,16,16})),
 	)
-	//append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{1,0},raylib.Vector2{2,0},raylib.Vector2{2,1})
-	append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{1,0},raylib.Vector2{1,1},raylib.Vector2{0,1},raylib.Vector2{0,2},raylib.Vector2{1,2})
-	//append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{1,0})	//   0 deg
-	//append(&game.moveArrowList, raylib.Vector2{0,0},raylib.Vector2{0,1})	//  90 deg
-	//append(&game.moveArrowList, raylib.Vector2{1,0},raylib.Vector2{0,0})	// 180 deg
-	//append(&game.moveArrowList, raylib.Vector2{0,1},raylib.Vector2{0,0})	// 270 deg
 	raylib.UnloadImage(img)
 }
 
