@@ -3,10 +3,12 @@ package battle
 
 //= Imports
 import "core:fmt"
+import "core:math"
 
 import "vendor:raylib"
 
 import "../../game"
+import "../monsters"
 
 
 //= Procedures
@@ -30,7 +32,19 @@ arrow_pressed :: proc() {
 
 arrow_down :: proc() {
 	if game.battleData.moveArrowDraw {
+		//* Leave if line too long
+		monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
+		if monster.movesCur - len(game.battleData.moveArrowList) == 0 do return
 
+		//* Add the current tile if it wasn't that las one added
+		lastMember : int
+		if len(game.battleData.moveArrowList) - 1 >= 0 {
+			lastMember = len(game.battleData.moveArrowList) - 1
+			if game.battleData.moveArrowList[lastMember] != game.battleData.target do append(&game.battleData.moveArrowList, game.battleData.target)
+		} else {
+			playerPos : raylib.Vector2 = {game.battleData.field["player"].entity.position.x - 8, game.battleData.field["player"].entity.position.z - 55.75}
+			if game.battleData.target != playerPos do append(&game.battleData.moveArrowList, game.battleData.target)
+		}
 	}
 }
 arrow_released :: proc() {

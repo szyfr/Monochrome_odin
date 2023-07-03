@@ -24,7 +24,7 @@ draw :: proc() {
 		#partial switch game.battleData.playerAction {
 			case .interaction:
 				//* Draw Arrow
-				lastPosition : raylib.Vector2 = {-1,-1}
+				lastPosition : raylib.Vector2 = {game.battleData.field["player"].entity.position.x - 8, game.battleData.field["player"].entity.position.z - 55.75}
 				for i:=0;i<len(game.battleData.moveArrowList);i+=1 {
 					startDirection : f32
 					nextDirection : f32
@@ -67,10 +67,10 @@ draw :: proc() {
 					draw_arrow_tile(type, game.battleData.moveArrowList[i], direction)
 					lastPosition = game.battleData.moveArrowList[i]
 				}
-			case .attack1:
-			case .attack2:
-			case .attack3:
-			case .attack4:
+			case .attack1: draw_attack(0)
+			case .attack2: draw_attack(1)
+			case .attack3: draw_attack(2)
+			case .attack4: draw_attack(3)
 			case .item:
 			case .switch_in:
 		}
@@ -146,4 +146,36 @@ create_matrix_rotation_z :: proc( rotation : f32 ) -> raylib.Matrix {
 		0.00, 0.00, 0.00, 1.00,
 	}
 	return transform
+}
+
+draw_attack :: proc( value : int ) {
+	attack : game.MonsterAttack = game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
+	player := &game.battleData.field["player"]
+
+	#partial switch attack {
+		case .tackle:
+			position : raylib.Vector2 = {player.entity.position.x - 8, player.entity.position.z - 55.75}
+			offset : raylib.Vector2
+			switch  player.entity.direction {
+				case .up:		offset += { 0,-1}
+				case .down:		offset += { 0, 1}
+				case .left:		offset += {-1, 0}
+				case .right:	offset += { 1, 0}
+			}
+			if game.battleData.field["enemy"].entity.position == {position.x + offset.x + 8, 0, position.y + offset.y + 55.75} {
+				draw_tile(game.attackTackleMat[1], position + offset, f32(player.entity.direction) * 90)
+				draw_tile(game.attackTackleMat[2], position + (offset * 2), f32(player.entity.direction) * 90)
+			} else {
+				draw_tile(game.attackTackleMat[0], position + offset, f32(player.entity.direction) * 90)
+			}
+	}
+}
+
+draw_tile :: proc( material : raylib.Material, position : raylib.Vector2, rotation : f32 ) {
+	transform : raylib.Matrix = create_matrix_rotation_y(rotation)
+	transform[3,0] = position.x + 8.5
+	transform[3,1] = 0.02
+	transform[3,2] = position.y + 56.5
+
+	raylib.DrawMesh(game.standeeMesh, material, transform)
 }

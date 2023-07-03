@@ -31,6 +31,9 @@ BattleData :: struct {
 	playersTurn	: bool,
 	playerFirst	: bool,
 
+	movementTimer : int,
+	movementOffset : int,
+
 	playerAction	: PlayerAction,
 	target			: raylib.Vector2,
 	moveArrowList	: [dynamic]raylib.Vector2,

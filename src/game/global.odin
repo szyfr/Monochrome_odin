@@ -44,6 +44,9 @@ monsterBox		: raylib.Texture
 monsterTextures	: map[MonsterSpecies]raylib.Texture
 elementalTypes	: raylib.Texture
 
+attackTackleTex	: [3]raylib.Texture
+attackTackleMat	: [3]raylib.Material
+
 font			: raylib.Font
 
 pointer			: raylib.Texture

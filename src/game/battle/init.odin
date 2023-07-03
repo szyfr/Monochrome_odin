@@ -42,7 +42,8 @@ init :: proc( battle : string ) -> bool {
 	}
 	game.battleData.field["enemy"] = game.Token{
 		overworld.create(
-			{12 + 8, 0, 3 + 55.75},
+			//{12 + 8, 0, 3 + 55.75},
+			{7 + 8, 0, 3 + 55.75},
 			reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species),
 			"monster",
 		)^,

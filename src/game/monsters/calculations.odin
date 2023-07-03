@@ -90,3 +90,25 @@ give_experience :: proc( monster :^game.Monster, amount : int ) -> bool {
 
 	return leveled
 }
+
+max_movement :: proc( monster : game.Monster ) -> f32 {
+	movement : f32 = 0
+
+	if monster.spd < 20 {
+		movement = math.ceil(f32(monster.spd) / 4)
+	} else {
+		movement += 5
+		if monster.spd < 100 {
+			movement += math.ceil((f32(monster.spd) - 20) / 20)
+		} else {
+			movement += 4 + math.ceil((f32(monster.spd) - 100) / 100)
+		}
+	}
+
+	return movement
+}
+
+start_turn :: proc( monster : ^game.Monster ) {
+	monster.movesMax = int(max_movement(monster^))
+	monster.movesCur = monster.movesMax
+}

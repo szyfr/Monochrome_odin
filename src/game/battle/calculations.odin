@@ -2,11 +2,13 @@ package battle
 
 
 //= Imports
+import "core:fmt"
 import "core:math"
 
 import "vendor:raylib"
 
 import "../../game"
+import "../monsters"
 
 
 //= Procedures
@@ -27,6 +29,8 @@ calculate_path :: proc() {
 	current_pos : raylib.Vector2 = player_pos
 
 	distance : [4]f32
+	monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
+	maxLength := monsters.max_movement(game.battleData.playerTeam[game.battleData.currentPlayer])
 
 	for current_pos != current_target {
 		//* Check each cardinal direction
@@ -39,14 +43,6 @@ calculate_path :: proc() {
 		else do distance[2] = 1000000
 		if spot_empty(current_pos + { 0,-1}) do distance[3] = dist(current_pos + { 0,-1}, current_target)
 		else do distance[3] = 1000000
-		//distance[1] = dist(current_pos + { 0, 1}, current_target)
-		//distance[2] = dist(current_pos + {-1, 0}, current_target)
-		//distance[3] = dist(current_pos + { 0,-1}, current_target)
-
-		//* Check for objects
-		for i:=0;i<4;i+=1 {
-			
-		}
 
 		//* Find smallest distance
 		switch smallest(distance) {
@@ -56,6 +52,7 @@ calculate_path :: proc() {
 			case 3: current_pos += { 0,-1}
 		}
 		append(&game.battleData.moveArrowList, current_pos)
+		if monster.movesCur - len(game.battleData.moveArrowList) == 0 do break
 	}
 	
 }

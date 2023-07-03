@@ -26,6 +26,9 @@ Monster :: struct {
 
 	size	: Size,
 
+	movesMax : int,
+	movesCur : int,
+
 	experience	: int,
 	level		: int,
 	rate		: ExperienceRate,

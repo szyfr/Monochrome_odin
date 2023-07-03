@@ -17,7 +17,7 @@ token_position :: proc( token : game.Token ) -> raylib.Vector2 {
 
 spot_empty :: proc( position : raylib.Vector2 ) -> bool {
 	for ent in game.battleData.field {
-		if token_position(game.battleData.field[ent]) == position {
+		if token_position(game.battleData.field[ent]) == position && game.battleData.field[ent].type != .hazard {
 			return false
 		}
 	}

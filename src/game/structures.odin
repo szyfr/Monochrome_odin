@@ -116,10 +116,10 @@ AudioSystem :: struct {
 
 //= Enumerations
 Direction :: enum {
-	up,
+	right,
 	down,
 	left,
-	right,
+	up,
 }
 
 Emote :: enum {

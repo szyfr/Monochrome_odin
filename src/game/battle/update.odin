@@ -9,6 +9,7 @@ import "vendor:raylib"
 
 import "../../game"
 import "../../settings"
+import "../monsters"
 import "../entity/overworld"
 
 
@@ -34,6 +35,28 @@ update :: proc() {
 			}
 		}
 
+		//* Player Direction
+		player := &game.battleData.field["player"]
+		difference : raylib.Vector2 = {player.entity.position.x-8, player.entity.position.z-55.75} - game.battleData.target
+		differenceAbs : raylib.Vector2 = {math.abs(difference.x), math.abs(difference.y)}
+		if difference.x > 0 && differenceAbs.x >= differenceAbs.y {
+			player.entity.direction = .left
+			overworld.play_animation(&player.entity, "walk_left")
+		}
+		if difference.x < 0 && differenceAbs.x >= differenceAbs.y {
+			player.entity.direction = .right
+			overworld.play_animation(&player.entity, "walk_right")
+		}
+		if difference.y < 0 && differenceAbs.x < differenceAbs.y {
+			player.entity.direction = .down
+			overworld.play_animation(&player.entity, "walk_down")
+		}
+		if difference.y > 0 && differenceAbs.x < differenceAbs.y {
+			player.entity.direction = .up
+			overworld.play_animation(&player.entity, "walk_up")
+		}
+		
+
 		//* Mode changing
 		// TODO Check attacks
 		if settings.is_key_pressed("info")		do game.battleData.playerAction = .interaction
@@ -46,35 +69,71 @@ update :: proc() {
 
 		//* Turns
 		if game.battleData.playersTurn {
-			//* 
-			#partial switch game.battleData.playerAction {
-				case .interaction:
-					if settings.is_key_pressed("leftclick") do arrow_pressed()
-					if settings.is_key_down("leftclick") do arrow_down()
-					if settings.is_key_released("leftclick") do arrow_released()
-					if settings.is_key_pressed("rightclick") {} //TODO INFO
-					//if settings.is_key_down("leftclick") {
-					//	draw_arrows()
-					//	//if len(game.battleData.moveArrowList) == 0 {
-					//	//	append(&game.battleData.moveArrowList, game.battleData.target)
-					//	//} else if game.battleData.target != game.battleData.moveArrowList[len(game.battleData.moveArrowList)-1] {
-					//	//	//TODO Create helper functions to easily remove and manipulate entries
-					//	//	append(&game.battleData.moveArrowList, game.battleData.target)
-					//	//}
-					//}
-					//if settings.is_key_down("rightclick") {
-					//	
-					//}
-			//	case .item:
-			//	case .switch_in:
-				case .attack1:
-				case .attack2:
-				case .attack3:
-				case .attack4:
+			if game.battleData.movementTimer != 0 {
+				if game.battleData.movementTimer == 1 {
+					//* Set new position
+					game.battleData.movementTimer = 10
+					ply := &game.battleData.field["player"]
+					vec := game.battleData.moveArrowList[0]
+					ply.entity.position = {vec.x + 8, 0, vec.y + 55.75}
+
+					//* Change movement
+					game.battleData.playerTeam[game.battleData.currentPlayer].movesCur -= 1
+
+					//* Edit Arrow
+					undercut_arrow()
+
+					//* Check if continues
+					if len(game.battleData.moveArrowList) == 0 {
+						game.battleData.movementTimer = 0
+					}
+				} else do game.battleData.movementTimer -= 1
+			} else {
+				//* 
+				#partial switch game.battleData.playerAction {
+					case .interaction:
+						if game.battleData.playerTeam[game.battleData.currentPlayer].movesCur > 0 {
+							if settings.is_key_pressed("leftclick") do arrow_pressed()
+							if settings.is_key_down("leftclick") do arrow_down()
+							if settings.is_key_released("leftclick") do arrow_released()
+						}
+						if settings.is_key_pressed("rightclick") {} //TODO INFO
+						if settings.is_key_pressed("interact") &&
+								game.battleData.playerTeam[game.battleData.currentPlayer].movesCur > 0 &&
+								len(game.battleData.moveArrowList) > 0 {
+							game.battleData.movementTimer = 10
+							game.battleData.movementOffset = 0
+						}
+				//	case .item:
+				//	case .switch_in:
+					case .attack1: display_attack(0)
+					case .attack2: display_attack(1)
+					case .attack3: display_attack(2)
+					case .attack4: display_attack(3)
+				}
 			}
 		} else {
 			//* Enemy turn
 			game.battleData.playersTurn = true
+			monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
 		}
+	}
+}
+
+undercut_arrow :: proc() {
+	temp : [dynamic]raylib.Vector2
+
+	for i:=1;i<len(game.battleData.moveArrowList);i+=1 {
+		append(&temp, game.battleData.moveArrowList[i])
+	}
+	delete(game.battleData.moveArrowList)
+	game.battleData.moveArrowList = temp
+}
+
+display_attack :: proc( value : int ) {
+	attack : game.MonsterAttack = game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
+
+	#partial switch attack {
+		case .tackle:
 	}
 }

@@ -69,12 +69,24 @@ init :: proc() {
 	//* Monster types
 	game.elementalTypes = raylib.LoadTexture("data/private/sprites/spr_types.png")
 
+	//* Monster attacks
+	img := raylib.LoadImage("data/core/sprites/attacks/tackle.png")
+	game.attackTackleTex[0] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {0,0,16,16}))
+	game.attackTackleTex[1] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {16,0,16,16}))
+	game.attackTackleTex[2] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {32,0,16,16}))
+	game.attackTackleMat[0] = raylib.LoadMaterialDefault()
+	game.attackTackleMat[1] = raylib.LoadMaterialDefault()
+	game.attackTackleMat[2] = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackTackleMat[0], .ALBEDO, game.attackTackleTex[0])
+	raylib.SetMaterialTexture(&game.attackTackleMat[1], .ALBEDO, game.attackTackleTex[1])
+	raylib.SetMaterialTexture(&game.attackTackleMat[2], .ALBEDO, game.attackTackleTex[2])
+
 	//* Bar
 	game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})
 
 	//* Targeter
 	game.targeter = raylib.LoadImage("data/core/sprites/spr_overlay.png")
-	img := raylib.ImageCopy(game.targeter)
+	img = raylib.ImageCopy(game.targeter)
 	raylib.ImageColorTint(&img, {247,82,49,255})
 	game.targeterMat = raylib.LoadMaterialDefault()
 	raylib.SetMaterialTexture(

@@ -9,6 +9,7 @@ import "core:strings"
 import "vendor:raylib"
 
 import "../../../game"
+import "../../monsters"
 
 
 //= Procedures
@@ -138,11 +139,29 @@ draw_player_actions :: proc() {
 		raylib.WHITE,
 	)
 
+	//* Compile text
+	builder : strings.Builder
+	str : string
+	defer delete(str)
+	cstr : cstring
+	defer delete(cstr)
+
+	monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
+
+	str = fmt.sbprintf(
+		&builder,
+		"1: Move\n\t\t\t%v/%v",
+		monster.movesCur - len(game.battleData.moveArrowList),
+		monster.movesMax,
+	)
+	cstr = strings.clone_to_cstring(str)
+
 	//* Draw text
 	raylib.DrawTextPro(
 		game.font,
 		//"1: Info\n2: Move\n3: Item\n4: Switch",
-		"1: Move",
+		//"1: Move\n\t",
+		cstr,
 		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
 		{0, 0},
 		0,
