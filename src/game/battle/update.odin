@@ -106,10 +106,10 @@ update :: proc() {
 						}
 				//	case .item:
 				//	case .switch_in:
-					case .attack1: display_attack(0)
-					case .attack2: display_attack(1)
-					case .attack3: display_attack(2)
-					case .attack4: display_attack(3)
+					case .attack1: if settings.is_key_pressed("leftclick") do use_attack(0)
+					case .attack2: if settings.is_key_pressed("leftclick") do use_attack(1)
+					case .attack3: if settings.is_key_pressed("leftclick") do use_attack(2)
+					case .attack4: if settings.is_key_pressed("leftclick") do use_attack(3)
 				}
 			}
 		} else {
@@ -130,10 +130,40 @@ undercut_arrow :: proc() {
 	game.battleData.moveArrowList = temp
 }
 
-display_attack :: proc( value : int ) {
+use_attack :: proc( value : int ) {
 	attack : game.MonsterAttack = game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
+	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
+	enemyToken := &game.battleData.field["enemy"]
+	enemyPosition : raylib.Vector2 ={enemyToken.entity.position.x-8, enemyToken.entity.position.z-55.75}
+	player := &game.battleData.playerTeam[game.battleData.currentPlayer]
+	playerToken := &game.battleData.field["player"]
+	playerPosition : raylib.Vector2 = {playerToken.entity.position.x-8, playerToken.entity.position.z-55.75}
 
 	#partial switch attack {
 		case .tackle:
+			if player.stCur >= 2 {
+				offset : raylib.Vector2
+				switch playerToken.entity.direction {
+					case .up:		offset = { 0,-1}
+					case .down:		offset = { 0, 1}
+					case .left:		offset = {-1, 0}
+					case .right:	offset = { 1, 0}
+				}
+				//* Push enemy and deal damage
+				if enemyPosition == (playerPosition + offset) {
+					//* Check if enemy would hit wall or edge
+					if spot_empty(enemyPosition + offset) {
+						enemyToken.entity.position += {offset.x, 0, offset.y}
+						playerToken.entity.position += {offset.x, 0, offset.y}
+
+						enemy.hpCur -= (((((2*player.level)/5)+2)*35*(player.atk/enemy.def))/50)+2
+					} else {
+						enemy.hpCur -= ((((((2*player.level)/5)+2)*35*(player.atk/enemy.def))/50)+2) * 2
+					}
+				} else {
+					playerToken.entity.position += {offset.x, 0, offset.y}
+				}
+				player.stCur -= 2
+			}
 	}
 }

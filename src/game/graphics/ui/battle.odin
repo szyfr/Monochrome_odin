@@ -254,9 +254,9 @@ draw_enemy_status :: proc() {
 	if game.difficulty == .easy do tags += SHOW_AMOUNT
 
 	//* Draw HP bar
-	draw_bar(0, {posX + 40, posY +  68}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], tags)
+	draw_bar(0, {posX + 40, posY +  68}, {198, 16}, &game.battleData.enemyTeam[game.battleData.currentEnemy], tags)
 	//* Draw Stamina bar
-	draw_bar(1, {posX + 40, posY +  88}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], tags)
+	draw_bar(1, {posX + 40, posY +  88}, {198, 16}, &game.battleData.enemyTeam[game.battleData.currentEnemy], tags)
 }
 
 draw_infobox :: proc() {

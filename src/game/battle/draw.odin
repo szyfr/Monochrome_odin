@@ -148,34 +148,95 @@ create_matrix_rotation_z :: proc( rotation : f32 ) -> raylib.Matrix {
 	return transform
 }
 
+//TODO These don't work. I don't get matrixes
+mat_mult :: proc(
+	left  : linalg.Matrix4x4f32,
+	right : linalg.Matrix4x4f32,
+) -> linalg.Matrix4x4f32 {
+	result : linalg.Matrix4x4f32 = {}
+
+	result[0,0] = left[0,0]*right[0,0] + left[0,1]*right[1,0] + left[0,2]*right[2,0] + left[0,3]*right[3,0]
+	result[0,1] = left[0,0]*right[0,1] + left[0,1]*right[1,1] + left[0,2]*right[2,1] + left[0,3]*right[3,1]
+	result[0,2] = left[0,0]*right[0,2] + left[0,1]*right[1,2] + left[0,2]*right[2,2] + left[0,3]*right[3,2]
+	result[0,3] = left[0,0]*right[0,3] + left[0,1]*right[1,3] + left[0,2]*right[2,3] + left[0,3]*right[3,3]
+	
+	result[1,0] = left[1,0]*right[0,0] + left[1,1]*right[1,0] + left[1,2]*right[2,0] + left[1,3]*right[3,0]
+	result[1,1] = left[1,0]*right[0,1] + left[1,1]*right[1,1] + left[1,2]*right[2,1] + left[1,3]*right[3,1]
+	result[1,2] = left[1,0]*right[0,2] + left[1,1]*right[1,2] + left[1,2]*right[2,2] + left[1,3]*right[3,2]
+	result[1,3] = left[1,0]*right[0,3] + left[1,1]*right[1,3] + left[1,2]*right[2,3] + left[1,3]*right[3,3]
+	
+	result[2,0] = left[2,0]*right[0,0] + left[2,1]*right[1,0] + left[2,2]*right[2,0] + left[2,3]*right[3,0]
+	result[2,1] = left[2,0]*right[0,1] + left[2,1]*right[1,1] + left[2,2]*right[2,1] + left[2,3]*right[3,1]
+	result[2,2] = left[2,0]*right[0,2] + left[2,1]*right[1,2] + left[2,2]*right[2,2] + left[2,3]*right[3,2]
+	result[2,3] = left[2,0]*right[0,3] + left[2,1]*right[1,3] + left[2,2]*right[2,3] + left[2,3]*right[3,3]
+	
+	result[3,0] = left[3,0]*right[0,0] + left[3,1]*right[1,0] + left[3,2]*right[2,0] + left[3,3]*right[3,0]
+	result[3,1] = left[3,0]*right[0,1] + left[3,1]*right[1,1] + left[3,2]*right[2,1] + left[3,3]*right[3,1]
+	result[3,2] = left[3,0]*right[0,2] + left[3,1]*right[1,2] + left[3,2]*right[2,2] + left[3,3]*right[3,2]
+	result[3,3] = left[3,0]*right[0,3] + left[3,1]*right[1,3] + left[3,2]*right[2,3] + left[3,3]*right[3,3]
+
+	return result
+}
+mat_rotate_y :: proc( mat : raylib.Matrix, rotation : f32 ) -> raylib.Matrix {
+	transform : raylib.Matrix = create_matrix_rotation_y(rotation)
+	//output : raylib.Matrix = mat_mult(mat, transform)
+	output : raylib.Matrix = mat_mult(transform,mat)
+
+	return output
+}
+
+
 draw_attack :: proc( value : int ) {
 	attack : game.MonsterAttack = game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
 	player := &game.battleData.field["player"]
 
+	position : raylib.Vector2 = {player.entity.position.x - 8, player.entity.position.z - 55.75}
+	offset : raylib.Vector2
+	switch  player.entity.direction {
+		case .up:		offset += { 0,-1}
+		case .down:		offset += { 0, 1}
+		case .left:		offset += {-1, 0}
+		case .right:	offset += { 1, 0}
+	}
+
 	#partial switch attack {
 		case .tackle:
-			position : raylib.Vector2 = {player.entity.position.x - 8, player.entity.position.z - 55.75}
-			offset : raylib.Vector2
-			switch  player.entity.direction {
-				case .up:		offset += { 0,-1}
-				case .down:		offset += { 0, 1}
-				case .left:		offset += {-1, 0}
-				case .right:	offset += { 1, 0}
-			}
 			if game.battleData.field["enemy"].entity.position == {position.x + offset.x + 8, 0, position.y + offset.y + 55.75} {
 				draw_tile(game.attackTackleMat[1], position + offset, f32(player.entity.direction) * 90)
 				draw_tile(game.attackTackleMat[2], position + (offset * 2), f32(player.entity.direction) * 90)
 			} else {
 				draw_tile(game.attackTackleMat[0], position + offset, f32(player.entity.direction) * 90)
 			}
+		case .growl:
+			draw_tile(game.attackGrowlMat, position, 0, {5,5})
+		case .leafage:
+			// TODO Maybe have a limited range?
+			draw_tile(game.attackLeafageMat, game.battleData.target, 0)
+		case .scratch:
+			draw_tile(game.attackScratchMat, position + offset, 0)
+		case .leer:
+			draw_tile(game.attackLeerMat, position + offset*1.5, f32(player.entity.direction) * 90, {4,5})
+		case .ember:
+			draw_tile(game.attackEmberMat, position + offset*3, f32(player.entity.direction) * 90, {5,1})
+		case .aquajet:
+			if game.battleData.field["enemy"].entity.position == {position.x + (offset.x * 2) + 8, 0, position.y + (offset.y * 2) + 55.75} {
+				draw_tile(game.attackAquaJetMat[1], position + offset, f32(player.entity.direction) * 90)
+			} else {
+				draw_tile(game.attackAquaJetMat[0], position + offset, f32(player.entity.direction) * 90)
+				draw_tile(game.attackAquaJetMat[1], position + (offset*2), f32(player.entity.direction) * 90)
+			}
 	}
 }
 
-draw_tile :: proc( material : raylib.Material, position : raylib.Vector2, rotation : f32 ) {
+// TODO Fix scale issue for large tiles
+draw_tile :: proc( material : raylib.Material, position : raylib.Vector2, rotation : f32, scale : raylib.Vector2 = {1,1} ) {
 	transform : raylib.Matrix = create_matrix_rotation_y(rotation)
 	transform[3,0] = position.x + 8.5
 	transform[3,1] = 0.02
 	transform[3,2] = position.y + 56.5
+
+	transform[0,0] *= scale.x
+	transform[2,2] *= scale.y
 
 	raylib.DrawMesh(game.standeeMesh, material, transform)
 }

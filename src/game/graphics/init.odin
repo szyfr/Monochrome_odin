@@ -70,6 +70,7 @@ init :: proc() {
 	game.elementalTypes = raylib.LoadTexture("data/private/sprites/spr_types.png")
 
 	//* Monster attacks
+	//* Tackle
 	img := raylib.LoadImage("data/core/sprites/attacks/tackle.png")
 	game.attackTackleTex[0] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {0,0,16,16}))
 	game.attackTackleTex[1] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {16,0,16,16}))
@@ -80,6 +81,39 @@ init :: proc() {
 	raylib.SetMaterialTexture(&game.attackTackleMat[0], .ALBEDO, game.attackTackleTex[0])
 	raylib.SetMaterialTexture(&game.attackTackleMat[1], .ALBEDO, game.attackTackleTex[1])
 	raylib.SetMaterialTexture(&game.attackTackleMat[2], .ALBEDO, game.attackTackleTex[2])
+	raylib.UnloadImage(img)
+	//* Growl
+	game.attackGrowlTex = raylib.LoadTexture("data/core/sprites/attacks/growl.png")
+	game.attackGrowlMat = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackGrowlMat, .ALBEDO, game.attackGrowlTex)
+	//* Leafage
+	game.attackLeafageTex = raylib.LoadTexture("data/core/sprites/attacks/leafage.png")
+	game.attackLeafageMat = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackLeafageMat, .ALBEDO, game.attackLeafageTex)
+	//* Scratch
+	game.attackScratchTex = raylib.LoadTexture("data/core/sprites/attacks/scratch.png")
+	game.attackScratchMat = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackScratchMat, .ALBEDO, game.attackScratchTex)
+	//* Leer
+	game.attackLeerTex = raylib.LoadTexture("data/core/sprites/attacks/leer.png")
+	game.attackLeerMat = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackLeerMat, .ALBEDO, game.attackLeerTex)
+	//* Ember
+	game.attackEmberTex = raylib.LoadTexture("data/core/sprites/attacks/ember.png")
+	game.attackEmberMat = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackEmberMat, .ALBEDO, game.attackEmberTex)
+	//* Aqua Jet
+	img = raylib.LoadImage("data/core/sprites/attacks/aquajet.png")
+	game.attackAquaJetTex[0] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {0,0,16,16}))
+	game.attackAquaJetTex[1] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {16,0,16,16}))
+	game.attackAquaJetTex[2] = raylib.LoadTextureFromImage(raylib.ImageFromImage(img, {32,0,16,16}))
+	game.attackAquaJetMat[0] = raylib.LoadMaterialDefault()
+	game.attackAquaJetMat[1] = raylib.LoadMaterialDefault()
+	game.attackAquaJetMat[2] = raylib.LoadMaterialDefault()
+	raylib.SetMaterialTexture(&game.attackAquaJetMat[0], .ALBEDO, game.attackAquaJetTex[0])
+	raylib.SetMaterialTexture(&game.attackAquaJetMat[1], .ALBEDO, game.attackAquaJetTex[1])
+	raylib.SetMaterialTexture(&game.attackAquaJetMat[2], .ALBEDO, game.attackAquaJetTex[2])
+	raylib.UnloadImage(img)
 
 	//* Bar
 	game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})

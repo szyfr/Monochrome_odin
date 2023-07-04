@@ -74,6 +74,7 @@ MonsterAttack :: enum {
 
 	leafage,
 	ember,
+	aquajet,
 	watergun,
 }
 AttackType :: enum {

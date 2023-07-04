@@ -46,6 +46,18 @@ elementalTypes	: raylib.Texture
 
 attackTackleTex	: [3]raylib.Texture
 attackTackleMat	: [3]raylib.Material
+attackGrowlTex	: raylib.Texture
+attackGrowlMat	: raylib.Material
+attackLeafageTex	: raylib.Texture
+attackLeafageMat	: raylib.Material
+attackScratchTex	: raylib.Texture
+attackScratchMat	: raylib.Material
+attackLeerTex	: raylib.Texture
+attackLeerMat	: raylib.Material
+attackEmberTex	: raylib.Texture
+attackEmberMat	: raylib.Material
+attackAquaJetTex	: [3]raylib.Texture
+attackAquaJetMat	: [3]raylib.Material
 
 font			: raylib.Font
 
