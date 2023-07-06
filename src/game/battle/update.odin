@@ -106,10 +106,18 @@ update :: proc() {
 						}
 				//	case .item:
 				//	case .switch_in:
-					case .attack1: if settings.is_key_pressed("leftclick") do use_attack(0)
-					case .attack2: if settings.is_key_pressed("leftclick") do use_attack(1)
-					case .attack3: if settings.is_key_pressed("leftclick") do use_attack(2)
-					case .attack4: if settings.is_key_pressed("leftclick") do use_attack(3)
+					case .attack1:
+						if settings.is_key_pressed("leftclick") do use_attack(0)
+						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+					case .attack2:
+						if settings.is_key_pressed("leftclick") do use_attack(1)
+						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+					case .attack3:
+						if settings.is_key_pressed("leftclick") do use_attack(2)
+						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+					case .attack4:
+						if settings.is_key_pressed("leftclick") do use_attack(3)
+						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 				}
 			}
 		} else {

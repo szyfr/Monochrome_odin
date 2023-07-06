@@ -190,7 +190,9 @@ draw_attack :: proc( value : int ) {
 	attack : game.MonsterAttack = game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
 	player := &game.battleData.field["player"]
 
-	position : raylib.Vector2 = {player.entity.position.x - 8, player.entity.position.z - 55.75}
+	position : raylib.Vector2
+	if len(game.battleData.moveArrowList) > 0 do position = game.battleData.moveArrowList[len(game.battleData.moveArrowList)-1]
+	else do position = {player.entity.position.x - 8, player.entity.position.z - 55.75}
 	offset : raylib.Vector2
 	switch  player.entity.direction {
 		case .up:		offset += { 0,-1}
