@@ -39,7 +39,7 @@ logic :: proc() {
 
 	battle.update()
 
-	if settings.is_key_pressed("pause") && game.battleData != nil do battle.close()
+//	if settings.is_key_pressed("pause") && game.battleData != nil do battle.close()
 }
 draw :: proc() {
 	raylib.BeginDrawing()

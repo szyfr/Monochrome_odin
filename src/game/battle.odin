@@ -26,6 +26,8 @@ BattleData :: struct {
 	currentPlayer	:  int,
 
 	field : map[string]Token,
+	playerHazardCount	: int,
+	enemyHazardCount	: int,
 
 	turnNumber	: int,
 	playersTurn	: bool,

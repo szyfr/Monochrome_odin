@@ -7,6 +7,7 @@ import "core:reflect"
 import "../../game"
 import "../camera"
 import "../entity/overworld"
+import "../monsters"
 import "../../debug"
 
 
@@ -52,7 +53,10 @@ init :: proc( battle : string ) -> bool {
 	}
 
 	calc_turn_order()
-	if game.battleData.playerFirst do game.battleData.playersTurn = true
+	if game.battleData.playerFirst {
+		monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
+		game.battleData.playersTurn = true
+	} else do monsters.start_turn(&game.battleData.enemyTeam[game.battleData.currentEnemy])
 
 	camera.defocus()
 	game.camera.zoom = 1.2

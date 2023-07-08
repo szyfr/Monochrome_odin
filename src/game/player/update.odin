@@ -102,7 +102,7 @@ update :: proc() {
 	if vertical == 0 && horizontal == 0 do game.player.moveTimer = 0
 
 	//* Pause menu
-	if pause && game.eventmanager.currentEvent == nil {//&& game.battleStruct == nil {
+	if pause && game.eventmanager.currentEvent == nil && game.battleData == nil {
 		if game.player.menu != .pause do game.player.menu = .pause
 		else if game.player.menu == .pause do game.player.menu = .none
 		audio.play_sound("menu")

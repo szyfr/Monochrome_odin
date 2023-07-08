@@ -20,7 +20,7 @@ keybindings		: map[string]Keybinding
 
 eventmanager	: ^EventManager
 
-difficulty		: Difficulty = .medium
+difficulty		: Difficulty = .easy
 
 //* Text
 textSpeed		: i32

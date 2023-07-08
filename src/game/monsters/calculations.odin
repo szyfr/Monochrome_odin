@@ -46,7 +46,7 @@ update_stats :: proc(  monster : ^game.Monster ) {
 }
 
 calculate_hp :: proc( stat, level : int, iv : int = 0, ev : int = 0 ) -> int {
-	return int(f32((2 * stat + iv + int(f32(ev)/4)) * level) / 100) + level + 10
+	return int(f32((2 * stat + iv + int(f32(ev)/4)) * level) / 50) + level + 10
 }
 
 calculate_st :: proc( stat, level : int, iv : int = 0, ev : int = 0 ) -> int {
@@ -111,4 +111,6 @@ max_movement :: proc( monster : game.Monster ) -> f32 {
 start_turn :: proc( monster : ^game.Monster ) {
 	monster.movesMax = int(max_movement(monster^))
 	monster.movesCur = monster.movesMax
+	monster.stCur += (monster.stMax/2)
+	if monster.stCur > monster.stMax do monster.stCur = monster.stMax
 }

@@ -4,6 +4,7 @@ package battle
 //= Imports
 import "core:fmt"
 import "core:math"
+import "core:strings"
 
 import "vendor:raylib"
 
@@ -37,7 +38,11 @@ update :: proc() {
 
 		//* Player Direction
 		player := &game.battleData.field["player"]
-		difference : raylib.Vector2 = {player.entity.position.x-8, player.entity.position.z-55.75} - game.battleData.target
+		playerPos : raylib.Vector2
+		if len(game.battleData.moveArrowList) > 0 do playerPos = game.battleData.moveArrowList[len(game.battleData.moveArrowList)-1]
+		else do playerPos = {player.entity.position.x-8, player.entity.position.z-55.75}
+
+		difference : raylib.Vector2 = playerPos - game.battleData.target
 		differenceAbs : raylib.Vector2 = {math.abs(difference.x), math.abs(difference.y)}
 		if difference.x > 0 && differenceAbs.x >= differenceAbs.y {
 			player.entity.direction = .left
@@ -107,17 +112,33 @@ update :: proc() {
 				//	case .item:
 				//	case .switch_in:
 					case .attack1:
-						if settings.is_key_pressed("leftclick") do use_attack(0)
+						if settings.is_key_pressed("leftclick") {
+							if len(game.battleData.moveArrowList) == 0 do use_attack(0)
+							else do game.battleData.playerAction = .interaction
+						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					case .attack2:
-						if settings.is_key_pressed("leftclick") do use_attack(1)
+						if settings.is_key_pressed("leftclick") {
+							if len(game.battleData.moveArrowList) == 0 do use_attack(1)
+							else do game.battleData.playerAction = .interaction
+						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					case .attack3:
-						if settings.is_key_pressed("leftclick") do use_attack(2)
+						if settings.is_key_pressed("leftclick") {
+							if len(game.battleData.moveArrowList) == 0 do use_attack(2)
+							else do game.battleData.playerAction = .interaction
+						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					case .attack4:
-						if settings.is_key_pressed("leftclick") do use_attack(3)
+						if settings.is_key_pressed("leftclick") {
+							if len(game.battleData.moveArrowList) == 0 do use_attack(3)
+							else do game.battleData.playerAction = .interaction
+						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+				}
+				if settings.is_key_pressed("endturn") {
+					game.battleData.playersTurn = false
+					monsters.start_turn(&game.battleData.enemyTeam[game.battleData.currentEnemy])
 				}
 			}
 		} else {
@@ -139,17 +160,31 @@ undercut_arrow :: proc() {
 }
 
 use_attack :: proc( value : int ) {
-	attack : game.MonsterAttack = game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
-	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
-	enemyToken := &game.battleData.field["enemy"]
-	enemyPosition : raylib.Vector2 ={enemyToken.entity.position.x-8, enemyToken.entity.position.z-55.75}
-	player := &game.battleData.playerTeam[game.battleData.currentPlayer]
-	playerToken := &game.battleData.field["player"]
-	playerPosition : raylib.Vector2 = {playerToken.entity.position.x-8, playerToken.entity.position.z-55.75}
+	attack			:  game.MonsterAttack	= game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
+
+	enemy			: ^game.Monster			= &game.battleData.enemyTeam[game.battleData.currentEnemy]
+	enemyToken		: ^game.Token			= &game.battleData.field["enemy"]
+	enemyPosition	:  raylib.Vector2		= {enemyToken.entity.position.x-8, enemyToken.entity.position.z-55.75}
+
+	player			: ^game.Monster			= &game.battleData.playerTeam[game.battleData.currentPlayer]
+	playerToken		: ^game.Token			= &game.battleData.field["player"]
+	playerPosition	:  raylib.Vector2		= {playerToken.entity.position.x-8, playerToken.entity.position.z-55.75}
 
 	#partial switch attack {
 		case .tackle:
 			if player.stCur >= 2 {
+				modAtk, modDef : int
+
+				if player.statChanges[0] > 0 do modAtk = int(f32(player.atk) * ((2 + f32(player.statChanges[0])) / 2))
+				else do modAtk = int(f32(player.atk) * (2 / (2 + f32(player.statChanges[0]))))
+				if modAtk <= 0 do modAtk = 1
+
+				if enemy.statChanges[1] > 0 do modDef = int(f32(enemy.def) * ((2 + f32(enemy.statChanges[1])) / 2))
+				else do modDef = int(f32(enemy.def) * (2 / (2 - f32(enemy.statChanges[1]))))
+				if modDef <= 0 do modDef = 1
+
+				fmt.printf("A:%v - D:%v (2/%v): %v\n",modAtk,modDef, 2 - f32(enemy.statChanges[1]),(((((2*player.level)/5)+2)*35*(modAtk/modDef))/50)+2)
+
 				offset : raylib.Vector2
 				switch playerToken.entity.direction {
 					case .up:		offset = { 0,-1}
@@ -164,14 +199,48 @@ use_attack :: proc( value : int ) {
 						enemyToken.entity.position += {offset.x, 0, offset.y}
 						playerToken.entity.position += {offset.x, 0, offset.y}
 
-						enemy.hpCur -= (((((2*player.level)/5)+2)*35*(player.atk/enemy.def))/50)+2
+						enemy.hpCur -= (((((2*player.level)/5)+2)*35*(modAtk/modDef))/100)+2
 					} else {
-						enemy.hpCur -= ((((((2*player.level)/5)+2)*35*(player.atk/enemy.def))/50)+2) * 2
+						enemy.hpCur -= ((((((2*player.level)/5)+2)*35*(modAtk/modDef))/100)+2) * 2
 					}
 				} else {
 					playerToken.entity.position += {offset.x, 0, offset.y}
 				}
 				player.stCur -= 2
+			}
+		case .growl:
+			if player.stCur >= 3 {
+				difference := playerPosition - enemyPosition
+				if (difference.x <= 2 && difference.x >= -2) &&
+						(difference.y <= 2 && difference.y >= -2) &&
+						!(math.abs(difference.x) == 2 && math.abs(difference.y) == 2) {
+					if enemy.statChanges[1] > -6 do enemy.statChanges[1] -= 1
+				}
+
+				player.stCur -= 3
+			}
+		case .leafage:
+			if player.stCur >= 2 {
+				position : raylib.Vector3 = {game.battleData.target.x+8, 0, game.battleData.target.y+55.75}
+
+				modAtk : int
+				if player.statChanges[0] > 0 do modAtk = int(f32(player.spAtk) * ((2 + f32(player.statChanges[2])) / 2))
+				else do modAtk = int(f32(player.spAtk) * (2 / (2 + f32(player.statChanges[2]))))
+				if modAtk <= 0 do modAtk = 1
+
+				game.battleData.playerHazardCount += 1
+
+				builder : strings.Builder
+				str := fmt.sbprintf(&builder, "player_hazard_%v", game.battleData.playerHazardCount)
+
+				game.battleData.field[str] = game.Token{
+					overworld.create(position, "starter_fire", "monster")^,
+					.hazard,
+					modAtk,
+				}
+
+				player.stCur -= 2
+				fmt.printf(str)
 			}
 	}
 }

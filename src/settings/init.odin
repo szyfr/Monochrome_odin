@@ -76,6 +76,7 @@ create_default :: proc() {
 	game.keybindings["attack4"]		= {0, u32(raylib.KeyboardKey.R)}
 	game.keybindings["item"]		= {0, u32(raylib.KeyboardKey.THREE)}
 	game.keybindings["switchin"]	= {0, u32(raylib.KeyboardKey.FOUR)}
+	game.keybindings["endturn"]		= {0, u32(raylib.KeyboardKey.ENTER)}
 	game.keybindings["leftclick"]	= {1, u32(raylib.MouseButton.LEFT)}
 	game.keybindings["rightclick"]	= {1, u32(raylib.MouseButton.RIGHT)}
 	

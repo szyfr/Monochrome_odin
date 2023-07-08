@@ -10,7 +10,7 @@ import "../../../game"
 
 
 //= Procedures
-draw :: proc( entity : ^game.Entity, scale : f32 = 1 ) {
+draw :: proc( entity : ^game.Entity, scale : f32 = 1, alpha : u8 = 255, posOverride : raylib.Vector3 = {0,0,0} ) {
 	//* Draw mesh with material
 	transform : raylib.Matrix = {
 		1.00 * scale,  0.00, 0.00, 0.00,
@@ -18,9 +18,17 @@ draw :: proc( entity : ^game.Entity, scale : f32 = 1 ) {
 		0.00, -0.80, 0.78 * scale, 0.00,
 		0.00,  0.00, 0.00, 1.00,
 	}
-	transform[3,0] = entity.position.x + 0.5
-	transform[3,1] = entity.position.y + 0.5
-	transform[3,2] = entity.position.z + 0.5
+	if posOverride != {0,0,0} {
+		transform[3,0] = posOverride.x + 0.5
+		transform[3,1] = posOverride.y + 0.5
+		transform[3,2] = posOverride.z + 0.5
+	} else {
+		transform[3,0] = entity.position.x + 0.5
+		transform[3,1] = entity.position.y + 0.5
+		transform[3,2] = entity.position.z + 0.5
+	}
+
+	entity.animator.material.maps[0].color.a = alpha
 
 	raylib.DrawMesh(
 		entity.mesh^,
