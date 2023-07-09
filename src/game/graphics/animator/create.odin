@@ -44,7 +44,7 @@ create :: proc(
 	} else if os.exists(coreSpriteName) {
 		img = raylib.LoadImage(strings.clone_to_cstring(coreSpriteName))
 	} else {
-		debug.logf("[ERROR] - Failed to find %v in either Private or Core.", spriteName)
+		debug.logf("[ERROR][SPRITE] - Failed to find %v in either Private or Core.", spriteName)
 		game.running = false
 		return {}
 	}
@@ -81,7 +81,7 @@ create :: proc(
 	} else if os.exists(coreAnimationName) {
 		rawData, _ = os.read_entire_file_from_filename(coreAnimationName)
 	} else {
-		debug.logf("[ERROR] - Failed to find %v in either Private or Core.", animationName)
+		debug.logf("[ERROR][ANIMATION] - Failed to find %v in either Private or Core.", animationName)
 		game.running = false
 		return {}
 	}

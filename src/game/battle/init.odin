@@ -2,6 +2,7 @@ package battle
 
 
 //= Imports
+import "core:fmt"
 import "core:reflect"
 
 import "../../game"
@@ -16,6 +17,7 @@ init :: proc( battle : string ) -> bool {
 	game.battleData = new(game.BattleData)
 
 	battleInfo, res := game.region.battles[battle]
+	
 	if !res {
 		debug.log("[ERROR] - Failed to load battle.")
 		return false

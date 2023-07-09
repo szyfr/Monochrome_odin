@@ -114,3 +114,68 @@ start_turn :: proc( monster : ^game.Monster ) {
 	monster.stCur += (monster.stMax/2)
 	if monster.stCur > monster.stMax do monster.stCur = monster.stMax
 }
+
+type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monster ) -> f32 {
+	output : f32
+
+	weakness : int
+
+	#partial switch type {
+		case .normal:
+			// TODO Ghost's immunity, Rock + Steel resistance
+			//* Resistance
+		case .fire:
+			// TODO Ice + Bug + Steel weakness, rock + Dragon resistance
+			//* Weakness
+			if monster.elementalType1 == .grass || monster.elementalType2 == .grass do weakness += 1
+			//* Resistance
+			if monster.elementalType1 == .fire || monster.elementalType2 == .fire do weakness -= 1
+			if monster.elementalType1 == .water || monster.elementalType2 == .water do weakness -= 1
+		case .water:
+			// TODO Ground + Rock Weakness, Dragon resistance
+			//* Weakness
+			if monster.elementalType1 == .fire || monster.elementalType2 == .fire do weakness += 1
+			//* Resistance
+			if monster.elementalType1 == .grass || monster.elementalType2 == .grass do weakness -= 1
+			if monster.elementalType1 == .water || monster.elementalType2 == .water do weakness -= 1
+		case .grass:
+			// TODO Ground + Rock Weakness, Poison + Flying + Bug + Dragon + Steel resistance
+			//* Weakness
+			if monster.elementalType1 == .water || monster.elementalType2 == .water do weakness += 1
+			//* Resistance
+			if monster.elementalType1 == .grass || monster.elementalType2 == .grass do weakness -= 1
+			if monster.elementalType1 == .fire || monster.elementalType2 == .fire do weakness -= 1
+	}
+
+	switch {
+		case weakness >=  3:
+			output = 2.5
+			fmt.printf("Hyper-Effective!\n")
+		case weakness ==  2:
+			output = 2
+			fmt.printf("Doubly Super-Effective!\n")
+		case weakness ==  1:
+			output = 1.5
+			fmt.printf("Super-Effective!\n")
+		case weakness ==  0:
+			output = 1
+		case weakness == -1:
+			output = 0.66
+			fmt.printf("Not very effective!\n")
+		case weakness == -2:
+			output = 0.5
+			fmt.printf("Horribly ineffective!\n")
+		case weakness <= -3:
+			output = 0
+			fmt.printf("Immune!\n")
+	}
+
+	return output
+}
+
+calculate_damage :: proc( base, level, atk, def, effectiveness : f32 ) -> int {
+	output : int = int(((((((2*level)/5)+2)*base*(atk/def))/100)+2) * effectiveness)
+	if output <= 0 do output = 1
+
+	return output
+}

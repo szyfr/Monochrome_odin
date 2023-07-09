@@ -379,6 +379,7 @@ load_battles :: proc ( filename : string ) {
 			species, _ :=reflect.enum_from_name(game.MonsterSpecies, hardTeam[o].(json.Array)[0].(string))
 			battle.teamHard[o] = monsters.create( species, int(hardTeam[o].(json.Array)[1].(f64)) )
 		}
+		
 
 		game.region.battles[battleId] = battle
 	}

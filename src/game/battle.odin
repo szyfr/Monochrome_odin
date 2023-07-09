@@ -50,6 +50,7 @@ Token :: struct {
 	type : TokenType,
 	data : union {
 		int,
+		f32,
 	}
 }
 

@@ -173,17 +173,17 @@ use_attack :: proc( value : int ) {
 	#partial switch attack {
 		case .tackle:
 			if player.stCur >= 2 {
-				modAtk, modDef : int
+				modAtk, modDef : f32
 
-				if player.statChanges[0] > 0 do modAtk = int(f32(player.atk) * ((2 + f32(player.statChanges[0])) / 2))
-				else do modAtk = int(f32(player.atk) * (2 / (2 + f32(player.statChanges[0]))))
+				//* Calculate Attack stat
+				if player.statChanges[0] > 0 do modAtk = f32(player.atk) * ((2 + f32(player.statChanges[0])) / 2)
+				else do modAtk = f32(player.atk) * (2 / (2 + f32(player.statChanges[0])))
 				if modAtk <= 0 do modAtk = 1
 
-				if enemy.statChanges[1] > 0 do modDef = int(f32(enemy.def) * ((2 + f32(enemy.statChanges[1])) / 2))
-				else do modDef = int(f32(enemy.def) * (2 / (2 - f32(enemy.statChanges[1]))))
+				//* Calculate Defense stat
+				if enemy.statChanges[1] > 0 do modDef = f32(enemy.def) * ((2 + f32(enemy.statChanges[1])) / 2)
+				else do modDef = f32(enemy.def) * (2 / (2 - f32(enemy.statChanges[1])))
 				if modDef <= 0 do modDef = 1
-
-				fmt.printf("A:%v - D:%v (2/%v): %v\n",modAtk,modDef, 2 - f32(enemy.statChanges[1]),(((((2*player.level)/5)+2)*35*(modAtk/modDef))/50)+2)
 
 				offset : raylib.Vector2
 				switch playerToken.entity.direction {
@@ -195,13 +195,14 @@ use_attack :: proc( value : int ) {
 				//* Push enemy and deal damage
 				if enemyPosition == (playerPosition + offset) {
 					//* Check if enemy would hit wall or edge
+					effectiveness := monsters.type_damage_multiplier(.normal, enemy)
 					if spot_empty(enemyPosition + offset) {
 						enemyToken.entity.position += {offset.x, 0, offset.y}
 						playerToken.entity.position += {offset.x, 0, offset.y}
 
-						enemy.hpCur -= (((((2*player.level)/5)+2)*35*(modAtk/modDef))/100)+2
+						enemy.hpCur -= monsters.calculate_damage(35, f32(player.level), modAtk, modDef, effectiveness)
 					} else {
-						enemy.hpCur -= ((((((2*player.level)/5)+2)*35*(modAtk/modDef))/100)+2) * 2
+						enemy.hpCur -= int(f32(monsters.calculate_damage(40, f32(player.level), modAtk, modDef, effectiveness)) * 1.25)
 					}
 				} else {
 					playerToken.entity.position += {offset.x, 0, offset.y}
@@ -221,26 +222,39 @@ use_attack :: proc( value : int ) {
 			}
 		case .leafage:
 			if player.stCur >= 2 {
-				position : raylib.Vector3 = {game.battleData.target.x+8, 0, game.battleData.target.y+55.75}
+				modAtk, modDef : f32
 
-				modAtk : int
-				if player.statChanges[0] > 0 do modAtk = int(f32(player.spAtk) * ((2 + f32(player.statChanges[2])) / 2))
-				else do modAtk = int(f32(player.spAtk) * (2 / (2 + f32(player.statChanges[2]))))
+				//* Calculate Special Attack stat
+				if player.statChanges[2] > 0 do modAtk = f32(player.spAtk) * ((2 + f32(player.statChanges[2])) / 2)
+				else do modAtk = f32(player.spAtk) * (2 / (2 + f32(player.statChanges[3])))
 				if modAtk <= 0 do modAtk = 1
 
-				game.battleData.playerHazardCount += 1
+				//* Calculate Special Attack stat
+				if enemy.statChanges[3] > 0 do modDef = f32(enemy.spDef) * ((2 + f32(enemy.statChanges[3])) / 2)
+				else do modDef = f32(enemy.spDef) * (2 / (2 + f32(enemy.statChanges[3])))
+				if modDef <= 0 do modDef = 1
+				
 
-				builder : strings.Builder
-				str := fmt.sbprintf(&builder, "player_hazard_%v", game.battleData.playerHazardCount)
+				if game.battleData.target == enemyPosition {
+					effectiveness := monsters.type_damage_multiplier(.grass, enemy)
 
-				game.battleData.field[str] = game.Token{
-					overworld.create(position, "starter_fire", "monster")^,
-					.hazard,
-					modAtk,
+					enemy.hpCur -= monsters.calculate_damage(40, f32(player.level), modAtk, modDef, effectiveness)
+				} else {
+					position : raylib.Vector3 = {game.battleData.target.x+8, 0, game.battleData.target.y+55.75}
+
+					game.battleData.playerHazardCount += 1
+
+					builder : strings.Builder
+					str := fmt.sbprintf(&builder, "player_hazard_%v", game.battleData.playerHazardCount)
+
+					game.battleData.field[str] = game.Token{
+						overworld.create(position, "starter_fire", "monster")^,
+						.hazard,
+						modAtk,
+					}
 				}
 
-				player.stCur -= 2
-				fmt.printf(str)
+				player.stCur -= 4
 			}
 	}
 }
