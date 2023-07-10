@@ -181,6 +181,17 @@ load_scalable_graphics :: proc() {
 		size,size,size,size,
 		.NINE_PATCH,
 	}
+
+	
+	game.graphicsUI["textbox_general"]		= raylib.LoadTexture("data/core/sprites/ui/textbox.png")
+	game.graphicsNPatch["textbox_general"]	= {
+		{ 0, 0, f32(game.graphicsUI["textbox_general"].width), f32(game.graphicsUI["textbox_general"].width) },
+		game.graphicsUI["textbox_general"].width/3, game.graphicsUI["textbox_general"].width/3,
+		game.graphicsUI["textbox_general"].width/3, game.graphicsUI["textbox_general"].width/3,
+		.NINE_PATCH,
+	}
+	game.graphicsUI["textbox_player_status"]		= raylib.LoadTexture("data/core/sprites/ui/statusbox.png")
+	game.graphicsNPatch["textbox_player_status"]	= game.graphicsNPatch["textbox_general"]
 }
 
 close :: proc() {

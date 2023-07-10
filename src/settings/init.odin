@@ -33,6 +33,7 @@ init :: proc() {
 	//* Setting variables
 	game.screenWidth	= i32(jsonFile.(json.Object)["screenwidth"].(f64))
 	game.screenHeight	= i32(jsonFile.(json.Object)["screenheight"].(f64))
+	game.screenRatio	= f32(game.screenHeight) / 720
 	game.textSpeed		= i32(jsonFile.(json.Object)["textspeed"].(f64))
 	game.fpsLimit		= i32(jsonFile.(json.Object)["fpslimit"].(f64))
 	game.language		= jsonFile.(json.Object)["language"].(string)
@@ -55,6 +56,7 @@ init :: proc() {
 create_default :: proc() {
 	game.screenWidth	= 1280
 	game.screenHeight	=  720
+	game.screenRatio	= f32(game.screenHeight) / 720
 	game.textSpeed		=    1
 	game.fpsLimit		=   80
 	game.language		= "english"

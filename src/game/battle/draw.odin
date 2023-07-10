@@ -239,15 +239,15 @@ draw_attack :: proc( value : int ) {
 	}
 }
 
-// TODO Fix scale issue for large tiles
 draw_tile :: proc( material : raylib.Material, position : raylib.Vector2, rotation : f32, scale : raylib.Vector2 = {1,1} ) {
-	transform : raylib.Matrix = create_matrix_rotation_y(rotation)
-	transform[3,0] = position.x + 8.5
-	transform[3,1] = 0.02
-	transform[3,2] = position.y + 56.5
+	alter : f32 = rotation * (math.PI / 180)
 
-	transform[0,0] *= scale.x
-	transform[2,2] *= scale.y
+	transform : raylib.Matrix = {
+		scale.x*math.cos(alter),	0.00, scale.x*math.sin(alter),	0.00,
+		0.00,						0.00, 1.00,						0.00,
+		scale.y*-math.sin(alter),	0.00, scale.y*math.cos(alter),	0.00,
+		position.x + 8.5,			0.02, position.y + 56.5,		1.00,
+	}
 
 	raylib.DrawMesh(game.standeeMesh, material, transform)
 }

@@ -36,6 +36,10 @@ soundVolume		: f32
 audio			: ^AudioSystem
 
 //* Graphics
+screenRatio		: f32
+graphicsUI		: map[string]raylib.Texture
+graphicsNPatch	: map[string]raylib.NPatchInfo
+
 boxUI			: raylib.Texture
 statusboxUI		: raylib.Texture
 boxUI_npatch	: raylib.NPatchInfo

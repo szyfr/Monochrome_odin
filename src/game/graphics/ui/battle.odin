@@ -39,14 +39,7 @@ draw_player_status :: proc() {
 	posY : f32 = 10
 
 	//* Draw box
-	raylib.DrawTextureNPatch(
-		game.statusboxUI,
-		game.boxUI_npatch,
-		{posX * screenRatio, posY * screenRatio, 342 * screenRatio, 144 * screenRatio},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
+	draw_npatch({posX, posY, 342, 144}, "textbox_player_status")
 
 	//* Draw name
 	monsterName := game.localization[reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species)]
@@ -227,14 +220,7 @@ draw_enemy_status :: proc() {
 	posY : f32 = 10
 
 	//* Draw box
-	raylib.DrawTextureNPatch(
-		game.boxUI,
-		game.boxUI_npatch,
-		{posX * screenRatio, posY * screenRatio, 342 * screenRatio, 144 * screenRatio},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
+	draw_npatch({posX, posY, 342, 144}, "textbox_general")
 
 	//* Draw name
 	monsterName := game.localization[reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species)]
