@@ -82,6 +82,21 @@ update :: proc() {
 					vec := game.battleData.moveArrowList[0]
 					ply.entity.position = {vec.x + 8, 0, vec.y + 55.75}
 
+					//* Check new position for hazards
+					builder : strings.Builder
+					for i:=0;i<game.battleData.enemyHazardCount;i+=1 {
+						str := fmt.sbprintf(&builder, "enemy_hazard_%v", i)
+						vec := game.battleData.moveArrowList[0]
+						hazard, result := game.battleData.field[str]
+						if result && hazard.entity.position == {vec.x + 8, 0, vec.y + 55.75} && hazard.type == .hazard {
+							// TODO make hazards more adjustable and know more information about their use
+						//	player := &game.battleData.playerTeam[game.battleData.currentPlayer]
+						//	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
+						//	effectiveness := monsters.type_damage_multiplier(.grass, player)
+						//	enemy.hpCur -= monsters.calculate_damage(40, f32(enemy.level), modAtk, modDef, effectiveness)
+						}
+					}
+
 					//* Change movement
 					game.battleData.playerTeam[game.battleData.currentPlayer].movesCur -= 1
 
@@ -229,7 +244,7 @@ use_attack :: proc( value : int ) {
 				else do modAtk = f32(player.spAtk) * (2 / (2 + f32(player.statChanges[3])))
 				if modAtk <= 0 do modAtk = 1
 
-				//* Calculate Special Attack stat
+				//* Calculate Special Defense stat
 				if enemy.statChanges[3] > 0 do modDef = f32(enemy.spDef) * ((2 + f32(enemy.statChanges[3])) / 2)
 				else do modDef = f32(enemy.spDef) * (2 / (2 + f32(enemy.statChanges[3])))
 				if modDef <= 0 do modDef = 1
