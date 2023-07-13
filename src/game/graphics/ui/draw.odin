@@ -89,3 +89,14 @@ draw_npatch :: proc( rect : raylib.Rectangle, texture : string ) {
 		raylib.WHITE,
 	)
 }
+
+draw_sprite :: proc( rect : raylib.Rectangle, sprite : raylib.Vector2, color : raylib.Color, texture : string ) {
+	raylib.DrawTexturePro(
+		game.graphicsUI[texture],
+		{sprite.x * 16, sprite.y * 16, 16, 16},
+		{rect.x * game.screenRatio, rect.y * game.screenRatio, rect.width * game.screenRatio, rect.height * game.screenRatio},
+		{0,0},
+		0,
+		color,
+	)
+}

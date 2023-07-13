@@ -211,7 +211,7 @@ draw_monster :: proc() {
 
 	//* Position 1
 	//* Sprite
-	draw_sprite(55, 60, 0)
+	draw_monsprite(55, 60, 0)
 
 	//* Names
 	draw_names(280, 80, 0)
@@ -360,7 +360,7 @@ draw_lv :: proc( x, y : f32, monster : u8 ) {
 	)
 }
 
-draw_sprite :: proc( x, y : f32, monster : u8 ) {
+draw_monsprite :: proc( x, y : f32, monster : u8 ) {
 	posX := f32(game.screenWidth) / 16
 	posY := f32(game.screenHeight) / 16
 	screenRatio := f32(game.screenHeight) / 720

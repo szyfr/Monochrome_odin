@@ -32,7 +32,11 @@ init :: proc() {
 		game.emoteMaterials[i].maps[0].texture = raylib.LoadTextureFromImage(img)
 		raylib.UnloadImage(img)
 	}
-	
+
+	//* Status Icons
+	//game.status = raylib.LoadTexture("data/core/sprites/ui/status.png")
+	game.graphicsUI["status_icons"] = raylib.LoadTexture("data/core/sprites/ui/status.png")
+
 	//* Standee mesh
 	game.standeeMesh = raylib.GenMeshPlane(1,1,1,1)
 
@@ -181,7 +185,6 @@ load_scalable_graphics :: proc() {
 		size,size,size,size,
 		.NINE_PATCH,
 	}
-
 	
 	game.graphicsUI["textbox_general"]		= raylib.LoadTexture("data/core/sprites/ui/textbox.png")
 	game.graphicsNPatch["textbox_general"]	= {
