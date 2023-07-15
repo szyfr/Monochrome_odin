@@ -90,11 +90,10 @@ update :: proc() {
 						vec := game.battleData.moveArrowList[0]
 						hazard, result := game.battleData.field[str]
 						if result && hazard.entity.position == {vec.x + 8, 0, vec.y + 55.75} && hazard.type == .hazard {
-							// TODO make hazards more adjustable and know more information about their use
-						//	player := &game.battleData.playerTeam[game.battleData.currentPlayer]
-						//	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
-						//	effectiveness := monsters.type_damage_multiplier(.grass, player)
-						//	enemy.hpCur -= monsters.calculate_damage(40, f32(enemy.level), modAtk, modDef, effectiveness)
+							player := &game.battleData.playerTeam[game.battleData.currentPlayer]
+							if hazard.data.user != player {
+								if activate_hazard(false, hazard.data) do delete_key(&game.battleData.field, str)
+							}
 						}
 					}
 
@@ -129,25 +128,25 @@ update :: proc() {
 				//	case .switch_in:
 					case .attack1:
 						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(0)
+							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 0)
 							else do game.battleData.playerAction = .interaction
 						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					case .attack2:
 						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(1)
+							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 1)
 							else do game.battleData.playerAction = .interaction
 						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					case .attack3:
 						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(2)
+							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 2)
 							else do game.battleData.playerAction = .interaction
 						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					case .attack4:
 						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(3)
+							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 3)
 							else do game.battleData.playerAction = .interaction
 						}
 						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
@@ -173,110 +172,6 @@ undercut_arrow :: proc() {
 	}
 	delete(game.battleData.moveArrowList)
 	game.battleData.moveArrowList = temp
-}
-
-use_attack :: proc( value : int ) {
-	attack			:  game.MonsterAttack	= game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
-
-	enemy			: ^game.Monster			= &game.battleData.enemyTeam[game.battleData.currentEnemy]
-	enemyToken		: ^game.Token			= &game.battleData.field["enemy"]
-	enemyPosition	:  raylib.Vector2		= {enemyToken.entity.position.x-8, enemyToken.entity.position.z-55.75}
-
-	player			: ^game.Monster			= &game.battleData.playerTeam[game.battleData.currentPlayer]
-	playerToken		: ^game.Token			= &game.battleData.field["player"]
-	playerPosition	:  raylib.Vector2		= {playerToken.entity.position.x-8, playerToken.entity.position.z-55.75}
-
-	#partial switch attack {
-		case .tackle:
-			if player.stCur >= 2 {
-				modAtk, modDef : f32
-
-				//* Calculate Attack stat
-				if player.statChanges[0] > 0 do modAtk = f32(player.atk) * ((2 + f32(player.statChanges[0])) / 2)
-				else do modAtk = f32(player.atk) * (2 / (2 + f32(player.statChanges[0])))
-				if modAtk <= 0 do modAtk = 1
-
-				//* Calculate Defense stat
-				if enemy.statChanges[1] > 0 do modDef = f32(enemy.def) * ((2 + f32(enemy.statChanges[1])) / 2)
-				else do modDef = f32(enemy.def) * (2 / (2 - f32(enemy.statChanges[1])))
-				if modDef <= 0 do modDef = 1
-
-				offset : raylib.Vector2
-				switch playerToken.entity.direction {
-					case .up:		offset = { 0,-1}
-					case .down:		offset = { 0, 1}
-					case .left:		offset = {-1, 0}
-					case .right:	offset = { 1, 0}
-				}
-				//* Push enemy and deal damage
-				if enemyPosition == (playerPosition + offset) {
-					//* Check if enemy would hit wall or edge
-					effectiveness := type_damage_multiplier(.normal, enemy)
-					if spot_empty(enemyPosition + offset) {
-						enemyToken.entity.position += {offset.x, 0, offset.y}
-						playerToken.entity.position += {offset.x, 0, offset.y}
-
-						enemy.hpCur -= monsters.calculate_damage(35, f32(player.level), modAtk, modDef, effectiveness)
-					} else {
-						enemy.hpCur -= int(f32(monsters.calculate_damage(40, f32(player.level), modAtk, modDef, effectiveness)) * 1.25)
-					}
-				} else {
-					playerToken.entity.position += {offset.x, 0, offset.y}
-				}
-				player.stCur -= 2
-			}
-		case .growl:
-			if player.stCur >= 3 {
-				difference := playerPosition - enemyPosition
-				if (difference.x <= 2 && difference.x >= -2) &&
-						(difference.y <= 2 && difference.y >= -2) &&
-						!(math.abs(difference.x) == 2 && math.abs(difference.y) == 2) {
-					if enemy.statChanges[1] > -6 {
-						enemy.statChanges[1] -= 1
-						ui.add_message("Defense lowered!")
-					} else do ui.add_message("Defense can't go lower!")
-				}
-
-				player.stCur -= 3
-			}
-		case .leafage:
-			if player.stCur >= 2 {
-				modAtk, modDef : f32
-
-				//* Calculate Special Attack stat
-				if player.statChanges[2] > 0 do modAtk = f32(player.spAtk) * ((2 + f32(player.statChanges[2])) / 2)
-				else do modAtk = f32(player.spAtk) * (2 / (2 + f32(player.statChanges[3])))
-				if modAtk <= 0 do modAtk = 1
-
-				//* Calculate Special Defense stat
-				if enemy.statChanges[3] > 0 do modDef = f32(enemy.spDef) * ((2 + f32(enemy.statChanges[3])) / 2)
-				else do modDef = f32(enemy.spDef) * (2 / (2 + f32(enemy.statChanges[3])))
-				if modDef <= 0 do modDef = 1
-				
-
-				if game.battleData.target == enemyPosition {
-					effectiveness := type_damage_multiplier(.grass, enemy)
-					
-
-					enemy.hpCur -= monsters.calculate_damage(40, f32(player.level), modAtk, modDef, effectiveness)
-				} else {
-					position : raylib.Vector3 = {game.battleData.target.x+8, 0, game.battleData.target.y+55.75}
-
-					game.battleData.playerHazardCount += 1
-
-					builder : strings.Builder
-					str := fmt.sbprintf(&builder, "player_hazard_%v", game.battleData.playerHazardCount)
-
-					game.battleData.field[str] = game.Token{
-						overworld.create(position, "starter_fire", "monster")^,
-						.hazard,
-						modAtk,
-					}
-				}
-
-				player.stCur -= 4
-			}
-	}
 }
 
 type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monster ) -> f32 {

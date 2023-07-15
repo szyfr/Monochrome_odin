@@ -291,9 +291,9 @@ draw_enemy_status :: proc() {
 	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
 	if enemy.statChanges[0] != 0 {
 		draw_sprite({posX + 20, 160, 32, 32}, {0,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[1] > 0 do draw_sprite({posX + 20, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
+		if enemy.statChanges[0] > 0 do draw_sprite({posX + 20, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
 		else do draw_sprite({posX + 20, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 20, 160, 32, 32}, {math.abs(f32(enemy.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
+		draw_sprite({posX + 20, 160, 32, 32}, {math.abs(f32(enemy.statChanges[0]))-1,0}, {56,56,56,255}, "status_icons")
 	}
 	if enemy.statChanges[1] != 0 {
 		draw_sprite({posX + 52, 160, 32, 32}, {1,2}, {247,82,49,255}, "status_icons")
@@ -303,27 +303,27 @@ draw_enemy_status :: proc() {
 	}
 	if enemy.statChanges[2] != 0 {
 		draw_sprite({posX + 84, 160, 32, 32}, {2,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[1] > 0 do draw_sprite({posX + 84, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
+		if enemy.statChanges[2] > 0 do draw_sprite({posX + 84, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
 		else do draw_sprite({posX + 84, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 84, 160, 32, 32}, {math.abs(f32(enemy.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
+		draw_sprite({posX + 84, 160, 32, 32}, {math.abs(f32(enemy.statChanges[2]))-1,0}, {56,56,56,255}, "status_icons")
 	}
 	if enemy.statChanges[3] != 0 {
 		draw_sprite({posX + 116, 160, 32, 32}, {3,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[1] > 0 do draw_sprite({posX + 116, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
+		if enemy.statChanges[3] > 0 do draw_sprite({posX + 116, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
 		else do draw_sprite({posX + 116, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 116, 160, 32, 32}, {math.abs(f32(enemy.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
+		draw_sprite({posX + 116, 160, 32, 32}, {math.abs(f32(enemy.statChanges[3]))-1,0}, {56,56,56,255}, "status_icons")
 	}
 	if enemy.statChanges[4] != 0 {
 		draw_sprite({posX + 148, 160, 32, 32}, {4,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[1] > 0 do draw_sprite({posX + 148, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
+		if enemy.statChanges[4] > 0 do draw_sprite({posX + 148, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
 		else do draw_sprite({posX + 148, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 148, 160, 32, 32}, {math.abs(f32(enemy.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
+		draw_sprite({posX + 148, 160, 32, 32}, {math.abs(f32(enemy.statChanges[4]))-1,0}, {56,56,56,255}, "status_icons")
 	}
 	if enemy.statChanges[5] != 0 {
 		draw_sprite({posX + 180, 160, 32, 32}, {5,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[1] > 0 do draw_sprite({posX + 180, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
+		if enemy.statChanges[5] > 0 do draw_sprite({posX + 180, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
 		else do draw_sprite({posX + 180, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 180, 160, 32, 32}, {math.abs(f32(enemy.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
+		draw_sprite({posX + 180, 160, 32, 32}, {math.abs(f32(enemy.statChanges[5]))-1,0}, {56,56,56,255}, "status_icons")
 	}
 }
 

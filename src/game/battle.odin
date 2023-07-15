@@ -57,7 +57,15 @@ Token :: struct {
 	data : union {
 		int,
 		f32,
+		AttackData,
 	}
+}
+
+AttackData :: struct {
+	attack							: MonsterAttack,
+	user, target					: ^Monster,
+	userToken, targetToken			: ^Token,
+	userPosition, targetPosition	:  raylib.Vector2,
 }
 
 //BattleData :: struct {

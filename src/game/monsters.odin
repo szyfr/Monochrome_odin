@@ -23,6 +23,7 @@ Monster :: struct {
 	spd		: int,
 	
 	statChanges : [6]int,
+	flinch	: bool,
 
 	size	: Size,
 

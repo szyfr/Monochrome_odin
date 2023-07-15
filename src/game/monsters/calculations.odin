@@ -109,10 +109,21 @@ max_movement :: proc( monster : game.Monster ) -> f32 {
 }
 
 start_turn :: proc( monster : ^game.Monster ) {
-	monster.movesMax = int(max_movement(monster^))
-	monster.movesCur = monster.movesMax
-	monster.stCur += (monster.stMax/2)
+	//* Calc movement
+	if !monster.flinch {
+		monster.movesMax = int(max_movement(monster^))
+		monster.movesCur = monster.movesMax
+	}
+
+	//* Calc stamina
+	if !monster.flinch {
+		monster.stCur += (monster.stMax/2)
+	} else {
+		monster.stCur += (monster.stMax/4)
+	}
 	if monster.stCur > monster.stMax do monster.stCur = monster.stMax
+
+	monster.flinch = false
 }
 
 calculate_damage :: proc( base, level, atk, def, effectiveness : f32 ) -> int {
