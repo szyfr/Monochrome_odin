@@ -43,6 +43,12 @@ BattleData :: struct {
 	moveArrowDraw	: bool,
 
 	infoText : cstring,
+	messages : [dynamic]Message,
+}
+
+Message :: struct {
+	str : cstring,
+	time : int,
 }
 
 Token :: struct {

@@ -100,3 +100,7 @@ draw_sprite :: proc( rect : raylib.Rectangle, sprite : raylib.Vector2, color : r
 		color,
 	)
 }
+
+draw_text :: proc( rect : raylib.Rectangle, input : string ) {
+	
+}

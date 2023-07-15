@@ -11,6 +11,7 @@ import "vendor:raylib"
 import "../../game"
 import "../../settings"
 import "../monsters"
+import "../graphics/ui"
 import "../entity/overworld"
 
 
@@ -210,7 +211,7 @@ use_attack :: proc( value : int ) {
 				//* Push enemy and deal damage
 				if enemyPosition == (playerPosition + offset) {
 					//* Check if enemy would hit wall or edge
-					effectiveness := monsters.type_damage_multiplier(.normal, enemy)
+					effectiveness := type_damage_multiplier(.normal, enemy)
 					if spot_empty(enemyPosition + offset) {
 						enemyToken.entity.position += {offset.x, 0, offset.y}
 						playerToken.entity.position += {offset.x, 0, offset.y}
@@ -230,7 +231,10 @@ use_attack :: proc( value : int ) {
 				if (difference.x <= 2 && difference.x >= -2) &&
 						(difference.y <= 2 && difference.y >= -2) &&
 						!(math.abs(difference.x) == 2 && math.abs(difference.y) == 2) {
-					if enemy.statChanges[1] > -6 do enemy.statChanges[1] -= 1
+					if enemy.statChanges[1] > -6 {
+						enemy.statChanges[1] -= 1
+						ui.add_message("Defense lowered!")
+					} else do ui.add_message("Defense can't go lower!")
 				}
 
 				player.stCur -= 3
@@ -251,7 +255,8 @@ use_attack :: proc( value : int ) {
 				
 
 				if game.battleData.target == enemyPosition {
-					effectiveness := monsters.type_damage_multiplier(.grass, enemy)
+					effectiveness := type_damage_multiplier(.grass, enemy)
+					
 
 					enemy.hpCur -= monsters.calculate_damage(40, f32(player.level), modAtk, modDef, effectiveness)
 				} else {
@@ -272,4 +277,62 @@ use_attack :: proc( value : int ) {
 				player.stCur -= 4
 			}
 	}
+}
+
+type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monster ) -> f32 {
+	output : f32
+
+	weakness : int
+
+	#partial switch type {
+		case .normal:
+			// TODO Ghost's immunity, Rock + Steel resistance
+			//* Resistance
+		case .fire:
+			// TODO Ice + Bug + Steel weakness, rock + Dragon resistance
+			//* Weakness
+			if monster.elementalType1 == .grass || monster.elementalType2 == .grass do weakness += 1
+			//* Resistance
+			if monster.elementalType1 == .fire || monster.elementalType2 == .fire do weakness -= 1
+			if monster.elementalType1 == .water || monster.elementalType2 == .water do weakness -= 1
+		case .water:
+			// TODO Ground + Rock Weakness, Dragon resistance
+			//* Weakness
+			if monster.elementalType1 == .fire || monster.elementalType2 == .fire do weakness += 1
+			//* Resistance
+			if monster.elementalType1 == .grass || monster.elementalType2 == .grass do weakness -= 1
+			if monster.elementalType1 == .water || monster.elementalType2 == .water do weakness -= 1
+		case .grass:
+			// TODO Ground + Rock Weakness, Poison + Flying + Bug + Dragon + Steel resistance
+			//* Weakness
+			if monster.elementalType1 == .water || monster.elementalType2 == .water do weakness += 1
+			//* Resistance
+			if monster.elementalType1 == .grass || monster.elementalType2 == .grass do weakness -= 1
+			if monster.elementalType1 == .fire || monster.elementalType2 == .fire do weakness -= 1
+	}
+
+	switch {
+		case weakness >=  3:
+			output = 2.5
+			ui.add_message("Hyper-Effective!")
+		case weakness ==  2:
+			output = 2
+			ui.add_message("Doubly Super-Effective!")
+		case weakness ==  1:
+			output = 1.5
+			ui.add_message("Super-Effective!")
+		case weakness ==  0:
+			output = 1
+		case weakness == -1:
+			output = 0.66
+			ui.add_message("Not very effective!")
+		case weakness == -2:
+			output = 0.5
+			ui.add_message("Horribly ineffective!")
+		case weakness <= -3:
+			output = 0
+			ui.add_message("Immune!")
+	}
+
+	return output
 }

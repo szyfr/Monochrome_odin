@@ -31,6 +31,9 @@ draw_battle :: proc() {
 		
 		//* Infobox
 		draw_infobox()
+
+		//* Messages
+		draw_messages()
 	}
 }
 
@@ -352,4 +355,41 @@ draw_infobox :: proc() {
 			{56,56,56,255},
 		)
 	}
+}
+
+draw_messages :: proc() {
+	offset : raylib.Vector2 = {f32(game.screenWidth) - 400, f32(game.screenHeight) - 200}
+
+	for i:=0;i<len(game.battleData.messages);i+=1 {
+		draw_npatch({offset.x, offset.y, 400, 88}, "textbox_general")
+		raylib.DrawTextPro(
+			game.font,
+			game.battleData.messages[i].str,
+			{offset.x + (30 * game.screenRatio), offset.y + (40 * game.screenRatio)},
+			{0, 0},
+			0,
+			(16 * game.screenRatio),
+			5,
+			{56,56,56,255},
+		)
+
+		offset -= {0, 100}
+		game.battleData.messages[i].time -= 1
+		if game.battleData.messages[i].time <= 0 do remove_message(i)
+	}
+}
+
+add_message :: proc( str : cstring ) {
+	append(&game.battleData.messages, game.Message{str, 200})
+}
+
+remove_message :: proc( index : int ) {
+	temp : [dynamic]game.Message
+
+	for i:=0;i<len(game.battleData.messages);i+=1 {
+		if i != index do append(&temp, game.battleData.messages[i])
+	}
+
+	delete(game.battleData.messages)
+	game.battleData.messages = temp
 }
