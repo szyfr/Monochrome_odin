@@ -53,11 +53,13 @@ use_attack :: proc( player : bool, value : int ) {
 }
 
 activate_hazard :: proc( player : bool, data : game.AttackData ) -> bool {
-	#partial switch attack {
+
+	#partial switch data.attack {
 		case .leafage:
 			hazard_leafage(player, data)
 			return true
 	}
+	return false
 }
 
 use_tackle :: proc( player : bool, data : game.AttackData ) {
@@ -278,6 +280,7 @@ use_leafage :: proc( player : bool, data : game.AttackData ) {
 }
 
 hazard_leafage :: proc( player : bool, data : game.AttackData ) {
+	modAtk, modDef : f32
 	//* Calculate Attack stat
 	if data.user.statChanges[0] > 0 do modAtk = f32(data.user.atk) * ((2 + f32(data.user.statChanges[0])) / 2)
 	else do modAtk = f32(data.user.atk) * (2 / (2 + f32(data.user.statChanges[0])))

@@ -75,6 +75,14 @@ barHpRat		: f32 = -20
 barSt			: raylib.Texture
 barStRat		: f32 = -20
 
+playerBarHP	: BarGraphic
+playerBarST	: BarGraphic
+playerBarXP	: BarGraphic
+
+enemyBarHP		: BarGraphic
+enemyBarST		: BarGraphic
+
+
 overlayActive	: bool
 overlayTexture	: raylib.Texture
 overlayRectangle: raylib.Rectangle

@@ -1,16 +1,23 @@
 
 # Ver 0.01_0 "A New Start"
 
-## Story
-- Added basic introduction. Nothing that will be kept post town rework.
+## World
+
+### Added
+- Starting town
+	- Main storyline
+	- Various NPCs
 
 ## Monsters
-- Added all three starters
-	- Grass: A tank that places hazards.
-	- Fire: A glass cannon of a special attacker.
-	- Water: A brawler.
+
+### Added
+- grass_starter: A tank that sets up obstacles.
+- fire_starter: A long-range special attacker.
+- water_starter: A physical attacking brawler.
 
 ## Attacks
+
+### Added
 - Tackle: Deals damage and knocks enemy back. If the enemy can't be moved damage is increased.
 - Scratch: Deals damage in an adjacent tile.
 

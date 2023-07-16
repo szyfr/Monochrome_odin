@@ -18,19 +18,22 @@ draw_battle :: proc() {
 	if game.battleData != nil {
 		//* Player Status
 		draw_player_status()
-		//* Player UI
-		draw_player_actions()
-		draw_player_attacks()
-		draw_player_selection()
-		//* Enemy Status
-		draw_enemy_status()
 
-		//* Draw current turn marker
-		if game.battleData.playersTurn do raylib.DrawTexturePro( game.pointer, {0,0,8,8}, {scale(359),scale(119),scale(32),scale(32)}, {8,8}, 180, raylib.WHITE )
-		else do raylib.DrawTexturePro( game.pointer, {0,0,8,8}, {scale(918),scale(119),scale(32),scale(32)}, {8,8}, 0, raylib.WHITE )
-		
-		//* Infobox
-		draw_infobox()
+		if game.eventmanager.currentEvent == nil {
+			//* Player UI
+			draw_player_actions()
+			draw_player_attacks()
+			draw_player_selection()
+			//* Enemy Status
+			draw_enemy_status()
+
+			//* Draw current turn marker
+			if game.battleData.playersTurn do raylib.DrawTexturePro( game.pointer, {0,0,8,8}, {scale(359),scale(119),scale(32),scale(32)}, {8,8}, 180, raylib.WHITE )
+			else do raylib.DrawTexturePro( game.pointer, {0,0,8,8}, {scale(918),scale(119),scale(32),scale(32)}, {8,8}, 0, raylib.WHITE )
+
+			//* Infobox
+			draw_infobox()
+		}
 
 		//* Messages
 		draw_messages()
@@ -38,7 +41,7 @@ draw_battle :: proc() {
 }
 
 draw_player_status :: proc() {
-	screenRatio := f32(game.screenHeight) / 720
+	monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
 	posX : f32 = 10
 	posY : f32 = 10
 
@@ -46,79 +49,29 @@ draw_player_status :: proc() {
 	draw_npatch({posX, posY, 342, 144}, "textbox_player_status")
 
 	//* Draw name
-	monsterName := game.localization[reflect.enum_string(game.battleData.playerTeam[game.battleData.currentPlayer].species)]
-	raylib.DrawTextPro(
-		game.font,
-		monsterName,
-		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
+	monsterName := game.localization[reflect.enum_string(monster.species)]
+	draw_text({posX + 40, posY + 40, 258, 16}, monsterName)
 
-	//* Draw HP bar
-	draw_bar(0, {posX + 40, posY +  68}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], SHOW_STAT|SHOW_AMOUNT)
-	//* Draw Stamina bar
-	draw_bar(1, {posX + 40, posY +  88}, {198, 16}, &game.battleData.playerTeam[game.battleData.currentPlayer], SHOW_STAT|SHOW_AMOUNT)
-	//* Draw Experience bar
-	draw_bar(2, {posX + 40, posY + 116}, {258, 12}, &game.battleData.playerTeam[game.battleData.currentPlayer], 0)
+	//* Draw bars
+	draw_bar_battle({posX + 40, posY +  68, 198, 16}, monster, 0, true)
+	draw_bar_battle({posX + 40, posY +  88, 198, 16}, monster, 1, true)
+	draw_bar_battle({posX + 40, posY + 116, 198, 16}, monster, 2, true)
 
 	//* Draw stat changes
-	player := &game.battleData.playerTeam[game.battleData.currentPlayer]
-	if player.statChanges[0] != 0 {
-		draw_sprite({posX + 20, 160, 32, 32}, {0,2}, {247,82,49,255}, "status_icons")
-		if player.statChanges[1] > 0 do draw_sprite({posX + 20, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 20, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 20, 160, 32, 32}, {math.abs(f32(player.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if player.statChanges[1] != 0 {
-		draw_sprite({posX + 52, 160, 32, 32}, {1,2}, {247,82,49,255}, "status_icons")
-		if player.statChanges[1] > 0 do draw_sprite({posX + 52, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 52, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 52, 160, 32, 32}, {math.abs(f32(player.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if player.statChanges[2] != 0 {
-		draw_sprite({posX + 84, 160, 32, 32}, {2,2}, {247,82,49,255}, "status_icons")
-		if player.statChanges[1] > 0 do draw_sprite({posX + 84, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 84, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 84, 160, 32, 32}, {math.abs(f32(player.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if player.statChanges[3] != 0 {
-		draw_sprite({posX + 116, 160, 32, 32}, {3,2}, {247,82,49,255}, "status_icons")
-		if player.statChanges[1] > 0 do draw_sprite({posX + 116, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 116, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 116, 160, 32, 32}, {math.abs(f32(player.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if player.statChanges[4] != 0 {
-		draw_sprite({posX + 148, 160, 32, 32}, {4,2}, {247,82,49,255}, "status_icons")
-		if player.statChanges[1] > 0 do draw_sprite({posX + 148, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 148, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 148, 160, 32, 32}, {math.abs(f32(player.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if player.statChanges[5] != 0 {
-		draw_sprite({posX + 180, 160, 32, 32}, {5,2}, {247,82,49,255}, "status_icons")
-		if player.statChanges[1] > 0 do draw_sprite({posX + 180, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 180, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 180, 160, 32, 32}, {math.abs(f32(player.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
+	draw_stat_changes(monster, 0, {posX +  20, 160})
+	draw_stat_changes(monster, 1, {posX +  52, 160})
+	draw_stat_changes(monster, 2, {posX +  84, 160})
+	draw_stat_changes(monster, 3, {posX + 116, 160})
+	draw_stat_changes(monster, 4, {posX + 148, 160})
+	draw_stat_changes(monster, 5, {posX + 180, 160})
 }
 
 draw_player_attacks :: proc() {
-	screenRatio := f32(game.screenHeight) / 720
 	posX : f32 = 10
-	posY : f32 = (f32(game.screenHeight) - (134 * screenRatio)) / screenRatio
+	posY : f32 = (f32(game.screenHeight) - (134 * game.screenRatio)) / game.screenRatio
 
 	//* Draw box
-	raylib.DrawTextureNPatch(
-		game.boxUI,
-		game.boxUI_npatch,
-		{posX * screenRatio, posY * screenRatio, 342 * screenRatio, 156 * screenRatio},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
+	draw_npatch({posX, posY, 342, 156}, "textbox_general")
 
 	//* Compile text
 	builder : strings.Builder
@@ -148,32 +101,16 @@ draw_player_attacks :: proc() {
 
 
 	//* Draw text
-	raylib.DrawTextPro(
-		game.font,
-		cstr,
-		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
+	draw_text({posX + 48, posY + 40, 342, 156}, cstr, true)
 }
 
 draw_player_actions :: proc() {
-	screenRatio := f32(game.screenHeight) / 720
+	monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
 	posX : f32 = 310
-	posY : f32 = (f32(game.screenHeight) - (134 * screenRatio)) / screenRatio
+	posY : f32 = (f32(game.screenHeight) - (134 * game.screenRatio)) / game.screenRatio
 
 	//* Draw box
-	raylib.DrawTextureNPatch(
-		game.boxUI,
-		game.boxUI_npatch,
-		{posX * screenRatio, posY * screenRatio, 278 * screenRatio, 156 * screenRatio},
-		{0,0},
-		0,
-		raylib.WHITE,
-	)
+	draw_npatch({posX, posY, 278, 156}, "textbox_general")
 
 	//* Compile text
 	builder : strings.Builder
@@ -182,29 +119,16 @@ draw_player_actions :: proc() {
 	cstr : cstring
 	defer delete(cstr)
 
-	monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
-
 	str = fmt.sbprintf(
 		&builder,
-		"1: Move\n\t\t\t%v/%v",
+		"   Move\n\t\t\t%v/%v",
 		monster.movesCur - len(game.battleData.moveArrowList),
 		monster.movesMax,
 	)
 	cstr = strings.clone_to_cstring(str)
 
 	//* Draw text
-	raylib.DrawTextPro(
-		game.font,
-		//"1: Info\n2: Move\n3: Item\n4: Switch",
-		//"1: Move\n\t",
-		cstr,
-		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
+	draw_text({posX + 48, posY + 40, 342, 156}, cstr, true)
 }
 
 draw_player_selection :: proc() {
@@ -239,7 +163,6 @@ draw_player_selection :: proc() {
 			dest.y = scale(702)
 	}
 
-	//(texture: Texture2D, source, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color)
 	raylib.DrawTexturePro(
 		game.pointer,
 		{0,0,8,8},
@@ -258,138 +181,38 @@ descale :: proc( input : f32 ) -> f32 {
 }
 
 draw_enemy_status :: proc() {
-	screenRatio := f32(game.screenHeight) / 720
-	posX : f32 = (f32(game.screenWidth) - (352 * screenRatio)) / screenRatio
+	monster := &game.battleData.enemyTeam[game.battleData.currentEnemy]
+	posX : f32 = (f32(game.screenWidth) - (352 * game.screenRatio)) / game.screenRatio
 	posY : f32 = 10
 
 	//* Draw box
 	draw_npatch({posX, posY, 342, 144}, "textbox_general")
 
 	//* Draw name
-	monsterName := game.localization[reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species)]
-	raylib.DrawTextPro(
-		game.font,
-		monsterName,
-		{(posX * screenRatio) + (40 * screenRatio), (posY * screenRatio) + (40 * screenRatio)},
-		{0, 0},
-		0,
-		(16 * screenRatio),
-		5,
-		{56,56,56,255},
-	)
+	monsterName := game.localization[reflect.enum_string(monster.species)]
+	draw_text({posX + 40, posY + 40, 258, 16}, monsterName)
 
-	//* Only show HP and Stamina numbers for enemies if on Easy
-	tags : u8 = SHOW_STAT
-	if game.difficulty == .easy do tags += SHOW_AMOUNT
-
-	//* Draw HP bar
-	draw_bar(0, {posX + 40, posY +  68}, {198, 16}, &game.battleData.enemyTeam[game.battleData.currentEnemy], tags)
-	//* Draw Stamina bar
-	draw_bar(1, {posX + 40, posY +  88}, {198, 16}, &game.battleData.enemyTeam[game.battleData.currentEnemy], tags)
+	//* Draw bars
+	draw_bar_battle({posX + 40, posY +  68, 198, 16}, monster, 0, false)
+	draw_bar_battle({posX + 40, posY +  88, 198, 16}, monster, 1, false)
 
 	//* Draw stat changes
-	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
-	if enemy.statChanges[0] != 0 {
-		draw_sprite({posX + 20, 160, 32, 32}, {0,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[0] > 0 do draw_sprite({posX + 20, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 20, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 20, 160, 32, 32}, {math.abs(f32(enemy.statChanges[0]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if enemy.statChanges[1] != 0 {
-		draw_sprite({posX + 52, 160, 32, 32}, {1,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[1] > 0 do draw_sprite({posX + 52, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 52, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 52, 160, 32, 32}, {math.abs(f32(enemy.statChanges[1]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if enemy.statChanges[2] != 0 {
-		draw_sprite({posX + 84, 160, 32, 32}, {2,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[2] > 0 do draw_sprite({posX + 84, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 84, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 84, 160, 32, 32}, {math.abs(f32(enemy.statChanges[2]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if enemy.statChanges[3] != 0 {
-		draw_sprite({posX + 116, 160, 32, 32}, {3,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[3] > 0 do draw_sprite({posX + 116, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 116, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 116, 160, 32, 32}, {math.abs(f32(enemy.statChanges[3]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if enemy.statChanges[4] != 0 {
-		draw_sprite({posX + 148, 160, 32, 32}, {4,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[4] > 0 do draw_sprite({posX + 148, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 148, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 148, 160, 32, 32}, {math.abs(f32(enemy.statChanges[4]))-1,0}, {56,56,56,255}, "status_icons")
-	}
-	if enemy.statChanges[5] != 0 {
-		draw_sprite({posX + 180, 160, 32, 32}, {5,2}, {247,82,49,255}, "status_icons")
-		if enemy.statChanges[5] > 0 do draw_sprite({posX + 180, 160, 32, 32}, {1,1}, {56,56,56,255}, "status_icons")
-		else do draw_sprite({posX + 180, 160, 32, 32}, {0,1}, {56,56,56,255}, "status_icons")
-		draw_sprite({posX + 180, 160, 32, 32}, {math.abs(f32(enemy.statChanges[5]))-1,0}, {56,56,56,255}, "status_icons")
-	}
+	draw_stat_changes(monster, 0, {posX +  20, 160})
+	draw_stat_changes(monster, 1, {posX +  52, 160})
+	draw_stat_changes(monster, 2, {posX +  84, 160})
+	draw_stat_changes(monster, 3, {posX + 116, 160})
+	draw_stat_changes(monster, 4, {posX + 148, 160})
+	draw_stat_changes(monster, 5, {posX + 180, 160})
 }
 
 draw_infobox :: proc() {
 	if game.battleData.playerAction == .interaction && game.battleData.infoText != "" {
-		screenWidth_4	:= (f32(game.screenWidth) / 4)
-		screenHeight_4	:= (f32(game.screenHeight) / 4)
+		width	:= f32(game.screenWidth) - (f32(game.screenWidth) / 4)
+		height	:= f32(game.screenHeight) - (f32(game.screenHeight) / 4)
 		posX : f32 = 10
-		posY : f32 = f32(game.screenHeight) - screenHeight_4
-		screenRatio := f32(game.screenHeight) / 720
+		posY : f32 = height
 
-		raylib.DrawTextureNPatch(
-			game.boxUI,
-			game.boxUI_npatch,
-			{posX, posY, f32(game.screenWidth) - screenWidth_4, f32(game.screenHeight) - screenHeight_4},
-			{0,0},
-			0,
-			raylib.WHITE,
-		)
-
-		raylib.DrawTextPro(
-			game.font,
-			game.battleData.infoText,
-			{posX + (40 * screenRatio), posY + (50 * screenRatio)},
-			{0, 0},
-			0,
-			(16 * screenRatio),
-			5,
-			{56,56,56,255},
-		)
+		draw_npatch({posX, posY, width, height}, "textbox_general")
+		draw_text({posX + 40, posY + 40, width, height}, game.battleData.infoText)
 	}
-}
-
-draw_messages :: proc() {
-	offset : raylib.Vector2 = {f32(game.screenWidth) - 400, f32(game.screenHeight) - 200}
-
-	for i:=0;i<len(game.battleData.messages);i+=1 {
-		draw_npatch({offset.x, offset.y, 400, 88}, "textbox_general")
-		raylib.DrawTextPro(
-			game.font,
-			game.battleData.messages[i].str,
-			{offset.x + (30 * game.screenRatio), offset.y + (40 * game.screenRatio)},
-			{0, 0},
-			0,
-			(16 * game.screenRatio),
-			5,
-			{56,56,56,255},
-		)
-
-		offset -= {0, 100}
-		game.battleData.messages[i].time -= 1
-		if game.battleData.messages[i].time <= 0 do remove_message(i)
-	}
-}
-
-add_message :: proc( str : cstring ) {
-	append(&game.battleData.messages, game.Message{str, 200})
-}
-
-remove_message :: proc( index : int ) {
-	temp : [dynamic]game.Message
-
-	for i:=0;i<len(game.battleData.messages);i+=1 {
-		if i != index do append(&temp, game.battleData.messages[i])
-	}
-
-	delete(game.battleData.messages)
-	game.battleData.messages = temp
 }

@@ -17,7 +17,7 @@ import "../entity/overworld"
 
 //= Procedures
 update :: proc() {
-	if game.battleData != nil {
+	if game.battleData != nil && game.eventmanager.currentEvent == nil {
 		//* Player cursor
 		ray := raylib.GetMouseRay(raylib.GetMousePosition(), game.camera)
 		col : raylib.RayCollision
@@ -91,8 +91,9 @@ update :: proc() {
 						hazard, result := game.battleData.field[str]
 						if result && hazard.entity.position == {vec.x + 8, 0, vec.y + 55.75} && hazard.type == .hazard {
 							player := &game.battleData.playerTeam[game.battleData.currentPlayer]
-							if hazard.data.user != player {
-								if activate_hazard(false, hazard.data) do delete_key(&game.battleData.field, str)
+							data := hazard.data.(game.AttackData)
+							if data.user != player {
+								if activate_hazard(false, data) do delete_key(&game.battleData.field, str)
 							}
 						}
 					}
@@ -161,6 +162,19 @@ update :: proc() {
 			game.battleData.playersTurn = true
 			monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
 		}
+
+		//* Checking for win
+		enemyMon	:= &game.battleData.enemyTeam[game.battleData.currentEnemy]
+		playerMon	:= &game.battleData.playerTeam[game.battleData.currentPlayer]
+		if enemyMon.hpCur <= 0 {
+			//* Check for other monsters
+			//* End battle
+			game.eventmanager.currentEvent = &game.region.events["trainer_battle_win"]
+			evt := &game.eventmanager.currentEvent.chain[3].(game.GiveExperience)
+			evt.amount = 100
+			evt.member = game.battleData.currentPlayer
+		}
+		//* Checking for loss
 	}
 }
 

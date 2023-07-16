@@ -119,8 +119,20 @@ init :: proc() {
 	raylib.SetMaterialTexture(&game.attackAquaJetMat[2], .ALBEDO, game.attackAquaJetTex[2])
 	raylib.UnloadImage(img)
 
-	//* Bar
-	game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})
+	//* Bars
+	//game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})
+	game.playerBarHP.image = raylib.GenImageColor(200, 1, {173,173,173,255})
+	game.playerBarHP.ratio = -20
+	game.playerBarST.image = raylib.GenImageColor(200, 1, {173,173,173,255})
+	game.playerBarST.ratio = -20
+	game.playerBarXP.image = raylib.GenImageColor(200, 1, {173,173,173,255})
+	game.playerBarXP.ratio = -20
+
+	game.enemyBarHP.image = raylib.GenImageColor(200, 1, {173,173,173,255})
+	game.enemyBarHP.ratio = -20
+	game.enemyBarST.image = raylib.GenImageColor(200, 1, {173,173,173,255})
+	game.enemyBarST.ratio = -20
+	
 
 	//* Targeter
 	game.targeter = raylib.LoadImage("data/core/sprites/spr_overlay.png")

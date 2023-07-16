@@ -74,6 +74,7 @@ level_up :: proc( monster :^game.Monster ) {
 	monster.level += 1
 
 	update_stats(monster)
+	audio.play_sound("level_up") //TODO experience gain noise
 }
 
 give_experience :: proc( monster :^game.Monster, amount : int ) -> bool {

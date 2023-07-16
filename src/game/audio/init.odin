@@ -23,7 +23,6 @@ init :: proc() {
 		str := strings.clone_from_cstring(musicList.paths[i])
 		value := str
 
-		str, _ = strings.remove_all(str, "aud_")
 		str, _ = strings.remove_all(str, ".wav")
 		str, _ = strings.remove_all(str, "data/private/audio/music/")
 		game.audio.musicFilenames[str] = strings.clone_to_cstring(value)
@@ -36,7 +35,6 @@ init :: proc() {
 		str := strings.clone_from_cstring(soundList.paths[i])
 		value := str
 
-		str, _ = strings.remove_all(str, "sfx_")
 		str, _ = strings.remove_all(str, ".wav")
 		str, _ = strings.remove_all(str, "data/private/audio/sfx/")
 		game.audio.soundFilenames[str] = strings.clone_to_cstring(value)

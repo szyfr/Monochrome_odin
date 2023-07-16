@@ -298,7 +298,6 @@ event_skip :: proc( curChain : ^game.SkipEvent ) {
 	game.eventmanager.currentChain = curChain.event
 }
 
-// TODO Make sure this works once battles are worked on
 event_gain_exp :: proc( curChain : ^game.GiveExperience ) {
 	if game.eventmanager.uses >= curChain.amount * 3 {
 		game.eventmanager.currentChain += 1

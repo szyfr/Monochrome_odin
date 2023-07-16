@@ -113,6 +113,12 @@ AudioSystem :: struct {
 	soundCurrent	: raylib.Sound,
 }
 
+BarGraphic :: struct {
+	image	: raylib.Image,
+	texture	: raylib.Texture,
+	ratio	: f32,
+}
+
 
 //= Enumerations
 Direction :: enum {
