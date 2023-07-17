@@ -169,10 +169,29 @@ update :: proc() {
 		if enemyMon.hpCur <= 0 {
 			//* Check for other monsters
 			//* End battle
+			//TODO Move this around so that once you defeat an enemy it gives experience, *then* check for other monsters, *then* end battle
 			game.eventmanager.currentEvent = &game.region.events["trainer_battle_win"]
-			evt := &game.eventmanager.currentEvent.chain[3].(game.GiveExperience)
-			evt.amount = 100
-			evt.member = game.battleData.currentPlayer
+			totalExp := monsters.calculate_experience_gain(enemyMon)
+
+			exper := &game.eventmanager.currentEvent.chain[3].(game.GiveExperience)
+			game.battleData.experience += totalExp
+			exper.amount = game.battleData.experience
+			exper.member = game.battleData.currentPlayer
+
+			if playerMon.experience + game.battleData.experience >= monsters.calculate_experience(playerMon.level+1, playerMon.rate) {
+				game.eventmanager.currentEvent.chain[4] = game.ShowLevelUp{
+					level	= playerMon.level,
+					hp		= playerMon.hpMax,
+					st		= playerMon.stMax,
+					atk		= playerMon.atk,
+					def		= playerMon.def,
+					spatk	= playerMon.spAtk,
+					spdef	= playerMon.spDef,
+					spd		= playerMon.spd,
+				}
+			} else {
+				game.eventmanager.currentEvent.chain[4] = game.WaitEvent{0}
+			}
 		}
 		//* Checking for loss
 	}

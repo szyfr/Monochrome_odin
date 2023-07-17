@@ -183,15 +183,13 @@ open_textbox :: proc(
 	else do refName = strings.to_pascal_case(reflect.enum_string(game.player.monsters[0].species))
 
 	refEnemy : string
-	// TODO
-	//if game.battleStruct == nil do refEnemy = "TRAINER NOT FOUND"
-	//else do refEnemy = strings.clone_from_cstring(game.localization[game.battleStruct.enemyName])
+	if game.battleData == nil do refEnemy = "TRAINER NOT FOUND"
+	else do refEnemy = strings.clone_from_cstring(game.localization[game.battleData.trainerName])
 	
 
 	refEnemyName : string
-	// TODO
-	//if game.battleStruct == nil do refEnemyName = "MONSTER NOT FOUND"
-	//else do refEnemyName = strings.to_pascal_case(reflect.enum_string(game.battleStruct.enemyMonsterList[0].species))
+	if game.battleData == nil do refEnemyName = "MONSTER NOT FOUND"
+	else do refEnemyName = strings.to_pascal_case(reflect.enum_string(game.battleData.enemyTeam[game.battleData.currentEnemy].species))
 
 	builder : strings.Builder
 
@@ -199,9 +197,8 @@ open_textbox :: proc(
 	strings.builder_reset(&builder)
 
 	refExperience : string
-	// TODO
-	//if game.battleStruct == nil do refExperience = "0"
-	//else do refExperience = fmt.sbprintf(&builder,"%v",game.battleStruct.experience)
+	if game.battleData == nil do refExperience = "0"
+	else do refExperience = fmt.sbprintf(&builder,"%v",game.battleData.experience)
 	
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_TRAINER}",	refEnemy)
 	textbox.targetText, _ = strings.replace_all(textbox.targetText, "{ENEMY_MONSTER_0_NAME}",	refName)

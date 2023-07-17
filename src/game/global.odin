@@ -20,7 +20,9 @@ keybindings		: map[string]Keybinding
 
 eventmanager	: ^EventManager
 
-difficulty		: Difficulty = .easy
+difficulty		: Difficulty = .medium
+
+homePosition	: raylib.Vector2 = {32, 41}
 
 //* Text
 textSpeed		: i32

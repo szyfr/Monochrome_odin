@@ -53,6 +53,9 @@ parse_events :: proc() {
 		case game.OverlayAnimationEvent: event_animation_overlay(&curChain.(game.OverlayAnimationEvent))
 
 		case game.SkipEvent: event_skip(&curChain.(game.SkipEvent))
+
+		case game.ReturnHome: return_home(&curChain.(game.ReturnHome))
+		case game.SetHome: set_home(&curChain.(game.SetHome))
 	}
 }
 
@@ -338,4 +341,12 @@ event_emote :: proc( curChain : ^game.EmoteEvent ) {
 		game.eventmanager.currentChain += 1
 		game.eventmanager.uses = 0
 	}
+}
+
+return_home :: proc( curChain : ^game.ReturnHome ) {
+	warpingEnt : ^game.Entity = overworld.get_entity("player")
+	overworld.teleport(warpingEnt, {game.homePosition.x, 0, game.homePosition.y})
+}
+set_home :: proc( curChain : ^game.SetHome ) {
+	game.homePosition = {curChain.position.x, curChain.position.y}
 }

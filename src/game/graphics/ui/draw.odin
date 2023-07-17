@@ -14,7 +14,7 @@ import "../../../game"
 
 //= Procedures
 
-//* Custom N_Patch function to account for scaling the textures
+//* N_Patch function to account for scaling the textures
 draw_npatch :: proc( rect : raylib.Rectangle, texture : string ) {
 	//* Row 1
 	raylib.DrawTexturePro(
@@ -95,6 +95,7 @@ draw_npatch :: proc( rect : raylib.Rectangle, texture : string ) {
 	)
 }
 
+//* Drawing a single sprite from a spritesheet
 draw_sprite :: proc( rect : raylib.Rectangle, sprite : raylib.Vector2, color : raylib.Color, texture : string ) {
 	raylib.DrawTexturePro(
 		game.graphicsUI[texture],
@@ -106,6 +107,7 @@ draw_sprite :: proc( rect : raylib.Rectangle, sprite : raylib.Vector2, color : r
 	)
 }
 
+//* Draws text scaled by screensize
 draw_text :: proc( rect : raylib.Rectangle, input : cstring, plain : bool = false ) {
 	position : raylib.Vector2
 	if !plain do position = {
@@ -125,6 +127,7 @@ draw_text :: proc( rect : raylib.Rectangle, input : cstring, plain : bool = fals
 	)
 }
 
+//* Draws HP/ST/XP bars
 draw_bar_battle :: proc( rect : raylib.Rectangle, monster : ^game.Monster, stat : u8, player : bool ) {
 	graphic	: ^game.BarGraphic
 	builder : strings.Builder
@@ -220,6 +223,7 @@ draw_bar_battle :: proc( rect : raylib.Rectangle, monster : ^game.Monster, stat 
 
 }
 
+//* Draws stat changes popoup
 draw_stat_changes :: proc( monster : ^game.Monster, stat : int, position : raylib.Vector2 ) {
 	if monster.statChanges[stat] != 0 {
 		draw_sprite({position.x, position.y, 32, 32}, {0,2}, {247,82,49,255}, "status_icons")

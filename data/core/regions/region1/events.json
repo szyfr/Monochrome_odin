@@ -94,7 +94,10 @@
 				["text","trainer_battle_win_1"],
 				["text","trainer_battle_win_2"],
 				["giveexp",0,0],
-				["animation","flash",23,8,[0,1,2],false],
+				["wait",0],
+				["wait",0],
+				["animation","flash",23,8,[0,1,2],true],
+				["wait",25]
 				["end_battle"],
 				["music","new_bark_town",1],
 				["animation","flash",23,8,[2,1,0],false],
@@ -102,12 +105,15 @@
 		{ //? Lose
 			"id":"trainer_battle_lose",
 			"chain": [
-				["music","trainer_battle_win",1],
+				["music","trainer_battle_win",0],
 				["text","trainer_battle_lose_1"],
 				["text","trainer_battle_lose_2"],
-				["warp","player",[ 32,41 ],false,"up"],
+				["animation","flash",23,8,[0,1,2],true],
+				["wait",25]
+				["return_home"]
 				["end_battle"],
 				["music","new_bark_town",1],
+				["animation","flash",23,8,[2,1,0],false],
 			]},
 	//	{	 // Elm's Lab
 	//		"location": [ 17,9 ],

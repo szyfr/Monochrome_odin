@@ -238,7 +238,7 @@ use_leer :: proc( player : bool, data : game.AttackData ) {
 }
 
 use_leafage :: proc( player : bool, data : game.AttackData ) {
-	if data.user.stCur >= 2 {
+	if data.user.stCur >= 4 {
 		modAtk, modDef : f32
 		//* Calculate Attack stat
 		if data.user.statChanges[0] > 0 do modAtk = f32(data.user.atk) * ((2 + f32(data.user.statChanges[0])) / 2)

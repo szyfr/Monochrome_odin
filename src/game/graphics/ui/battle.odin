@@ -35,6 +35,9 @@ draw_battle :: proc() {
 			draw_infobox()
 		}
 
+		//* Levelup display
+		if game.levelUpDisplay != nil do draw_levelup()
+
 		//* Messages
 		draw_messages()
 	}
@@ -173,13 +176,6 @@ draw_player_selection :: proc() {
 	)
 }
 
-scale :: proc( input : f32 ) -> f32 {
-	return input * (f32(game.screenHeight) / 720)
-}
-descale :: proc( input : f32 ) -> f32 {
-	return input / (f32(game.screenHeight) / 720)
-}
-
 draw_enemy_status :: proc() {
 	monster := &game.battleData.enemyTeam[game.battleData.currentEnemy]
 	posX : f32 = (f32(game.screenWidth) - (352 * game.screenRatio)) / game.screenRatio
@@ -215,4 +211,112 @@ draw_infobox :: proc() {
 		draw_npatch({posX, posY, width, height}, "textbox_general")
 		draw_text({posX + 40, posY + 40, width, height}, game.battleData.infoText)
 	}
+}
+
+draw_levelup :: proc() {
+	monster := &game.battleData.playerTeam[game.battleData.currentPlayer]
+	posX : f32 = (f32(game.screenWidth) - (352 * game.screenRatio)) / game.screenRatio
+	posY : f32 = 10
+
+	draw_npatch({posX, posY, 342, 342}, "textbox_general")
+
+	//* Compile text
+	builder : strings.Builder
+	str : string
+	defer delete(str)
+	cstr : cstring
+	defer delete(cstr)
+
+	strings.write_string(&builder, "Level  ")
+	if game.levelUpDisplay.level < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.level <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.level)
+	strings.write_string(&builder, " - ")
+	if monster.level < 100 do strings.write_string(&builder, " ")
+	if monster.level <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.level)
+	strings.write_string(&builder, "\n\n")
+
+	strings.write_string(&builder, "HP:    ")
+	if game.levelUpDisplay.hp < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.hp <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.hp)
+	strings.write_string(&builder, " - ")
+	if monster.hpMax < 100 do strings.write_string(&builder, " ")
+	if monster.hpMax <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.hpMax)
+	strings.write_string(&builder, "\n")
+
+	strings.write_string(&builder, "ST:    ")
+	if game.levelUpDisplay.st < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.st <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.st)
+	strings.write_string(&builder, " - ")
+	if monster.stMax < 100 do strings.write_string(&builder, " ")
+	if monster.stMax <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.stMax)
+	strings.write_string(&builder, "\n\n")
+
+	strings.write_string(&builder, "ATK:   ")
+	if game.levelUpDisplay.atk < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.atk <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.atk)
+	strings.write_string(&builder, " - ")
+	if monster.atk < 100 do strings.write_string(&builder, " ")
+	if monster.atk <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.atk)
+	strings.write_string(&builder, "\n")
+
+	strings.write_string(&builder, "DEF:   ")
+	if game.levelUpDisplay.def < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.def <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.def)
+	strings.write_string(&builder, " - ")
+	if monster.def < 100 do strings.write_string(&builder, " ")
+	if monster.def <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.def)
+	strings.write_string(&builder, "\n")
+
+	strings.write_string(&builder, "SPATK: ")
+	if game.levelUpDisplay.spatk < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.spatk <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.spatk)
+	strings.write_string(&builder, " - ")
+	if monster.spAtk < 100 do strings.write_string(&builder, " ")
+	if monster.spAtk <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.spAtk)
+	strings.write_string(&builder, "\n")
+
+	strings.write_string(&builder, "SPDEF: ")
+	if game.levelUpDisplay.spdef < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.spdef <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.spdef)
+	strings.write_string(&builder, " - ")
+	if monster.spDef < 100 do strings.write_string(&builder, " ")
+	if monster.spDef <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.spDef)
+	strings.write_string(&builder, "\n")
+
+	strings.write_string(&builder, "SPD:   ")
+	if game.levelUpDisplay.spd < 100 do strings.write_string(&builder, " ")
+	if game.levelUpDisplay.spd <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, game.levelUpDisplay.spd)
+	strings.write_string(&builder, " - ")
+	if monster.spd < 100 do strings.write_string(&builder, " ")
+	if monster.spd <  10 do strings.write_string(&builder, " ")
+	strings.write_int(&builder, monster.spd)
+
+	str = strings.to_string(builder)
+	cstr = strings.clone_to_cstring(str)
+
+	//* Draw text
+	draw_text({posX + 40, posY + 56, 342, 342}, cstr, true)
+}
+
+
+scale :: proc( input : f32 ) -> f32 {
+	return input * (f32(game.screenHeight) / 720)
+}
+descale :: proc( input : f32 ) -> f32 {
+	return input / (f32(game.screenHeight) / 720)
 }

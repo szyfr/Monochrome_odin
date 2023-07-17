@@ -44,6 +44,8 @@ BattleData :: struct {
 
 	infoText : cstring,
 	messages : [dynamic]Message,
+
+	experience : int,
 }
 
 Message :: struct {
@@ -67,33 +69,6 @@ AttackData :: struct {
 	userToken, targetToken			: ^Token,
 	userPosition, targetPosition	:  raylib.Vector2,
 }
-
-//BattleData :: struct {
-//	trainerName : string,
-//	arenaType : ArenaType,
-//
-//	enemyTeam		:  [8]Monster,
-//	currentEnemy	:  int,
-//	playerTeam		: ^[4]Monster,
-//	currentPlayer	:  int,
-//
-//	entities		: [dynamic]Entity,
-//
-//	turnNumber	: int,
-//	playersTurn	: bool,
-//	playerFirst	: bool,
-//
-//	playerAction : PlayerAction,
-//
-//	squares : [8][16]Unit,
-//	target	: raylib.Vector2,
-//}
-//
-//Unit :: union {
-//	bool,
-//	^Monster,
-//	int,
-//}
 
 
 //= Enum

@@ -60,6 +60,8 @@ init :: proc( battle : string ) -> bool {
 		game.battleData.playersTurn = true
 	} else do monsters.start_turn(&game.battleData.enemyTeam[game.battleData.currentEnemy])
 
+	game.battleData.experience = 0
+
 	camera.defocus()
 	game.camera.zoom = 1.2
 	camera.set_position( {16,0,60} )

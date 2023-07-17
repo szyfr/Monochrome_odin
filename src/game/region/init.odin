@@ -309,6 +309,12 @@ load_events :: proc ( filename : string ) {
 					chn = game.SkipEvent{
 						event	= int(chain[n].(json.Array)[1].(f64)),
 					}
+				case "return_home":
+					chn = game.ReturnHome{false}
+				case "set_home":
+					chn = game.SetHome{
+						position = {f32(chain[n].(json.Array)[1].(json.Array)[0].(f64)), f32(chain[n].(json.Array)[1].(json.Array)[1].(f64))}
+					}
 			}
 			append(&event.chain, chn)
 		}

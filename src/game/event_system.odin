@@ -56,6 +56,8 @@ EventChain :: union {
 	GiveExperience,
 	ShowLevelUp,
 	SkipEvent,
+	ReturnHome,
+	SetHome,
 }
 WarpEvent :: struct {
 	entityid	: string,
@@ -142,6 +144,7 @@ GiveExperience :: struct {
 ShowLevelUp :: struct {
 	level	: int,
 	hp		: int,
+	st		: int,
 	atk		: int,
 	def		: int,
 	spatk	: int,
@@ -150,6 +153,12 @@ ShowLevelUp :: struct {
 }
 SkipEvent :: struct {
 	event : int,
+}
+ReturnHome :: struct {
+	welp : bool,
+}
+SetHome :: struct {
+	position : raylib.Vector2,
 }
 
 

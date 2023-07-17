@@ -120,7 +120,6 @@ init :: proc() {
 	raylib.UnloadImage(img)
 
 	//* Bars
-	//game.barImg = raylib.GenImageColor(200, 1, {173,173,173,255})
 	game.playerBarHP.image = raylib.GenImageColor(200, 1, {173,173,173,255})
 	game.playerBarHP.ratio = -20
 	game.playerBarST.image = raylib.GenImageColor(200, 1, {173,173,173,255})

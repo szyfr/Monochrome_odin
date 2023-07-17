@@ -2,6 +2,7 @@ package monsters
 
 
 //= Imports
+//import "core:c/libc"
 import "core:math"
 import "core:fmt"
 
@@ -68,6 +69,28 @@ calculate_experience :: proc( level : int, rate : game.ExperienceRate ) -> int {
 	}
 
 	return total
+}
+
+calculate_experience_gain :: proc( monster : ^game.Monster ) -> int {
+	baseYield	: f32 = 1
+	wild		: f32 = 1
+	expShare	: f32 = 1
+	origOwner	: f32 = 1
+	item		: f32 = 1
+	canEvolve	: f32 = 1
+
+	#partial switch monster.species {
+		case .starter_grass:
+			baseYield = 64
+		case .starter_fire:
+			baseYield = 64
+		case .starter_water:
+			baseYield = 64
+	}
+
+	if game.battleData.trainerName != "wild" do wild = 1.5
+
+	return int(((baseYield * f32(monster.level)) / 7) * wild * (1 / expShare) * origOwner * item * canEvolve)
 }
 
 level_up :: proc( monster :^game.Monster ) {
