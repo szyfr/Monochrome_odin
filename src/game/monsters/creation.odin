@@ -22,10 +22,7 @@ create_species :: proc( species : game.MonsterSpecies, level : int ) -> game.Mon
 			monster.attacks[0] = .tackle
 			monster.attacks[1] = .growl
 			monster.attacks[2] = .leafage
-			//monster.attacks[0] = .scratch
-			//monster.attacks[1] = .leer
-			//monster.attacks[2] = .ember
-			//monster.attacks[3] = .aquajet
+			monster.ai = .tank_setup
 		case .starter_fire:
 			monster.elementalType1 = .fire
 			monster.elementalType2 = .none
@@ -34,6 +31,7 @@ create_species :: proc( species : game.MonsterSpecies, level : int ) -> game.Mon
 			monster.attacks[0] = .tackle
 			monster.attacks[1] = .leer
 			monster.attacks[2] = .ember
+			monster.ai = .ranged_special
 		case .starter_water:
 			monster.elementalType1 = .water
 			monster.elementalType2 = .none
@@ -42,6 +40,7 @@ create_species :: proc( species : game.MonsterSpecies, level : int ) -> game.Mon
 			monster.attacks[0] = .scratch
 			monster.attacks[1] = .leer
 			monster.attacks[2] = .aquajet
+			monster.ai = .brawler_physical
 	}
 
 	update_stats(&monster)

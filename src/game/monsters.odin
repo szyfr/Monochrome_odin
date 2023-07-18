@@ -27,6 +27,8 @@ Monster :: struct {
 
 	size	: Size,
 
+	ai : AIType,
+
 	movesMax : int,
 	movesCur : int,
 
@@ -94,4 +96,10 @@ ExperienceRate :: enum {
 	fast,
 	medium,
 	slow,
+}
+
+AIType :: enum {
+	tank_setup,
+	ranged_special,
+	brawler_physical,
 }

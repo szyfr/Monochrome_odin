@@ -159,6 +159,7 @@ update :: proc() {
 			}
 		} else {
 			//* Enemy turn
+			enemy_AI()
 			game.battleData.playersTurn = true
 			monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
 		}
@@ -263,4 +264,14 @@ type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monst
 	}
 
 	return output
+}
+
+enemy_AI :: proc() {
+	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
+
+	switch enemy.ai {
+		case .tank_setup:
+		case .ranged_special:
+		case .brawler_physical:
+	}
 }
