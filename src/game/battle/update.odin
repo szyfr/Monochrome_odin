@@ -267,11 +267,53 @@ type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monst
 }
 
 enemy_AI :: proc() {
-	enemy := &game.battleData.enemyTeam[game.battleData.currentEnemy]
+	enemy			:= &game.battleData.enemyTeam[game.battleData.currentEnemy]
+	enemyToken		:= &game.battleData.field["enemy"]
+	enemyEntity		:= &enemyToken.entity
+	enemyPosition	:=  game.battleData.field["enemy"].entity.position
+	player			:= &game.battleData.playerTeam[game.battleData.currentPlayer]
+	playerPosition	:=  game.battleData.field["player"].entity.position
+
+	distance := dist(enemyPosition, playerPosition)
+	// TODO Redo turn to allow walk animation to be played from there rather than an extra call here
+	if distance > dist(enemyPosition + { 1, 0, 0}, playerPosition) {
+		overworld.turn(enemyEntity, .right)
+		overworld.play_animation(enemyEntity, "walk_right")
+	}
+	if distance > dist(enemyPosition + {-1, 0, 0}, playerPosition) {
+		overworld.turn(enemyEntity, .left)
+		overworld.play_animation(enemyEntity, "walk_left")
+	}
+	if distance > dist(enemyPosition + { 0, 0, 1}, playerPosition) {
+		overworld.turn(enemyEntity, .down)
+		overworld.play_animation(enemyEntity, "walk_up")
+	}
+	if distance > dist(enemyPosition + { 0, 0,-1}, playerPosition) {
+		overworld.turn(enemyEntity, .up)
+		overworld.play_animation(enemyEntity, "walk_down")
+	}
+
 
 	switch enemy.ai {
 		case .tank_setup:
 		case .ranged_special:
 		case .brawler_physical:
+			for i:=0;i<enemy.movesCur;i+=1 {
+				if distance <= 1 do break
+				
+				switch enemyEntity.direction {
+					case .right:
+						enemyEntity.position += { 1, 0, 0}
+					case .left:
+						enemyEntity.position += {-1, 0, 0}
+					case .up:
+						enemyEntity.position += { 0, 0,-1}
+					case .down:
+						enemyEntity.position += { 0, 0, 1}
+				}
+				distance = dist(enemyPosition, playerPosition)
+				enemy.movesCur -= 1
+			}
+			use_attack(false, 0)
 	}
 }

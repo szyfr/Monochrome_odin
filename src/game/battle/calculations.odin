@@ -57,8 +57,12 @@ calculate_path :: proc() {
 	
 }
 
-dist :: proc( p1, p2 : raylib.Vector2 ) -> f32 {
+dist :: proc{ dist_v2, dist_v3 }
+dist_v2 :: proc( p1, p2 : raylib.Vector2 ) -> f32 {
 	return math.sqrt(math.pow(p2.x - p1.x, 2) + math.pow(p2.y - p1.y, 2))
+}
+dist_v3 :: proc( p1, p2 : raylib.Vector3 ) -> f32 {
+	return math.sqrt(math.pow(p2.x - p1.x, 2) + math.pow(p2.y - p1.y, 2) + math.pow(p2.z - p1.z, 2))
 }
 
 smallest :: proc( numbers : [4]f32 ) -> int {

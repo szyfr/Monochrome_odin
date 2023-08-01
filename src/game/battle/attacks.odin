@@ -72,6 +72,8 @@ use_tackle :: proc( player : bool, data : game.AttackData ) {
 			case .left:		offset = {-1, 0}
 			case .right:	offset = { 1, 0}
 		}
+		//? Redo this in a way that ignores player/enemy but not walls or borders
+		//if !spot_empty(data.userPosition + offset) do return
 		//* Push enemy and deal damage
 		if data.targetPosition == (data.userPosition + offset) {
 			modAtk, modDef : f32

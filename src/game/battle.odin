@@ -21,6 +21,7 @@ BattleData :: struct {
 
 	enemyTeam		:  [8]Monster,
 	currentEnemy	:  int,
+	enemyBrain		:  AIBrain,
 
 	playerTeam		: ^[4]Monster,
 	currentPlayer	:  int,
@@ -68,6 +69,10 @@ AttackData :: struct {
 	user, target					: ^Monster,
 	userToken, targetToken			: ^Token,
 	userPosition, targetPosition	:  raylib.Vector2,
+}
+
+AIBrain :: struct {
+	
 }
 
 
