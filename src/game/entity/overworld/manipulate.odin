@@ -96,12 +96,21 @@ teleport :: proc(
 turn :: proc(
 	entity		: ^game.Entity,
 	direction	:  game.Direction,
+	moveAnim	:  bool = false,
 ) {
 	switch direction {
-		case .up:		play_animation(entity, "idle_up")
-		case .down:		play_animation(entity, "idle_down")
-		case .left:		play_animation(entity, "idle_left")
-		case .right:	play_animation(entity, "idle_right")
+		case .up:
+			if !moveAnim	do play_animation(entity, "idle_up")
+			else			do play_animation(entity, "walk_up")
+		case .down:
+			if !moveAnim	do play_animation(entity, "idle_down")
+			else			do play_animation(entity, "walk_down")
+		case .left:
+			if !moveAnim	do play_animation(entity, "idle_left")
+			else			do play_animation(entity, "walk_left")
+		case .right:
+			if !moveAnim	do play_animation(entity, "idle_right")
+			else			do play_animation(entity, "walk_right")
 	}
 	entity.direction = direction
 }

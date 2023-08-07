@@ -27,7 +27,8 @@ Monster :: struct {
 
 	size	: Size,
 
-	ai : AIType,
+//	ai : AIType,
+	ai : AIBrain,
 
 	movesMax : int,
 	movesCur : int,
@@ -38,6 +39,31 @@ Monster :: struct {
 	//TODO Nature
 
 	attacks : [4]MonsterAttack,
+}
+
+AIBrain :: struct {
+	type : AIType,
+
+	aggression : int,
+	special : int,
+
+	attack : [4]BrainAttack,
+
+	//= Per turn
+
+}
+
+BrainAttack :: struct {
+	attack		: MonsterAttack,
+	type		: ElementalType,
+	category	: AttackType,
+	
+	damage		: int,
+	range		: int,
+	aggression	: int,
+	stCost		: int,
+	needEnemy	: bool,
+	damaging	: bool,
 }
 
 

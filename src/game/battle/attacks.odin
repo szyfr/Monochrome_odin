@@ -16,11 +16,8 @@ import "../../game"
 
 //= Procedures
 use_attack :: proc( player : bool, value : int ) {
-	attack : game.MonsterAttack	= game.battleData.playerTeam[game.battleData.currentPlayer].attacks[value]
-	
-	data : game.AttackData = {}
-	data.attack = attack
 	//* Get the user and target info
+	data : game.AttackData = {}
 	if player {
 		data.user			= &game.battleData.playerTeam[game.battleData.currentPlayer]
 		data.userToken		= &game.battleData.field["player"]
@@ -38,8 +35,9 @@ use_attack :: proc( player : bool, value : int ) {
 		data.targetToken	= &game.battleData.field["player"]
 		data.targetPosition	= {data.targetToken.entity.position.x-8, data.targetToken.entity.position.z-55.75}
 	}
+	data.attack = data.user.attacks[value]
 
-	#partial switch attack {
+	#partial switch data.attack {
 		case .tackle:	use_tackle(player, data)
 		case .scratch:	use_scratch(player, data)
 
@@ -357,9 +355,6 @@ use_aquajet :: proc( player : bool, data : game.AttackData ) {
 		if data.target.statChanges[1] > 0 do modDef = f32(data.target.def) * ((2 + f32(data.target.statChanges[1])) / 2)
 		else do modDef = f32(data.target.def) * (2 / (2 - f32(data.target.statChanges[1])))
 		if modDef <= 0 do modDef = 1
-
-		//* Calculate effectiveness
-		effectiveness := type_damage_multiplier(.water, data.target)
 		
 		//* Calculate offset
 		offset, fartherOffset : raylib.Vector2
@@ -379,10 +374,16 @@ use_aquajet :: proc( player : bool, data : game.AttackData ) {
 		}
 		
 		if data.targetPosition == data.userPosition + offset {					//* If adjacent
+			//* Calculate effectiveness
+			effectiveness := type_damage_multiplier(.water, data.target)
+
 			data.target.hpCur -= monsters.calculate_damage(35, f32(data.user.level), modAtk, modDef, effectiveness)
 			if data.target.stCur != 0 do data.target.stCur -= 1
 			else do data.target.flinch = true
 		} else if data.targetPosition == data.userPosition + fartherOffset {	//* If one tile away
+			//* Calculate effectiveness
+			effectiveness := type_damage_multiplier(.water, data.target)
+			
 			data.target.hpCur -= monsters.calculate_damage(35, f32(data.user.level), modAtk, modDef, effectiveness)
 		}
 		//* Move if spot empty

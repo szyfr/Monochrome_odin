@@ -71,10 +71,6 @@ AttackData :: struct {
 	userPosition, targetPosition	:  raylib.Vector2,
 }
 
-AIBrain :: struct {
-	
-}
-
 
 //= Enum
 ArenaType :: enum {

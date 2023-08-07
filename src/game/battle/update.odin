@@ -159,7 +159,8 @@ update :: proc() {
 			}
 		} else {
 			//* Enemy turn
-			enemy_AI()
+			process_turn()
+		//	enemy_AI()
 			game.battleData.playersTurn = true
 			monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
 		}
@@ -208,7 +209,7 @@ undercut_arrow :: proc() {
 	game.battleData.moveArrowList = temp
 }
 
-type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monster ) -> f32 {
+type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monster, showui : bool = true ) -> f32 {
 	output : f32
 
 	weakness : int
@@ -243,77 +244,25 @@ type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monst
 	switch {
 		case weakness >=  3:
 			output = 2.5
-			ui.add_message("Hyper-Effective!")
+			if showui do ui.add_message("Hyper-Effective!")
 		case weakness ==  2:
 			output = 2
-			ui.add_message("Doubly Super-Effective!")
+			if showui do ui.add_message("Doubly Super-Effective!")
 		case weakness ==  1:
 			output = 1.5
-			ui.add_message("Super-Effective!")
+			if showui do ui.add_message("Super-Effective!")
 		case weakness ==  0:
 			output = 1
 		case weakness == -1:
 			output = 0.66
-			ui.add_message("Not very effective!")
+			if showui do ui.add_message("Not very effective!")
 		case weakness == -2:
-			output = 0.5
-			ui.add_message("Horribly ineffective!")
+			output = 0.33
+			if showui do ui.add_message("Horribly ineffective!")
 		case weakness <= -3:
 			output = 0
-			ui.add_message("Immune!")
+			if showui do ui.add_message("Immune!")
 	}
 
 	return output
-}
-
-enemy_AI :: proc() {
-	enemy			:= &game.battleData.enemyTeam[game.battleData.currentEnemy]
-	enemyToken		:= &game.battleData.field["enemy"]
-	enemyEntity		:= &enemyToken.entity
-	enemyPosition	:=  game.battleData.field["enemy"].entity.position
-	player			:= &game.battleData.playerTeam[game.battleData.currentPlayer]
-	playerPosition	:=  game.battleData.field["player"].entity.position
-
-	distance := dist(enemyPosition, playerPosition)
-	// TODO Redo turn to allow walk animation to be played from there rather than an extra call here
-	if distance > dist(enemyPosition + { 1, 0, 0}, playerPosition) {
-		overworld.turn(enemyEntity, .right)
-		overworld.play_animation(enemyEntity, "walk_right")
-	}
-	if distance > dist(enemyPosition + {-1, 0, 0}, playerPosition) {
-		overworld.turn(enemyEntity, .left)
-		overworld.play_animation(enemyEntity, "walk_left")
-	}
-	if distance > dist(enemyPosition + { 0, 0, 1}, playerPosition) {
-		overworld.turn(enemyEntity, .down)
-		overworld.play_animation(enemyEntity, "walk_up")
-	}
-	if distance > dist(enemyPosition + { 0, 0,-1}, playerPosition) {
-		overworld.turn(enemyEntity, .up)
-		overworld.play_animation(enemyEntity, "walk_down")
-	}
-
-
-	switch enemy.ai {
-		case .tank_setup:
-		case .ranged_special:
-		case .brawler_physical:
-			for i:=0;i<enemy.movesCur;i+=1 {
-				if distance <= 1 do break
-				
-				switch enemyEntity.direction {
-					case .right:
-						enemyEntity.position += { 1, 0, 0}
-					case .left:
-						enemyEntity.position += {-1, 0, 0}
-					case .up:
-						enemyEntity.position += { 0, 0,-1}
-					case .down:
-						enemyEntity.position += { 0, 0, 1}
-				}
-				distance = dist(enemyPosition, playerPosition)
-				enemy.movesCur -= 1
-			}
-			use_attack(false, 0)
-	}
 }
