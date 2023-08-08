@@ -13,17 +13,6 @@ import "../entity/overworld"
 
 
 //= Procedures
-calc_direction :: proc( p1,p2 : raylib.Vector3 ) -> game.Direction {
-	distance := dist(p1, p2)
-	direction : game.Direction
-
-	if distance > dist(p1 + { 1, 0, 0}, p2) do direction = .right
-	if distance > dist(p1 + {-1, 0, 0}, p2) do direction = .left
-	if distance > dist(p1 + { 0, 0, 1}, p2) do direction = .down
-	if distance > dist(p1 + { 0, 0,-1}, p2) do direction = .up
-
-	return direction
-}
 process_turn :: proc() {
 	enemy			:= &game.battleData.enemyTeam[game.battleData.currentEnemy]
 	enemyBrain		:= &enemy.ai
@@ -101,7 +90,8 @@ process_turn :: proc() {
 		lined := (enemyPosition.x == playerPosition.x || enemyPosition.z == playerPosition.z)
 		if enemy.movesCur == 0 || (lined && int(distance) <= distanceKeep) do break
 
-		//overworld.move(enemyEntity, enemyEntity.direction)
+		//move_monster(enemyToken, enemyToken.entity.direction)
+
 		switch enemyEntity.direction {
 			case .right:	enemyEntity.position += {1,0,0}
 			case .left:		enemyEntity.position -= {1,0,0}

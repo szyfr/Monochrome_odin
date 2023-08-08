@@ -72,3 +72,7 @@ smallest :: proc( numbers : [4]f32 ) -> int {
 	}
 	return smallest
 }
+
+close_enough :: proc( v1,v2 : raylib.Vector3 ) -> bool {
+	return (v1.x <= v2.x + 0.01 && v1.x >= v2.x - 0.01) && (v1.y <= v2.y + 0.01 && v1.y >= v2.y - 0.01) && (v1.z <= v2.z + 0.01 && v1.z >= v2.z - 0.01)
+}

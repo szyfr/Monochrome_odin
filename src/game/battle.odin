@@ -19,6 +19,8 @@ BattleData :: struct {
 	trainerName : string,
 	arenaType : ArenaType,
 
+	event : BattleEvent,
+
 	enemyTeam		:  [8]Monster,
 	currentEnemy	:  int,
 	enemyBrain		:  AIBrain,
@@ -69,6 +71,27 @@ AttackData :: struct {
 	user, target					: ^Monster,
 	userToken, targetToken			: ^Token,
 	userPosition, targetPosition	:  raylib.Vector2,
+}
+
+BattleEvent :: union {
+	DamageMonster,
+	MoveMonster,
+	UseAttack,
+}
+
+DamageMonster :: struct {
+	monster : ^Monster,
+	remainder : int,
+}
+MoveMonster :: struct {
+	monster		: ^Token,
+	direction	: Direction,
+	target		: raylib.Vector3,
+}
+UseAttack :: struct {
+	attack : MonsterAttack,
+	position : raylib.Vector3,
+	direction : Direction,
 }
 
 

@@ -38,6 +38,7 @@ update :: proc() {
 		}
 
 		//* Player Direction
+		// TODO Simplify this
 		player := &game.battleData.field["player"]
 		playerPos : raylib.Vector2
 		if len(game.battleData.moveArrowList) > 0 do playerPos = game.battleData.moveArrowList[len(game.battleData.moveArrowList)-1]
@@ -62,141 +63,173 @@ update :: proc() {
 			overworld.play_animation(&player.entity, "walk_up")
 		}
 		
+		if game.battleData.event == nil {
+			//* Mode changing
+			// TODO Check attacks
+			if settings.is_key_pressed("info")		do game.battleData.playerAction = .interaction
+			if settings.is_key_pressed("attack1")	do game.battleData.playerAction = .attack1
+			if settings.is_key_pressed("attack2")	do game.battleData.playerAction = .attack2
+			if settings.is_key_pressed("attack3")	do game.battleData.playerAction = .attack3
+			if settings.is_key_pressed("attack4")	do game.battleData.playerAction = .attack4
+			//if settings.is_key_pressed("item")		do game.battleData.playerAction = .item
+			//if settings.is_key_pressed("switchin")	do game.battleData.playerAction = .switch_in
 
-		//* Mode changing
-		// TODO Check attacks
-		if settings.is_key_pressed("info")		do game.battleData.playerAction = .interaction
-		if settings.is_key_pressed("attack1")	do game.battleData.playerAction = .attack1
-		if settings.is_key_pressed("attack2")	do game.battleData.playerAction = .attack2
-		if settings.is_key_pressed("attack3")	do game.battleData.playerAction = .attack3
-		if settings.is_key_pressed("attack4")	do game.battleData.playerAction = .attack4
-		//if settings.is_key_pressed("item")		do game.battleData.playerAction = .item
-		//if settings.is_key_pressed("switchin")	do game.battleData.playerAction = .switch_in
-
-		//* Turns
-		if game.battleData.playersTurn {
-			if game.battleData.movementTimer != 0 {
-				if game.battleData.movementTimer == 1 {
-					//* Set new position
-					game.battleData.movementTimer = 10
-					ply := &game.battleData.field["player"]
-					vec := game.battleData.moveArrowList[0]
-					ply.entity.position = {vec.x + 8, 0, vec.y + 55.75}
-
-					//* Check new position for hazards
-					builder : strings.Builder
-					for i:=0;i<game.battleData.enemyHazardCount;i+=1 {
-						str := fmt.sbprintf(&builder, "enemy_hazard_%v", i)
+			//* Turns
+			if game.battleData.playersTurn {
+				if game.battleData.movementTimer != 0 {
+					if game.battleData.movementTimer == 1 {
+						//* Set new position
+						//game.battleData.movementTimer = 10
+						playerToken := &game.battleData.field["player"]
 						vec := game.battleData.moveArrowList[0]
-						hazard, result := game.battleData.field[str]
-						if result && hazard.entity.position == {vec.x + 8, 0, vec.y + 55.75} && hazard.type == .hazard {
-							player := &game.battleData.playerTeam[game.battleData.currentPlayer]
-							data := hazard.data.(game.AttackData)
-							if data.user != player {
-								if activate_hazard(false, data) do delete_key(&game.battleData.field, str)
+						//ply.entity.position = {vec.x + 8, 0, vec.y + 55.75}
+						direction : game.Direction = calc_direction(playerToken.entity.position, raylib.Vector3{vec.x + 8, 0, vec.y + 55.75})
+						move_monster(playerToken, direction)
+
+						//* Check new position for hazards
+						builder : strings.Builder
+						for i:=0;i<game.battleData.enemyHazardCount;i+=1 {
+							str := fmt.sbprintf(&builder, "enemy_hazard_%v", i)
+							vec := game.battleData.moveArrowList[0]
+							hazard, result := game.battleData.field[str]
+							if result && hazard.entity.position == {vec.x + 8, 0, vec.y + 55.75} && hazard.type == .hazard {
+								player := &game.battleData.playerTeam[game.battleData.currentPlayer]
+								data := hazard.data.(game.AttackData)
+								if data.user != player {
+									if activate_hazard(false, data) do delete_key(&game.battleData.field, str)
+								}
 							}
 						}
+
+						//* Change movement
+						game.battleData.playerTeam[game.battleData.currentPlayer].movesCur -= 1
+
+						//* Edit Arrow
+						undercut_arrow()
+
+						//* Check if continues
+						if len(game.battleData.moveArrowList) == 0 {
+							game.battleData.movementTimer = 0
+						}
+					} else do game.battleData.movementTimer -= 1
+				} else {
+					//* 
+					#partial switch game.battleData.playerAction {
+						case .interaction:
+							if game.battleData.playerTeam[game.battleData.currentPlayer].movesCur > 0 {
+								if settings.is_key_pressed("leftclick") do arrow_pressed()
+								if settings.is_key_down("leftclick") do arrow_down()
+								if settings.is_key_released("leftclick") do arrow_released()
+							}
+							if settings.is_key_pressed("rightclick") {} //TODO INFO
+							if settings.is_key_pressed("interact") &&
+									game.battleData.playerTeam[game.battleData.currentPlayer].movesCur > 0 &&
+									len(game.battleData.moveArrowList) > 0 {
+								game.battleData.movementTimer = 10
+								game.battleData.movementOffset = 0
+							}
+					//	case .item:
+					//	case .switch_in:
+						case .attack1:
+							if settings.is_key_pressed("leftclick") {
+								if len(game.battleData.moveArrowList) == 0 do use_attack(true, 0)
+								else do game.battleData.playerAction = .interaction
+							}
+							if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+						case .attack2:
+							if settings.is_key_pressed("leftclick") {
+								if len(game.battleData.moveArrowList) == 0 do use_attack(true, 1)
+								else do game.battleData.playerAction = .interaction
+							}
+							if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+						case .attack3:
+							if settings.is_key_pressed("leftclick") {
+								if len(game.battleData.moveArrowList) == 0 do use_attack(true, 2)
+								else do game.battleData.playerAction = .interaction
+							}
+							if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
+						case .attack4:
+							if settings.is_key_pressed("leftclick") {
+								if len(game.battleData.moveArrowList) == 0 do use_attack(true, 3)
+								else do game.battleData.playerAction = .interaction
+							}
+							if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 					}
-
-					//* Change movement
-					game.battleData.playerTeam[game.battleData.currentPlayer].movesCur -= 1
-
-					//* Edit Arrow
-					undercut_arrow()
-
-					//* Check if continues
-					if len(game.battleData.moveArrowList) == 0 {
-						game.battleData.movementTimer = 0
+					if settings.is_key_pressed("endturn") {
+						game.battleData.playersTurn = false
+						monsters.start_turn(&game.battleData.enemyTeam[game.battleData.currentEnemy])
 					}
-				} else do game.battleData.movementTimer -= 1
-			} else {
-				//* 
-				#partial switch game.battleData.playerAction {
-					case .interaction:
-						if game.battleData.playerTeam[game.battleData.currentPlayer].movesCur > 0 {
-							if settings.is_key_pressed("leftclick") do arrow_pressed()
-							if settings.is_key_down("leftclick") do arrow_down()
-							if settings.is_key_released("leftclick") do arrow_released()
-						}
-						if settings.is_key_pressed("rightclick") {} //TODO INFO
-						if settings.is_key_pressed("interact") &&
-								game.battleData.playerTeam[game.battleData.currentPlayer].movesCur > 0 &&
-								len(game.battleData.moveArrowList) > 0 {
-							game.battleData.movementTimer = 10
-							game.battleData.movementOffset = 0
-						}
-				//	case .item:
-				//	case .switch_in:
-					case .attack1:
-						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 0)
-							else do game.battleData.playerAction = .interaction
-						}
-						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
-					case .attack2:
-						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 1)
-							else do game.battleData.playerAction = .interaction
-						}
-						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
-					case .attack3:
-						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 2)
-							else do game.battleData.playerAction = .interaction
-						}
-						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
-					case .attack4:
-						if settings.is_key_pressed("leftclick") {
-							if len(game.battleData.moveArrowList) == 0 do use_attack(true, 3)
-							else do game.battleData.playerAction = .interaction
-						}
-						if settings.is_key_pressed("rightclick") do game.battleData.playerAction = .interaction
 				}
-				if settings.is_key_pressed("endturn") {
-					game.battleData.playersTurn = false
-					monsters.start_turn(&game.battleData.enemyTeam[game.battleData.currentEnemy])
+			} else {
+				//* Enemy turn
+				process_turn()
+			//	enemy_AI()
+				game.battleData.playersTurn = true
+				monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
+			}
+
+			//* Checking for win
+			enemyMon	:= &game.battleData.enemyTeam[game.battleData.currentEnemy]
+			playerMon	:= &game.battleData.playerTeam[game.battleData.currentPlayer]
+			if enemyMon.hpCur <= 0 {
+				//* Check for other monsters
+				//* End battle
+				//TODO Move this around so that once you defeat an enemy it gives experience, *then* check for other monsters, *then* end battle
+				game.eventmanager.currentEvent = &game.region.events["trainer_battle_win"]
+				totalExp := monsters.calculate_experience_gain(enemyMon)
+
+				exper := &game.eventmanager.currentEvent.chain[3].(game.GiveExperience)
+				game.battleData.experience += totalExp
+				exper.amount = game.battleData.experience
+				exper.member = game.battleData.currentPlayer
+
+				if playerMon.experience + game.battleData.experience >= monsters.calculate_experience(playerMon.level+1, playerMon.rate) {
+					game.eventmanager.currentEvent.chain[4] = game.ShowLevelUp{
+						level	= playerMon.level,
+						hp		= playerMon.hpMax,
+						st		= playerMon.stMax,
+						atk		= playerMon.atk,
+						def		= playerMon.def,
+						spatk	= playerMon.spAtk,
+						spdef	= playerMon.spDef,
+						spd		= playerMon.spd,
+					}
+				} else {
+					game.eventmanager.currentEvent.chain[4] = game.WaitEvent{0}
 				}
 			}
+			//* Checking for loss
 		} else {
-			//* Enemy turn
-			process_turn()
-		//	enemy_AI()
-			game.battleData.playersTurn = true
-			monsters.start_turn(&game.battleData.playerTeam[game.battleData.currentPlayer])
-		}
-
-		//* Checking for win
-		enemyMon	:= &game.battleData.enemyTeam[game.battleData.currentEnemy]
-		playerMon	:= &game.battleData.playerTeam[game.battleData.currentPlayer]
-		if enemyMon.hpCur <= 0 {
-			//* Check for other monsters
-			//* End battle
-			//TODO Move this around so that once you defeat an enemy it gives experience, *then* check for other monsters, *then* end battle
-			game.eventmanager.currentEvent = &game.region.events["trainer_battle_win"]
-			totalExp := monsters.calculate_experience_gain(enemyMon)
-
-			exper := &game.eventmanager.currentEvent.chain[3].(game.GiveExperience)
-			game.battleData.experience += totalExp
-			exper.amount = game.battleData.experience
-			exper.member = game.battleData.currentPlayer
-
-			if playerMon.experience + game.battleData.experience >= monsters.calculate_experience(playerMon.level+1, playerMon.rate) {
-				game.eventmanager.currentEvent.chain[4] = game.ShowLevelUp{
-					level	= playerMon.level,
-					hp		= playerMon.hpMax,
-					st		= playerMon.stMax,
-					atk		= playerMon.atk,
-					def		= playerMon.def,
-					spatk	= playerMon.spAtk,
-					spdef	= playerMon.spDef,
-					spd		= playerMon.spd,
-				}
-			} else {
-				game.eventmanager.currentEvent.chain[4] = game.WaitEvent{0}
+			switch event in game.battleData.event {
+				case game.DamageMonster:
+				case game.MoveMonster:
+					offset : raylib.Vector3
+					switch event.direction {
+						case .right:	event.monster.entity.position += { 0.1, 0.0,  0.0}
+						case .left:		event.monster.entity.position += {-0.1, 0.0,  0.0}
+						case .down:		event.monster.entity.position += { 0.0, 0.0,  1.0}
+						case .up:		event.monster.entity.position += { 0.0, 0.0, -1.0}
+					}
+					if close_enough(event.monster.entity.position, event.target) {
+						event.monster.entity.position = event.target
+						game.battleData.event = nil
+					}
+				case game.UseAttack:
 			}
 		}
-		//* Checking for loss
 	}
+}
+
+move_monster :: proc( monster : ^game.Token, direction : game.Direction ) {
+	offset : raylib.Vector3
+	switch direction {
+		case .right:	offset = { 1, 0,  0}
+		case .left:		offset = {-1, 0,  0}
+		case .down:		offset = { 0, 0,  1}
+		case .up:		offset = { 0, 0, -1}
+	}
+
+	game.battleData.event = game.MoveMonster{ monster, direction, monster.entity.position + offset }
 }
 
 undercut_arrow :: proc() {
@@ -211,7 +244,6 @@ undercut_arrow :: proc() {
 
 type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monster, showui : bool = true ) -> f32 {
 	output : f32
-
 	weakness : int
 
 	#partial switch type {
@@ -265,4 +297,28 @@ type_damage_multiplier :: proc( type : game.ElementalType, monster : ^game.Monst
 	}
 
 	return output
+}
+
+calc_direction :: proc{ calc_direction_v3, calc_direction_v2 }
+calc_direction_v3 :: proc( p1,p2 : raylib.Vector3 ) -> game.Direction {
+	distance := dist(p1, p2)
+	direction : game.Direction
+
+	if distance > dist(p1 + { 1, 0, 0}, p2) do direction = .right
+	if distance > dist(p1 + {-1, 0, 0}, p2) do direction = .left
+	if distance > dist(p1 + { 0, 0, 1}, p2) do direction = .down
+	if distance > dist(p1 + { 0, 0,-1}, p2) do direction = .up
+
+	return direction
+}
+calc_direction_v2 :: proc( p1,p2 : raylib.Vector2 ) -> game.Direction {
+	distance := dist(p1, p2)
+	direction : game.Direction
+
+	if distance > dist(p1 + { 1, 0}, p2) do direction = .right
+	if distance > dist(p1 + {-1, 0}, p2) do direction = .left
+	if distance > dist(p1 + { 0, 1}, p2) do direction = .down
+	if distance > dist(p1 + { 0,-1}, p2) do direction = .up
+
+	return direction
 }
