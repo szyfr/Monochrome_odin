@@ -19,7 +19,8 @@ BattleData :: struct {
 	trainerName : string,
 	arenaType : ArenaType,
 
-	event : BattleEvent,
+	events : [dynamic]BattleEvent,
+	counter : int,
 
 	enemyTeam		:  [8]Monster,
 	currentEnemy	:  int,

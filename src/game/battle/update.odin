@@ -63,7 +63,7 @@ update :: proc() {
 			overworld.play_animation(&player.entity, "walk_up")
 		}
 		
-		if game.battleData.event == nil {
+		if len(game.battleData.events) == 0 {
 			//* Mode changing
 			// TODO Check attacks
 			if settings.is_key_pressed("info")		do game.battleData.playerAction = .interaction
@@ -200,8 +200,16 @@ update :: proc() {
 			}
 			//* Checking for loss
 		} else {
-			switch event in game.battleData.event {
+			switch event in game.battleData.events[0] {
 				case game.DamageMonster:
+					if event.remainder != game.battleData.counter {
+						game.battleData.counter += 1
+						event.monster.hpCur -= 1
+					} else {
+					//	game.battleData.event = nil
+						undercut_events()
+						game.battleData.counter = 0
+					}
 				case game.MoveMonster:
 					offset : raylib.Vector3
 					switch event.direction {
@@ -212,7 +220,8 @@ update :: proc() {
 					}
 					if close_enough(event.monster.entity.position, event.target) {
 						event.monster.entity.position = event.target
-						game.battleData.event = nil
+						undercut_events()
+					//	game.battleData.event = nil
 					}
 				case game.UseAttack:
 			}
@@ -220,6 +229,22 @@ update :: proc() {
 	}
 }
 
+undercut_events :: proc() {
+	temp : [dynamic]game.BattleEvent
+
+	for i:=1;i<len(game.battleData.events);i+=1 {
+		append(&temp, game.battleData.events[i])
+	}
+	delete(game.battleData.events)
+	game.battleData.events = temp
+	delete(temp)
+}
+
+damage_monster :: proc( monster : ^game.Monster, damage : int ) {
+//	game.battleData.event = game.DamageMonster{ monster, damage }
+	fmt.printf("Damage\n")
+	append(&game.battleData.events, game.DamageMonster{ monster, damage })
+}
 move_monster :: proc( monster : ^game.Token, direction : game.Direction ) {
 	offset : raylib.Vector3
 	switch direction {
@@ -228,8 +253,10 @@ move_monster :: proc( monster : ^game.Token, direction : game.Direction ) {
 		case .down:		offset = { 0, 0,  1}
 		case .up:		offset = { 0, 0, -1}
 	}
+	fmt.printf("Move\n")
 
-	game.battleData.event = game.MoveMonster{ monster, direction, monster.entity.position + offset }
+//	game.battleData.event = game.MoveMonster{ monster, direction, monster.entity.position + offset }
+	append(&game.battleData.events, game.MoveMonster{ monster, direction, monster.entity.position + offset })
 }
 
 undercut_arrow :: proc() {

@@ -89,15 +89,20 @@ use_tackle :: proc( player : bool, data : game.AttackData ) {
 
 			//* Check if enemy would hit wall or edge
 			if spot_empty(data.targetPosition + offset) {
-				data.targetToken.entity.position += {offset.x, 0, offset.y}
-				data.userToken.entity.position += {offset.x, 0, offset.y}
+				move_monster(data.targetToken, data.userToken.entity.direction)
+				move_monster(data.userToken, data.userToken.entity.direction)
+			//	data.targetToken.entity.position += {offset.x, 0, offset.y}
+			//	data.userToken.entity.position += {offset.x, 0, offset.y}
 
-				data.target.hpCur -= monsters.calculate_damage(35, f32(data.user.level), modAtk, modDef, effectiveness)
+				damage_monster(data.target, monsters.calculate_damage(35, f32(data.user.level), modAtk, modDef, effectiveness))
+				//data.target.hpCur -= monsters.calculate_damage(35, f32(data.user.level), modAtk, modDef, effectiveness)
 			} else {
-				data.target.hpCur -= int(f32(monsters.calculate_damage(40, f32(data.user.level), modAtk, modDef, effectiveness)) * 1.25)
+				damage_monster(data.target, monsters.calculate_damage(40, f32(data.user.level), modAtk, modDef, effectiveness))
+				//data.target.hpCur -= int(f32(monsters.calculate_damage(40, f32(data.user.level), modAtk, modDef, effectiveness)) * 1.25)
 			}
 		} else {
-			data.userToken.entity.position += {offset.x, 0, offset.y}
+			move_monster(data.userToken, data.userToken.entity.direction)
+			//data.userToken.entity.position += {offset.x, 0, offset.y}
 		}
 		data.user.stCur -= 2
 	}
