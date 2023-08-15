@@ -66,8 +66,8 @@ init :: proc( battle : string ) -> bool {
 	game.camera.zoom = 1.2
 	camera.set_position( {16,0,60} )
 
-//	game.battleData.event = nil
-	undercut_events()
+	game.battleData.event = nil
+//	undercut_events()
 
 	return true
 }

@@ -63,7 +63,8 @@ update :: proc() {
 			overworld.play_animation(&player.entity, "walk_up")
 		}
 		
-		if len(game.battleData.events) == 0 {
+		//if len(game.battleData.events) == 0 {
+		if game.battleData.event == nil {
 			//* Mode changing
 			// TODO Check attacks
 			if settings.is_key_pressed("info")		do game.battleData.playerAction = .interaction
@@ -200,14 +201,15 @@ update :: proc() {
 			}
 			//* Checking for loss
 		} else {
-			switch event in game.battleData.events[0] {
+			//switch event in game.battleData.events[0] {
+			switch event in game.battleData.event {
 				case game.DamageMonster:
 					if event.remainder != game.battleData.counter {
 						game.battleData.counter += 1
 						event.monster.hpCur -= 1
 					} else {
-					//	game.battleData.event = nil
-						undercut_events()
+						game.battleData.event = nil
+					//	undercut_events()
 						game.battleData.counter = 0
 					}
 				case game.MoveMonster:
@@ -220,8 +222,8 @@ update :: proc() {
 					}
 					if close_enough(event.monster.entity.position, event.target) {
 						event.monster.entity.position = event.target
-						undercut_events()
-					//	game.battleData.event = nil
+					//	undercut_events()
+						game.battleData.event = nil
 					}
 				case game.UseAttack:
 			}
@@ -229,21 +231,21 @@ update :: proc() {
 	}
 }
 
-undercut_events :: proc() {
-	temp : [dynamic]game.BattleEvent
-
-	for i:=1;i<len(game.battleData.events);i+=1 {
-		append(&temp, game.battleData.events[i])
-	}
-	delete(game.battleData.events)
-	game.battleData.events = temp
-	delete(temp)
-}
+//undercut_events :: proc() {
+//	temp : [dynamic]game.BattleEvent
+//
+//	for i:=1;i<len(game.battleData.events);i+=1 {
+//		append(&temp, game.battleData.events[i])
+//	}
+//	delete(game.battleData.events)
+//	game.battleData.events = temp
+//	delete(temp)
+//}
 
 damage_monster :: proc( monster : ^game.Monster, damage : int ) {
-//	game.battleData.event = game.DamageMonster{ monster, damage }
-	fmt.printf("Damage\n")
-	append(&game.battleData.events, game.DamageMonster{ monster, damage })
+	game.battleData.event = game.DamageMonster{ monster, damage }
+//	fmt.printf("Damage\n")
+//	append(&game.battleData.events, game.DamageMonster{ monster, damage })
 }
 move_monster :: proc( monster : ^game.Token, direction : game.Direction ) {
 	offset : raylib.Vector3
@@ -255,8 +257,8 @@ move_monster :: proc( monster : ^game.Token, direction : game.Direction ) {
 	}
 	fmt.printf("Move\n")
 
-//	game.battleData.event = game.MoveMonster{ monster, direction, monster.entity.position + offset }
-	append(&game.battleData.events, game.MoveMonster{ monster, direction, monster.entity.position + offset })
+	game.battleData.event = game.MoveMonster{ monster, direction, monster.entity.position + offset }
+//	append(&game.battleData.events, game.MoveMonster{ monster, direction, monster.entity.position + offset })
 }
 
 undercut_arrow :: proc() {
