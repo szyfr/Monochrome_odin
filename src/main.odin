@@ -2,23 +2,13 @@ package main
 
 
 //= Imports
-import "vendor:raylib"
+import "core:fmt"
 
-import "game"
-import "game/camera"
-import "game/player"
-import "game/graphics"
-import "game/graphics/ui"
-import "game/audio"
-import "game/region"
-import "game/events"
-import "game/monsters"
-import "game/battle"
-import "game/entity/overworld"
-import "game/entity/emotes"
+import "vendor:raylib"
 
 import "settings"
 import "localization"
+import "system/packages"
 
 import "debug"
 
@@ -26,102 +16,70 @@ import "debug"
 //= Constants
 DEBUG :: true
 
+//= Globals
+running : bool : true
+tex : raylib.Texture
+
 
 //= Main
-
-logic :: proc() {
-	//* Core
-	camera.update()
-	player.update()
-
-	region.update()
-	raylib.UpdateMusicStream(game.audio.musicCurrent)
-
-	battle.update()
-
-//	if settings.is_key_pressed("pause") && game.battleData != nil do battle.close()
-}
-draw :: proc() {
+logic :: proc() {}
+draw  :: proc() {
 	raylib.BeginDrawing()
 	raylib.ClearBackground( {57,57,57,255} )
 
 	//* 3D
-	raylib.BeginMode3D(game.camera)
+	//raylib.BeginMode3D(game.camera)
 
-	region.draw()
-	emotes.draw()
-
-	battle.draw()
-
-	raylib.EndMode3D()
+	//raylib.EndMode3D()
 
 	//* 2D
-	ui.draw_pause_menus()
-	ui.draw_textbox()
-	ui.draw_battle()
-	if game.overlayActive {
-		raylib.DrawTexturePro(
-			game.overlayTexture,
-			game.overlayRectangle,
-			{0,0,f32(game.screenWidth),f32(game.screenHeight)},
-			{0,0},
-			0,
-			raylib.WHITE,
-		)
-	}
+	//(texture: Texture2D, posX, posY: c.int, tint: Color)
+	raylib.DrawTexture(tex, 0,0, raylib.WHITE)
+
 	//* DEBUG
-	if DEBUG do debug.update_onscreen(game.screenHeight)
+	if DEBUG do debug.update_onscreen(settings.screen_height)
 
 	raylib.EndDrawing()
 }
 
-init :: proc() {
+init  :: proc() {
 	//* Debug
 	debug.onscreenErrors = DEBUG
 
 	//* Settings / Localization
-	settings.init()
-	localization.init()
+	settings.load()
+	localization.load()
 
 	//* Raylib
 	raylib.SetTraceLogLevel(.NONE)
 	raylib.InitWindow(
-		game.screenWidth,
-		game.screenHeight,
-		localization.grab_cstring("title"),
+		settings.screen_width,
+		settings.screen_height,
+		//localization.grab_cstring("title"),
+		localization.text["title"],
+		//"Monochrome"
 	)
-	if game.fpsLimit != 0 do raylib.SetTargetFPS(game.fpsLimit)
+	if settings.screen_fps != 0 do raylib.SetTargetFPS(settings.screen_fps)
 	raylib.SetExitKey(.KEY_NULL)
 
-	//* Core
-	graphics.init()
-	audio.init()
-	audio.play_music("new_bark_town") // TODO: TEMP
-	events.init()
-	region.init("data/core/regions/region1/")
 
-	camera.init()
-	player.init()
+	//!
+	img := packages.load_image("data/testSprites.mon",0)
+	tes := raylib.LoadImage("data/core/sprites/arrow.png")
+	fmt.printf("%v\n----\n%v\n",img,tes)
+	tex = raylib.LoadTextureFromImage(img)
 }
 close :: proc() {
-	//* Localization
+	//* Settings / Localization
+	settings.close()
 	localization.close()
-
-	//* Core
-	graphics.close()
-
-	camera.close()
-	player.close()
-
-	//* Raylib
-	raylib.CloseWindow()
 }
 
 main :: proc() {
 	init()
 	defer close()
 
-	for !raylib.WindowShouldClose() && game.running {
+	for !raylib.WindowShouldClose() && running {
 		logic()
 		draw()
 	}
