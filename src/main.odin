@@ -66,7 +66,7 @@ init  :: proc() {
 	//!
 	img := packages.load_image("data/testSprites.mon",0)
 	tes := raylib.LoadImage("data/core/sprites/arrow.png")
-	fmt.printf("%v\n----\n%v\n",img,tes)
+//	fmt.printf("%v\n----\n%v\n",img,tes)
 	tex = raylib.LoadTextureFromImage(img)
 }
 close :: proc() {

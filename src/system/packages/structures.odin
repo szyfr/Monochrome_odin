@@ -6,7 +6,7 @@ package packages
 
 //= Structures
 FileHeader :: struct {
-	signiture	: [4]u8,
+	signature	: [4]u8,
 	version		: u16,
 	chunkCount	: u16,
 	reserved	: u64,
@@ -26,9 +26,9 @@ ChunkInfo :: struct {
 DataType :: enum u8 {
 	empty,
 	raw,
+	image,
 	json,
 	model,
-	image,
 	wave,
 
 	// TODO
