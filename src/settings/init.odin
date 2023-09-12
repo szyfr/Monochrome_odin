@@ -15,8 +15,8 @@ import "../debug"
 
 //= Procedures
 load :: proc() {
-	if !raylib.FileExists("settings.json") {
-		debug.log("[WARNING] - Failed to find settings.json. Creating new.")
+	if !os.is_file("settings.json") {
+		debug.log("[WARNING] - Failed to find settings.json. Creating new file.")
 		save_settings_from_default()
 	}
 	load_settings_from_file()

@@ -8,7 +8,6 @@ import "vendor:raylib"
 
 import "settings"
 import "localization"
-import "system/packages"
 
 import "debug"
 
@@ -55,19 +54,10 @@ init  :: proc() {
 	raylib.InitWindow(
 		settings.screen_width,
 		settings.screen_height,
-		//localization.grab_cstring("title"),
 		localization.text["title"],
-		//"Monochrome"
 	)
 	if settings.screen_fps != 0 do raylib.SetTargetFPS(settings.screen_fps)
 	raylib.SetExitKey(.KEY_NULL)
-
-
-	//!
-	img := packages.load_image("data/testSprites.mon",0)
-	tes := raylib.LoadImage("data/core/sprites/arrow.png")
-//	fmt.printf("%v\n----\n%v\n",img,tes)
-	tex = raylib.LoadTextureFromImage(img)
 }
 close :: proc() {
 	//* Settings / Localization
