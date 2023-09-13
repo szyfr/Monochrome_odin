@@ -54,6 +54,8 @@ save_settings_from_default :: proc() {
 	kb["down"]			= json.Array{0,0,83}
 	kb["left"]			= json.Array{0,0,65}
 	kb["right"]			= json.Array{0,0,68}
+	kb["rotate_right"]	= json.Array{0,0,69}
+	kb["rotate_left"]	= json.Array{0,0,81}
 	kb["confirm"]		= json.Array{0,0,257}
 	start["keybindings"] = kb
 	
