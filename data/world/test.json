@@ -1,0 +1,16 @@
+{
+	"name":"new_bark_town",
+
+	"width":10,
+	"height":10,
+
+	"tiles":[
+		{ "tile":"tile_tree_1", "position":[0,0,0], "tags":[ true,false] }
+		{ "tile":"tile_tree_1", "position":[1,0,0], "tags":[ true,false] }
+		{ "tile":"tile_tree_1", "position":[2,0,0], "tags":[ true,false] }
+		{ "tile":"tile_tree_1", "position":[3,0,0], "tags":[ true,false] }
+		{ "tile":"tile_tree_1", "position":[0,0,1], "tags":[ true,false] }
+		{ "tile":"tile_tree_1", "position":[1,0,1], "tags":[ true,false] }
+		{ "tile":"tile_grass",  "position":[2,0,1], "tags":[false,false] }
+	]
+}

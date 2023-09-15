@@ -3,6 +3,7 @@ package main
 
 //= Imports
 import "core:fmt"
+import "core:math"
 
 import "vendor:raylib"
 
@@ -10,6 +11,7 @@ import "settings"
 import "localization"
 import "camera"
 import "player"
+import "world"
 import "system"
 
 import "debug"
@@ -37,15 +39,17 @@ draw  :: proc() {
 
 	raylib.DrawGrid(100, 1)
 
+	world.draw()
+
 	//(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: f32, tint: Color)
 	raylib.DrawBillboardPro(
 		camera		= camera.rl,
 		texture		= testTexture,
 		source		= {0,0,16,16},
 		position	= player.unit.position + {0,0.5,0},
-		up			= {0.98,0.17,0},
-		size		= {1, 1},
-		origin		= {1, 2},
+		up			= {math.sin(camera.rotation / 57.3), 1, -math.cos(camera.rotation / 57.3)},
+		size		= {1, 0.75},
+		origin		= {0, 0},
 		rotation	= 0,
 		tint		= raylib.WHITE,
 	)
@@ -54,9 +58,9 @@ draw  :: proc() {
 		texture		= testTexture,
 		source		= {0,0,16,16},
 		position	= {0,0.5,0},
-		up			= {0.98,0.17,0},
-		size		= {1, 1},
-		origin		= {1, 2},
+		up			= {math.sin(camera.rotation / 57.3), 1, -math.cos(camera.rotation / 57.3)},
+		size		= {1, 0.75},
+		origin		= {0, 0},
 		rotation	= 0,
 		tint		= raylib.WHITE,
 	)
@@ -64,7 +68,6 @@ draw  :: proc() {
 	// 90:{ 0.98,  0.17,  0.00}
 	//180:{ 0.00, -0.17,  0.98}
 	//270:{-0.98,  0.17,  0.00}
-	fmt.printf("%v\n",system.normalize(system.rotate({0,0.75,-0.75}, camera.rotation)))
 
 	raylib.EndMode3D()
 
@@ -98,7 +101,12 @@ init  :: proc() {
 	camera.init()
 	player.init()
 
+	//* Graphics
+	world.init_tiles()
+
+	//! TEMP
 	testTexture = raylib.LoadTexture("data/old/sprites/spr_player_1.png")
+	world.init_map("data/world/test.json")
 }
 close :: proc() {
 	//* Settings / Localization

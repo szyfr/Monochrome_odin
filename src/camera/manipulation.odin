@@ -14,7 +14,7 @@ import "../settings"
 
 //= Constants
 XDIST   ::   0.0
-YDIST   ::   7.0
+YDIST   ::   3.0
 ZDIST   ::   2.5
 MVSPEED ::   5.0
 CMSPEED :: 200.0
@@ -53,9 +53,9 @@ update :: proc() {
 	} else {
 		rotation = trgRotation
 		if rotation <   0 do set_rotation(rotation + 360)
-		if rotation > 360 do set_rotation(rotation - 360)
-		if settings.button_down("rotate_right") do set_target_rotation(rotation + 90)
-		if settings.button_down("rotate_left") do set_target_rotation(rotation - 90)
+		if rotation >= 360 do set_rotation(rotation - 360)
+		if settings.button_down("rotate_right") do set_target_rotation(rotation - 90)
+		if settings.button_down("rotate_left") do set_target_rotation(rotation + 90)
 	}
 
 	

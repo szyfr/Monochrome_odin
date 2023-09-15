@@ -10,8 +10,8 @@ import "vendor:raylib"
 
 //= Constants
 XDIST   ::   0.0
-YDIST   ::   7.0
-ZDIST   ::   2.5
+YDIST   ::   5.0
+ZDIST   ::   5.0
 
 
 //= Procedures
