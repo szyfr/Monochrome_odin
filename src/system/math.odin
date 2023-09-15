@@ -2,10 +2,45 @@ package system
 
 
 //= Imports
+import "core:fmt"
+import "core:math"
+
 import "vendor:raylib"
 
 
+//= Constants
+XDIST   ::   0.0
+YDIST   ::   7.0
+ZDIST   ::   2.5
+
+
 //= Procedures
+normalize :: proc( v3 : raylib.Vector3 ) -> raylib.Vector3 {
+	max, min : f32 = 1,1
+
+	if v3.x > max do max = v3.x
+	if v3.y > max do max = v3.y
+	if v3.z > max do max = v3.z
+
+	if v3.x < min do min = v3.x
+	if v3.y < min do min = v3.y
+	if v3.z < min do min = v3.z
+
+	if max > min do return {v3.x/max, v3.y/max, v3.z/max}
+	else do return {v3.x/min, v3.y/min, v3.z/min}
+}
+rotate :: proc( pos : raylib.Vector3, rot : f32 ) -> raylib.Vector3 {
+	position : raylib.Vector3 = {}
+
+	position.x = XDIST * math.cos(rot / 57.3) - ZDIST * math.sin(rot / 57.3)
+	position.z = XDIST * math.sin(rot / 57.3) + ZDIST * math.cos(rot / 57.3)
+	
+	position.x += pos.x
+	position.y = (pos.y + YDIST)
+	position.z += pos.z
+
+	return position
+}
 
 close_enough :: proc{ close_enough_v3, close_enough_v2, close_enough_f32 }
 close_enough_v3 :: proc( v1,v2 : raylib.Vector3, offset : f32 = 0.05 ) -> bool {

@@ -10,6 +10,7 @@ import "settings"
 import "localization"
 import "camera"
 import "player"
+import "system"
 
 import "debug"
 
@@ -36,7 +37,34 @@ draw  :: proc() {
 
 	raylib.DrawGrid(100, 1)
 
-	raylib.DrawBillboardRec(camera.rl, testTexture, {0,0,16,16}, player.unit.position + {0,1,0}, {1,2}, raylib.WHITE)
+	//(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: f32, tint: Color)
+	raylib.DrawBillboardPro(
+		camera		= camera.rl,
+		texture		= testTexture,
+		source		= {0,0,16,16},
+		position	= player.unit.position + {0,0.5,0},
+		up			= {0.98,0.17,0},
+		size		= {1, 1},
+		origin		= {1, 2},
+		rotation	= 0,
+		tint		= raylib.WHITE,
+	)
+	raylib.DrawBillboardPro(
+		camera		= camera.rl,
+		texture		= testTexture,
+		source		= {0,0,16,16},
+		position	= {0,0.5,0},
+		up			= {0.98,0.17,0},
+		size		= {1, 1},
+		origin		= {1, 2},
+		rotation	= 0,
+		tint		= raylib.WHITE,
+	)
+	//  0:{ 0.00, -0.17, -0.98}
+	// 90:{ 0.98,  0.17,  0.00}
+	//180:{ 0.00, -0.17,  0.98}
+	//270:{-0.98,  0.17,  0.00}
+	fmt.printf("%v\n",system.normalize(system.rotate({0,0.75,-0.75}, camera.rotation)))
 
 	raylib.EndMode3D()
 

@@ -25,7 +25,7 @@ init :: proc() {
 	set_position({0.5,0,0.5})
 	set_rotation(0)
 
-	rl.up = {0,1,0}
+	rl.up = {0, 1, 0}
 	rl.fovy = 70
 	rl.projection = .PERSPECTIVE
 	
@@ -61,12 +61,7 @@ update :: proc() {
 	
 
 	//* Calculate the rlposition of the Camera based on rotation
-	cameraPosition : raylib.Vector3 = {}
-	cameraPosition.x = XDIST * math.cos(rotation / 57.3) - ZDIST * math.sin(rotation / 57.3)
-	cameraPosition.z = XDIST * math.sin(rotation / 57.3) + ZDIST * math.cos(rotation / 57.3)
-	cameraPosition.x += position.x
-	cameraPosition.y = (position.y + YDIST)
-	cameraPosition.z += position.z
+	cameraPosition := system.rotate(position, rotation)
 
 	rl.target = position
 	rl.position = cameraPosition
