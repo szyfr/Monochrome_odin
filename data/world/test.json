@@ -5,12 +5,48 @@
 	"height":10,
 
 	"tiles":[
-		{ "tile":"tile_tree_1", "position":[0,0,0], "tags":[ true,false] }
-		{ "tile":"tile_tree_1", "position":[1,0,0], "tags":[ true,false] }
-		{ "tile":"tile_tree_1", "position":[2,0,0], "tags":[ true,false] }
-		{ "tile":"tile_tree_1", "position":[3,0,0], "tags":[ true,false] }
-		{ "tile":"tile_tree_1", "position":[0,0,1], "tags":[ true,false] }
-		{ "tile":"tile_tree_1", "position":[1,0,1], "tags":[ true,false] }
-		{ "tile":"tile_grass",  "position":[2,0,1], "tags":[false,false] }
+		{ "tile":"tree_4", "position":[0,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[2,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[3,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[4,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[5,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[6,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[7,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[8,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[9,0,0],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[10,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[11,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[12,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[13,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[14,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[15,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[16,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[17,0,0],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[0,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[2,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[3,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[4,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[5,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[6,0,1],   "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-1],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-2],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-3],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-4],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-5],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-6],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-7],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-8],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-9],  "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-10], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-11], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-12], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-13], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-14], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-15], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-16], "tags":[ true,false,true ] }
+		{ "tile":"tree_4", "position":[1,0,-17], "tags":[ true,false,true ] }
+		{ "tile":"tile_grass",  "position":[2,0,2], "tags":[false,false,false ] }
 	]
 }

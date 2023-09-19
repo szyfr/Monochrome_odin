@@ -11,4 +11,5 @@ Tile :: struct {
 
 	solid : bool,
 	water : bool,
+	trnsp : bool,
 }

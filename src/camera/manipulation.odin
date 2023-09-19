@@ -17,7 +17,7 @@ XDIST   ::   0.0
 YDIST   ::   3.0
 ZDIST   ::   2.5
 MVSPEED ::   5.0
-CMSPEED :: 200.0
+CMSPEED :: 500.0
 
 
 //= Procedures
@@ -46,7 +46,7 @@ update :: proc() {
 		} else do position = trgPosition
 	}
 	//* Update rotation
-	if !system.close_enough(rotation, trgRotation, 0.5) {
+	if !system.close_enough(rotation, trgRotation, 5) {
 		dir := system.get_direction(rotation, trgRotation)
 
 		rotation += dir * (CMSPEED * ft)
