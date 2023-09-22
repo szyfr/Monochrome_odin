@@ -7,6 +7,7 @@ import "core:math"
 
 import "vendor:raylib"
 
+import "data"
 import "settings"
 import "localization"
 import "graphics"
@@ -32,32 +33,28 @@ logic :: proc() {
 	camera.update()
 }
 draw  :: proc() {
+	using data
+
 	raylib.BeginDrawing()
 	raylib.ClearBackground( {57,57,57,255} )
 
 	//* 3D
-	raylib.BeginMode3D(camera.rl)
-
-	//raylib.DrawGrid(100, 1)
+	raylib.BeginMode3D(cameraData.rl)
 
 	world.draw()
 
-	//(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: f32, tint: Color)
+	texture := graphics.textures["overworld_player"]
 	raylib.DrawBillboardPro(
-		camera		= camera.rl,
-		texture		= graphics.textures["overworld_player"],
+		camera		= cameraData.rl,
+		texture		= texture,
 		source		= {0,0,16,16},
-		position	= player.unit.position,
-		up			= {math.sin(camera.rotation / 57.3), 1, -math.cos(camera.rotation / 57.3)},
+		position	= playerData.unit.position + {0,0.5,0},
+		up			= {math.sin(cameraData.rotation / 57.3), 1, -math.cos(cameraData.rotation / 57.3)},
 		size		= {1, 0.75},
 		origin		= {0, 0},
 		rotation	= 0,
 		tint		= raylib.WHITE,
 	)
-	//  0:{ 0.00, -0.17, -0.98}
-	// 90:{ 0.98,  0.17,  0.00}
-	//180:{ 0.00, -0.17,  0.98}
-	//270:{-0.98,  0.17,  0.00}
 
 	raylib.EndMode3D()
 
@@ -87,7 +84,6 @@ init  :: proc() {
 	)
 	if settings.screen_fps != 0 do raylib.SetTargetFPS(settings.screen_fps)
 	raylib.SetExitKey(.KEY_NULL)
-	//raylib.rlDisableBackfaceCulling()
 
 	//* Camera and Player
 	camera.init()

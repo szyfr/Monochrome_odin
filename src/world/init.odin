@@ -30,14 +30,14 @@ init_tiles :: proc() {
 	for i:u32=0;i<directoryList.count;i+=1 {
 		str, _ := strings.remove_all(strings.clone_from_cstring(directoryList.paths[i]), ".obj")
 		str, _  = strings.remove_all(str, "data/tiles/")
-		models[str] = raylib.LoadModel(directoryList.paths[i])
+		data.worldData.models[str] = raylib.LoadModel(directoryList.paths[i])
 	}
 
 	raylib.UnloadDirectoryFiles(directoryList)
 }
 
 close_tiles :: proc() {
-	for i in models do delete_key(&models, i)
+	for i in data.worldData.models do delete_key(&data.worldData.models, i)
 }
 
 init_map :: proc( mapName : string ) {
@@ -52,18 +52,21 @@ init_map :: proc( mapName : string ) {
 	//* Parse json
 	tilesRoot := fileJson.(json.Object)["tiles"].(json.Array)
 	for i:=0;i<len(tilesRoot);i+=1 {
+		solidArr : [4]bool = parse_solid(tilesRoot[i].(json.Object)["tags"].(json.Array)[0].(json.Array))
 		tile : data.Tile = {
 			strings.clone(tilesRoot[i].(json.Object)["tile"].(string)),
-			tilesRoot[i].(json.Object)["tags"].(json.Array)[0].(bool),
-			tilesRoot[i].(json.Object)["tags"].(json.Array)[1].(bool),
+			solidArr,
+			f32(tilesRoot[i].(json.Object)["tags"].(json.Array)[1].(f64)),
 			tilesRoot[i].(json.Object)["tags"].(json.Array)[2].(bool),
+			tilesRoot[i].(json.Object)["tags"].(json.Array)[3].(bool),
+			tilesRoot[i].(json.Object)["tags"].(json.Array)[4].(bool),
 		}
 		position : raylib.Vector3 = {
 			f32(tilesRoot[i].(json.Object)["position"].(json.Array)[0].(f64)),
 			f32(tilesRoot[i].(json.Object)["position"].(json.Array)[1].(f64)),
 			f32(tilesRoot[i].(json.Object)["position"].(json.Array)[2].(f64)),
 		}
-		currentMap[position] = tile
+		data.worldData.currentMap[position] = tile
 	}
 
 	//* Cleanup
@@ -72,8 +75,10 @@ init_map :: proc( mapName : string ) {
 }
 
 draw :: proc() {
+	using data
+
 	//* Initialize all variables
-	playerPosition := system.get_player_position()
+	playerPosition := playerData.unit.position
 	maxX, minX := int(playerPosition.x) + WIDTH,  int(playerPosition.x) - WIDTH
 	maxY, minY := int(playerPosition.y) + HEIGHT, int(playerPosition.y) - HEIGHT
 	maxZ, minZ := int(playerPosition.z) + DEPTH,  int(playerPosition.z) - DEPTH
@@ -86,13 +91,13 @@ draw :: proc() {
 	for y:=f32(minY);y<f32(maxY);y+=0.5 {
 		//* Change order of drawing based on the current direction of camera rotation
 		switch {
-			case (camera.rotation > -45 && camera.rotation <=  45) || (camera.rotation > 315 && camera.rotation <= 405):
+			case (cameraData.rotation > -45 && cameraData.rotation <=  45) || (cameraData.rotation > 315 && cameraData.rotation <= 405):
 				draw_line_000(y, width, minX, maxX, minZ, maxZ, playerPosition.x)
-			case camera.rotation >  45 && camera.rotation <= 135:
+			case cameraData.rotation >  45 && cameraData.rotation <= 135:
 				draw_line_090(y, depth, minX, maxX, minZ, maxZ, playerPosition.z)
-			case camera.rotation > 135 && camera.rotation <= 225:
+			case cameraData.rotation > 135 && cameraData.rotation <= 225:
 				draw_line_180(y, width, minX, maxX, minZ, maxZ, playerPosition.x)
-			case (camera.rotation > 225 && camera.rotation <= 315) || (camera.rotation > -135 && camera.rotation <= -45):
+			case (cameraData.rotation > 225 && cameraData.rotation <= 315) || (cameraData.rotation > -135 && cameraData.rotation <= -45):
 				draw_line_270(y, depth, minX, maxX, minZ, maxZ, playerPosition.z)
 		}
 	}
@@ -106,9 +111,9 @@ draw_line_000 :: proc( y : f32, width : int, minX, maxX, minZ, maxZ : int, playe
 		flip := false
 
 		for c:=0;c!=width;c+=1 {
-			tile, resTile := currentMap[{f32(x),y,f32(z)}]
+			tile, resTile := data.worldData.currentMap[{f32(x),y,f32(z)}]
 			if resTile {
-				model, resModel := models[tile.model]
+				model, resModel := data.worldData.models[tile.model]
 				if resModel {
 					raylib.DrawModelEx(
 						model,
@@ -136,9 +141,9 @@ draw_line_090 :: proc( y : f32, depth : int, minX, maxX, minZ, maxZ : int, playe
 		z := maxZ
 		flip := false
 		for c:=0;c!=depth;c+=1 {
-			tile, resTile := currentMap[{f32(x),y,f32(z)}]
+			tile, resTile := data.worldData.currentMap[{f32(x),y,f32(z)}]
 			if resTile {
-				model, resModel := models[tile.model]
+				model, resModel := data.worldData.models[tile.model]
 				rotation : f32 = 0
 				if tile.trnsp do rotation = -90
 				if resModel {
@@ -167,9 +172,9 @@ draw_line_180 :: proc( y : f32, width : int, minX, maxX, minZ, maxZ : int, playe
 		x := maxX
 		flip := false
 		for c:=0;c!=width;c+=1 {
-			tile, resTile := currentMap[{f32(x),y,f32(z)}]
+			tile, resTile := data.worldData.currentMap[{f32(x),y,f32(z)}]
 			if resTile {
-				model, resModel := models[tile.model]
+				model, resModel := data.worldData.models[tile.model]
 				rotation : f32 = 0
 				if tile.trnsp do rotation = -180
 				if resModel {
@@ -198,9 +203,9 @@ draw_line_270 :: proc( y : f32, depth : int, minX, maxX, minZ, maxZ : int, playe
 		z := minZ
 		flip := false
 		for c:=0;c!=depth;c+=1 {
-			tile, resTile := currentMap[{f32(x),y,f32(z)}]
+			tile, resTile := data.worldData.currentMap[{f32(x),y,f32(z)}]
 			if resTile {
-				model, resModel := models[tile.model]
+				model, resModel := data.worldData.models[tile.model]
 				rotation : f32 = 0
 				if tile.trnsp do rotation = -270
 				if resModel {
@@ -222,4 +227,21 @@ draw_line_270 :: proc( y : f32, depth : int, minX, maxX, minZ, maxZ : int, playe
 			}
 		}
 	}
+}
+
+
+parse_solid :: proc( arr : json.Array ) -> [4]bool {
+	output : [4]bool = {false,false,false,false}
+
+	for i:=0;i<len(arr);i+=1 {
+		switch arr[i].(string) {
+			case "all":   output = {true,true,true,true}
+			case "none":  output = {false,false,false,false}
+			case "north": output[0] = true
+			case "west":  output[1] = true
+			case "south": output[2] = true
+			case "east":  output[3] = true
+		}
+	}
+	return output
 }
