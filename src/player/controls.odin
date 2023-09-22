@@ -53,6 +53,22 @@ update :: proc() {
 				if left  do newPos.z += 1
 				if right do newPos.z -= 1
 		}
-		unit.trgPosition = newPos
+
+		//tile, ok := world.currentMap[newPos]
+		//fmt.printf("%v\n",tile)
+		//switch system.check_position(newPos) {
+		//	case null: fallthrough
+		//	case empty:
+		//		unit.trgPosition = newPos
+		//	case entity:
+		//	case trigger:
+		//	case solid:
+		//	case step_up:
+		//		newPos.y += 0.5
+		//		unit.trgPosition = newPos
+		//	case step_down:
+		//		newPos.y -= 0.5
+		//		unit.trgPosition = newPos
+		//}
 	}
 }

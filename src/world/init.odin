@@ -10,7 +10,6 @@ import "core:encoding/json"
 
 import "vendor:raylib"
 
-import "../player"
 import "../camera"
 import "../graphics"
 import "../data"
@@ -73,142 +72,41 @@ init_map :: proc( mapName : string ) {
 }
 
 draw :: proc() {
-	//for tile in currentMap {
-	//	model := &models[currentMap[tile].model]
-	//	raylib.DrawModelEx(
-	//		model^,
-	//		tile,
-	//		{0,1,0},
-	//		0,
-	//		{1,1,1},
-	//		raylib.WHITE,
-	//	)
-	//}
-	
 	//* Initialize all variables
-	//maxX, minX := int(player.unit.position.x) + WIDTH,  int(player.unit.position.x) - WIDTH
-	//maxY, minY := int(player.unit.position.y) + HEIGHT, int(player.unit.position.y) - HEIGHT
-	//maxZ, minZ := int(player.unit.position.z) + DEPTH,  int(player.unit.position.z) - DEPTH
-
-	//maxX, minX : int
-	//maxY, minY : int
-	//maxZ, minZ : int
-//
-	//switch camera.trgRotation {
-	//	case 360: fallthrough
-	//	case   0:
-	//		maxX, minX = int(player.unit.position.x) + WIDTH,  int(player.unit.position.x) - WIDTH
-	//		maxY, minY = int(player.unit.position.y) + HEIGHT, int(player.unit.position.y) - HEIGHT
-	//		maxZ, minZ = int(player.unit.position.z) + DEPTH,  int(player.unit.position.z) - DEPTH
-	//	case  90:
-	//		maxX, minX = int(player.unit.position.z) + WIDTH,  int(player.unit.position.z) - WIDTH
-	//		maxY, minY = int(player.unit.position.y) + HEIGHT, int(player.unit.position.y) - HEIGHT
-	//		maxZ, minZ = int(player.unit.position.x) + DEPTH,  int(player.unit.position.x) - DEPTH
-	//	case 180:
-	//		maxX, minX = int(player.unit.position.x) + WIDTH,  int(player.unit.position.x) - WIDTH
-	//		maxY, minY = int(player.unit.position.y) + HEIGHT, int(player.unit.position.y) - HEIGHT
-	//		maxZ, minZ = int(player.unit.position.z) + DEPTH,  int(player.unit.position.z) - DEPTH
-	//	case -90: fallthrough
-	//	case 270:
-	//		maxX, minX = int(player.unit.position.z) + WIDTH,  int(player.unit.position.z) - WIDTH
-	//		maxY, minY = int(player.unit.position.y) + HEIGHT, int(player.unit.position.y) - HEIGHT
-	//		maxZ, minZ = int(player.unit.position.x) + DEPTH,  int(player.unit.position.x) - DEPTH
-	//}
-//
-//
-	//width  := maxX - minX
-	//height := maxY - minY
-	//depth  := maxZ - minZ
-	//col : raylib.Color = {0,0,0,255}
-//
-	//for y:=minY;y<maxY;y+=1 {
-	//	for z:=minZ;z<maxZ;z+=1 {
-	//		x := minX
-	//		flip := false
-//
-	//		for c:=0;c!=width;c+=1 {
-	//			//* Grab model
-	//			tile, resTile := currentMap[{f32(x),f32(y),f32(z)}]
-	//			if resTile {
-	//				model, resModel := models[tile.model]
-	//				if resModel {
-	//					raylib.DrawModelEx(
-	//						model,
-	//						{f32(x),f32(y),f32(z)},
-	//						{0,1,0},
-	//						0,
-	//						{1,1,1},
-	//						raylib.WHITE,
-	//					)
-	//				}
-	//			}
-	//			if !flip do x += 1
-	//			else     do x -= 1
-//
-	//			if x >= int(player.unit.position.x) && !flip {
-	//				flip = true
-	//				x = maxX-1
-	//			}
-	//		}
-//
-	//		//* Entities
-	//	}
-	//}
-
-	//* Initialize all variables
-	maxX, minX := int(player.unit.position.x) + WIDTH,  int(player.unit.position.x) - WIDTH
-	maxY, minY := int(player.unit.position.y) + HEIGHT, int(player.unit.position.y) - HEIGHT
-	maxZ, minZ := int(player.unit.position.z) + DEPTH,  int(player.unit.position.z) - DEPTH
-
+	playerPosition := system.get_player_position()
+	maxX, minX := int(playerPosition.x) + WIDTH,  int(playerPosition.x) - WIDTH
+	maxY, minY := int(playerPosition.y) + HEIGHT, int(playerPosition.y) - HEIGHT
+	maxZ, minZ := int(playerPosition.z) + DEPTH,  int(playerPosition.z) - DEPTH
 	width  := maxX - minX
 	height := maxY - minY
 	depth  := maxZ - minZ
 	col : raylib.Color = {0,0,0,255}
 
-	for y:=minY;y<maxY;y+=1 {
-		switch camera.trgRotation {
-			case 360: fallthrough
-			case   0: draw_line_000(y, width, minX, maxX, minZ, maxZ)
-			case  90: draw_line_090(y, depth, minX, maxX, minZ, maxZ)
-			case 180: draw_line_180(y, width, minX, maxX, minZ, maxZ)
-				//for z:=maxZ;z>minZ;z-=1 {
-				//	x := maxX
-				//	flip := false
-				//	for c:=0;c!=width;c+=1 {
-				//		tile, resTile := currentMap[{f32(x),f32(y),f32(z)}]
-				//		//fmt.printf("")
-				//		if resTile {
-				//			model, resModel := models[tile.model]
-				//			if resModel {
-				//				raylib.DrawModelEx(
-				//					model,
-				//					{f32(x),f32(y),f32(z)},
-				//					{0,1,0},
-				//					0,
-				//					{1,1,1},
-				//					raylib.WHITE,
-				//				)
-				//			}
-				//		}
-				//		if !flip do x -= 1
-				//		else     do x += 1
-				//		if x <= int(player.unit.position.x) && !flip {
-				//			flip = true
-				//			x = minX+1
-				//		}
-				//	}
-				//}
+	//* Draw from bottom up
+	for y:=f32(minY);y<f32(maxY);y+=0.5 {
+		//* Change order of drawing based on the current direction of camera rotation
+		switch {
+			case (camera.rotation > -45 && camera.rotation <=  45) || (camera.rotation > 315 && camera.rotation <= 405):
+				draw_line_000(y, width, minX, maxX, minZ, maxZ, playerPosition.x)
+			case camera.rotation >  45 && camera.rotation <= 135:
+				draw_line_090(y, depth, minX, maxX, minZ, maxZ, playerPosition.z)
+			case camera.rotation > 135 && camera.rotation <= 225:
+				draw_line_180(y, width, minX, maxX, minZ, maxZ, playerPosition.x)
+			case (camera.rotation > 225 && camera.rotation <= 315) || (camera.rotation > -135 && camera.rotation <= -45):
+				draw_line_270(y, depth, minX, maxX, minZ, maxZ, playerPosition.z)
 		}
 	}
 }
 
-draw_line_000 :: proc( y : int, width : int, minX, maxX, minZ, maxZ : int ) {
+// TODO Add entity rendering into draw lines
+
+draw_line_000 :: proc( y : f32, width : int, minX, maxX, minZ, maxZ : int, playerPos : f32 ) {
 	for z:=minZ;z<maxZ;z+=1 {
 		x := minX
 		flip := false
 
 		for c:=0;c!=width;c+=1 {
-			tile, resTile := currentMap[{f32(x),f32(y),f32(z)}]
+			tile, resTile := currentMap[{f32(x),y,f32(z)}]
 			if resTile {
 				model, resModel := models[tile.model]
 				if resModel {
@@ -216,7 +114,7 @@ draw_line_000 :: proc( y : int, width : int, minX, maxX, minZ, maxZ : int ) {
 						model,
 						{f32(x),f32(y),f32(z)},
 						{0,1,0},
-						0,
+						-360,
 						{1,1,1},
 						raylib.WHITE,
 					)
@@ -225,7 +123,7 @@ draw_line_000 :: proc( y : int, width : int, minX, maxX, minZ, maxZ : int ) {
 			if !flip do x += 1
 			else     do x -= 1
 
-			if x >= int(player.unit.position.x) && !flip {
+			if x >= int(playerPos) && !flip {
 				flip = true
 				x = maxX-1
 			}
@@ -233,49 +131,53 @@ draw_line_000 :: proc( y : int, width : int, minX, maxX, minZ, maxZ : int ) {
 	}
 }
 
-draw_line_090 :: proc( y : int, depth : int, minX, maxX, minZ, maxZ : int ) {
+draw_line_090 :: proc( y : f32, depth : int, minX, maxX, minZ, maxZ : int, playerPos : f32 ) {
 	for x:=maxX;x>minX;x-=1 {
-		z := minZ
+		z := maxZ
 		flip := false
 		for c:=0;c!=depth;c+=1 {
-			tile, resTile := currentMap[{f32(x),f32(y),f32(z)}]
+			tile, resTile := currentMap[{f32(x),y,f32(z)}]
 			if resTile {
 				model, resModel := models[tile.model]
+				rotation : f32 = 0
+				if tile.trnsp do rotation = -90
 				if resModel {
 					raylib.DrawModelEx(
 						model,
 						{f32(x),f32(y),f32(z)},
 						{0,1,0},
-						0,
+						rotation,
 						{1,1,1},
 						raylib.WHITE,
 					)
 				}
 			}
-			if !flip do z += 1
-			else     do z -= 1
-			if z > int(player.unit.position.x) && !flip {
+			if !flip do z -= 1
+			else     do z += 1
+			if z <= int(playerPos) && !flip {
 				flip = true
-				z = maxZ-1
+				z = minZ+1
 			}
 		}
 	}
 }
 
-draw_line_180 :: proc( y : int, width : int, minX, maxX, minZ, maxZ : int ) {
-	for z:=minZ;z<maxZ;z+=1 {
-		x := minX
+draw_line_180 :: proc( y : f32, width : int, minX, maxX, minZ, maxZ : int, playerPos : f32 ) {
+	for z:=maxZ;z>minZ;z-=1 {
+		x := maxX
 		flip := false
 		for c:=0;c!=width;c+=1 {
-			tile, resTile := currentMap[{f32(x),f32(y),f32(z)}]
+			tile, resTile := currentMap[{f32(x),y,f32(z)}]
 			if resTile {
 				model, resModel := models[tile.model]
+				rotation : f32 = 0
+				if tile.trnsp do rotation = -180
 				if resModel {
 					raylib.DrawModelEx(
 						model,
 						{f32(x),f32(y),f32(z)},
 						{0,1,0},
-						90,
+						rotation,
 						{1,1,1},
 						raylib.WHITE,
 					)
@@ -283,9 +185,40 @@ draw_line_180 :: proc( y : int, width : int, minX, maxX, minZ, maxZ : int ) {
 			}
 			if !flip do x -= 1
 			else     do x += 1
-			if x < int(player.unit.position.x) && !flip {
+			if x <= int(playerPos) && !flip {
 				flip = true
-				x = minX-1
+				x = minX+1
+			}
+		}
+	}
+}
+
+draw_line_270 :: proc( y : f32, depth : int, minX, maxX, minZ, maxZ : int, playerPos : f32 ) {
+	for x:=minX;x<maxX;x+=1 {
+		z := minZ
+		flip := false
+		for c:=0;c!=depth;c+=1 {
+			tile, resTile := currentMap[{f32(x),y,f32(z)}]
+			if resTile {
+				model, resModel := models[tile.model]
+				rotation : f32 = 0
+				if tile.trnsp do rotation = -270
+				if resModel {
+					raylib.DrawModelEx(
+						model,
+						{f32(x),f32(y),f32(z)},
+						{0,1,0},
+						rotation,
+						{1,1,1},
+						raylib.WHITE,
+					)
+				}
+			}
+			if !flip do z += 1
+			else     do z -= 1
+			if z >= int(playerPos) && !flip {
+				flip = true
+				z = maxZ-1
 			}
 		}
 	}
