@@ -16,8 +16,6 @@ Tile :: struct {
 	model : string,
 
 	solid  : [4]bool,
-	offset : f32,
-	ramp   : bool,
 	water  : bool,
 	trnsp  : bool,
 }

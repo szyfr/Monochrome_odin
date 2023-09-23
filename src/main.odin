@@ -44,11 +44,12 @@ draw  :: proc() {
 	world.draw()
 
 	texture := graphics.textures["overworld_player"]
+	position := playerData.unit.position + {0,0.5,0}
 	raylib.DrawBillboardPro(
 		camera		= cameraData.rl,
 		texture		= texture,
 		source		= {0,0,16,16},
-		position	= playerData.unit.position + {0,0.5,0},
+		position	= position,
 		up			= {math.sin(cameraData.rotation / 57.3), 1, -math.cos(cameraData.rotation / 57.3)},
 		size		= {1, 0.75},
 		origin		= {0, 0},

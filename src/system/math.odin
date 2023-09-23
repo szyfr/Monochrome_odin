@@ -98,3 +98,8 @@ get_direction_f32 :: proc( v1,v2 : f32 ) -> f32 {
 
 	return 0
 }
+
+round :: proc{ round_v3 }
+round_v3 :: proc( v3 : raylib.Vector3 ) -> raylib.Vector3 {
+	return {math.round(v3.x), math.round(v3.y), math.round(v3.z)}
+}

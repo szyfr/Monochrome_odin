@@ -30,6 +30,7 @@ init :: proc() {
 	data.cameraData.rl.up = {0, 1, 0}
 	data.cameraData.rl.fovy = 70
 	data.cameraData.rl.projection = .PERSPECTIVE
+	data.cameraData.offset = {0,0,0}
 	
 	update()
 }

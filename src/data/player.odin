@@ -22,3 +22,11 @@ PositionCheck :: enum {
 	step_up,
 	step_down,
 }
+
+RampType :: enum {
+	none,
+	up_half,
+	down_half,
+	up_full,
+	down_full,
+}
