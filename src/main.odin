@@ -87,11 +87,9 @@ init  :: proc() {
 	raylib.SetExitKey(.KEY_NULL)
 
 	//* Graphics
-	fmt.printf("Fuck\n")
 	graphics.init_textures()
-	fmt.printf("Fuck\n")
+	graphics.init_animations()
 	world.init_tiles()
-	fmt.printf("Fuck\n")
 
 	//* Camera and Player
 	camera.init()

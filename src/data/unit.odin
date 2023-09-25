@@ -7,16 +7,34 @@ import "vendor:raylib"
 
 //= Structures
 Unit :: struct {
-	display : UnitDisplay,
-
 	position, trgPosition : raylib.Vector3,
+	direction : Direction,
+	
+	animator : Animator,
 }
 
-UnitDisplay :: struct {
-	mesh : raylib.Mesh,
-	material : raylib.Material,
-	texture : raylib.Texture,
-	image : raylib.Image,
+Animator :: struct {
+	mesh		: raylib.Mesh,
+	material	: raylib.Material,
+	textures	: [dynamic]raylib.Texture,
 
-	frameCount, frame, delay : int,
+	currentAnimation : string,
+
+	frame, counter : int,
+
+}
+
+Animation :: struct {
+	frames	: [dynamic]int,
+	delay	: int,
+}
+
+
+//= Enumeration
+Direction :: enum {
+	null,
+	north,
+	south,
+	east,
+	west,
 }

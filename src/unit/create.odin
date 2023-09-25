@@ -20,12 +20,20 @@ create :: proc( position : raylib.Vector3 = {0,0,0}, texture : string = "overwor
 	model := &data.worldData.models["unit"]
 	texture := &graphics.textures[texture]
 
-	unit.display.mesh		= model.meshes[0]
-	unit.display.material	= raylib.LoadMaterialDefault()
-	unit.display.image		= raylib.LoadImageFromTexture(texture^)
-	img					   := raylib.ImageFromImage(unit.display.image, {0,0,16,16})
-	unit.display.texture	= raylib.LoadTextureFromImage(img)
-	unit.display.material.maps[0].texture = unit.display.texture
+	unit.animator.mesh		= model.meshes[0]
+	unit.animator.material	= raylib.LoadMaterialDefault()
+
+	img := raylib.LoadImageFromTexture(texture^)
+	for i:=0;i<int(img.width/img.height);i+=1 {
+		img_2 := raylib.ImageFromImage(img, {f32(i*int(img.height)),0,f32(img.height),f32(img.height)})
+		append(&unit.animator.textures, raylib.LoadTextureFromImage(img_2))
+		raylib.UnloadImage(img_2)
+	}
+	raylib.UnloadImage(img)
+
+	set_animation("idle_south", unit)
+
+	unit.animator.material.maps[0].texture = unit.animator.textures[0]
 	
 	return unit
 }

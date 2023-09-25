@@ -90,7 +90,7 @@ draw_line_090 :: proc() {
 		z := maxZ
 		flip := false
 
-		unit.draw(data.playerData.unit)
+		if math.round(data.playerData.unit.position.x) == x+1 do unit.draw(data.playerData.unit)
 
 		for c:f32=0;c!=depth;c+=1 {
 			for y:=minY;y<maxY;y+=0.5 {
@@ -130,7 +130,7 @@ draw_line_180 :: proc() {
 		x := maxX
 		flip := false
 
-		unit.draw(data.playerData.unit)
+		if math.round(data.playerData.unit.position.z) == z+1 do unit.draw(data.playerData.unit)
 
 		for c:f32=0;c!=width;c+=1 {
 			for y:=minY;y<maxY;y+=0.5 {
@@ -150,7 +150,6 @@ draw_line_180 :: proc() {
 				x = minX+1
 			}
 		}
-		unit.draw(data.playerData.unit)
 	}
 }
 
@@ -168,7 +167,7 @@ draw_line_270 :: proc() {
 		z := minZ
 		flip := false
 
-		unit.draw(data.playerData.unit)
+		if math.round(data.playerData.unit.position.x) == x-1 do unit.draw(data.playerData.unit)
 
 		for c:f32=0;c!=depth;c+=1 {
 			for y:=minY;y<maxY;y+=0.5 {

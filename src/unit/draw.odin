@@ -13,40 +13,35 @@ import "../graphics"
 
 //= Procedures
 draw :: proc( unit : ^data.Unit) {
-	//texture := graphics.textures["overworld_player"]
-	//position := data.playerData.unit.position + {0,0.5,0}
-	//raylib.DrawBillboardPro(
-	//	camera		= data.cameraData.rl,
-	//	texture		= texture,
-	//	source		= {0,0,16,16},
-	//	position	= position,
-	//	up			= {math.sin(data.cameraData.rotation / 57.3), 1, -math.cos(data.cameraData.rotation / 57.3)},
-	//	size		= {1, 0.75},
-	//	origin		= {0, 0},
-	//	rotation	= 0,
-	//	tint		= raylib.WHITE,
-	//)
-	//fmt.printf("fuck\n")
-	//model := &data.worldData.models["unit"]
-	//model.materials[0] = data.playerData.unit.material
-	//raylib.SetModelMeshMaterial(model, 0, data.playerData.unit.material)
-	//position := data.playerData.unit.position + {0,0.5,0}
-	//raylib.DrawModel(
-	//	model^,
-	//	position,
-	//	1,
-	//	raylib.WHITE,
-	//)
-	//*(mesh: Mesh, material: Material, transform: Matrix)
+	//* Animation update
+	animation := graphics.animations[unit.animator.currentAnimation]
+
+	unit.animator.counter += 1
+	if animation.delay != 0 && unit.animator.counter >= animation.delay {
+		unit.animator.counter = 0
+		unit.animator.frame += 1
+		if unit.animator.frame >= len(animation.frames) do unit.animator.frame = 0
+	}
+	unit.animator.material.maps[0].texture = unit.animator.textures[animation.frames[unit.animator.frame]]
+
+	//* Create matrix and draw
 	mat : raylib.Matrix = {
-		1,0,0,0,
+		math.cos(data.cameraData.rotation / 57.3),0,math.sin(data.cameraData.rotation / 57.3),0,
 		0,1,0,0,
-		0,0,1,0,
+		-math.sin(data.cameraData.rotation / 57.3),0,math.cos(data.cameraData.rotation / 57.3),0,
 		unit.position.x,unit.position.y,unit.position.z,1,
 	}
 	raylib.DrawMesh(
-		unit.display.mesh,
-		unit.display.material,
+		unit.animator.mesh,
+		unit.animator.material,
 		mat,
 	)
+}
+
+set_animation :: proc( anim : string, unit : ^data.Unit ) {
+	if unit.animator.currentAnimation != anim {
+		unit.animator.frame = 0
+		unit.animator.counter = 0
+		unit.animator.currentAnimation = anim
+	}
 }

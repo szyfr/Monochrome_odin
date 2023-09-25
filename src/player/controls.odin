@@ -3,10 +3,13 @@ package player
 
 //= Imports
 import "core:fmt"
+import "core:strings"
+import "core:reflect"
 
 import "vendor:raylib"
 
 import "../data"
+import "../unit"
 import "../camera"
 import "../settings"
 import "../system"
@@ -30,8 +33,7 @@ update :: proc() {
 		playerData.unit.position += dir * (MVSPEED * ft)
 	} else if playerData.canMove {
 		playerData.unit.position = playerData.unit.trgPosition
-		//newPos := system.round(playerData.unit.position)
-		newPos := playerData.unit.trgPosition
+		newPos := playerData.unit.position
 
 		//* Gather inputs
 		up    := settings.button_down("up")
@@ -40,67 +42,90 @@ update :: proc() {
 		right := settings.button_down("right")
 
 		//* Get movement vector based on camera rotation
+		if up    do playerData.unit.direction = .north
+		if down  do playerData.unit.direction = .south
+		if left  do playerData.unit.direction = .east
+		if right do playerData.unit.direction = .west
+
 		switch cameraData.rotation {
 			case   0:
-				if up    do newPos.z -= 1
-				if down  do newPos.z += 1
-				if left  do newPos.x -= 1
-				if right do newPos.x += 1
+				if up {
+					playerData.unit.direction = .north
+					newPos.z -= 1
+				}
+				if down {
+					playerData.unit.direction = .south
+					newPos.z += 1
+				}
+				if left {
+					playerData.unit.direction = .east
+					newPos.x -= 1
+				}
+				if right {
+					playerData.unit.direction = .west
+					newPos.x += 1
+				}
 			case  90:
-				if up    do newPos.x += 1
-				if down  do newPos.x -= 1
-				if left  do newPos.z -= 1
-				if right do newPos.z += 1
+				if up {
+					playerData.unit.direction = .west
+					newPos.x += 1
+				}
+				if down {
+					playerData.unit.direction = .east
+					newPos.x -= 1
+				}
+				if left {
+					playerData.unit.direction = .north
+					newPos.z -= 1
+				}
+				if right {
+					playerData.unit.direction = .south
+					newPos.z += 1
+				}
 			case 180:
-				if up    do newPos.z += 1
-				if down  do newPos.z -= 1
-				if left  do newPos.x += 1
-				if right do newPos.x -= 1
+				if up {
+					playerData.unit.direction = .south
+					newPos.z += 1
+				}
+				if down {
+					playerData.unit.direction = .north
+					newPos.z -= 1
+				}
+				if left {
+					playerData.unit.direction = .west
+					newPos.x += 1
+				}
+				if right {
+					playerData.unit.direction = .east
+					newPos.x -= 1
+				}
 			case 270:
-				if up    do newPos.x -= 1
-				if down  do newPos.x += 1
-				if left  do newPos.z += 1
-				if right do newPos.z -= 1
+				if up {
+					playerData.unit.direction = .east
+					newPos.x -= 1
+				}
+				if down {
+					playerData.unit.direction = .west
+					newPos.x += 1
+				}
+				if left {
+					playerData.unit.direction = .south
+					newPos.z += 1
+				}
+				if right {
+					playerData.unit.direction = .north
+					newPos.z -= 1
+				}
 		}
 
-		//* If the player is moving,
+		//* If the player is moving
 		if playerData.unit.trgPosition != newPos {
-			tile, ok := worldData.currentMap[newPos]
-
-			//* Checking for ramps when on even terrain
-			if !ok {
-				for i:=newPos.y-0.5;i<newPos.y+1;i+=0.5 {
-					tempTile, tempOk := worldData.currentMap[{newPos.x,i,newPos.z}]
-					if tempOk {
-						newPos = {newPos.x,i,newPos.z}
-						tile = tempTile
-						ok = tempOk
-						break
-					}
-				}
+			unit.move(playerData.unit, playerData.unit.direction)
+		} else {
+			//* Change direction and animation
+			if playerData.unit.direction != .null {
+				unit.rotate(playerData.unit, system.get_relative_direction_dire(playerData.unit.direction), false)
 			}
-
-			//* Disallow movement over void
-			if !ok do return
-
-			//* Check if solid
-			val := newPos - playerData.unit.trgPosition
-			switch val {
-				//* Cardinals
-				case { 0,val.y,-1}: if !tile.solid[0] do playerData.unit.trgPosition = newPos
-				case {-1,val.y, 0}: if !tile.solid[1] do playerData.unit.trgPosition = newPos
-				case { 0,val.y, 1}: if !tile.solid[2] do playerData.unit.trgPosition = newPos
-				case { 1,val.y, 0}: if !tile.solid[3] do playerData.unit.trgPosition = newPos
-				//* Diagonals
-				case {-1,val.y,-1}: if !tile.solid[1] && !tile.solid[0] do playerData.unit.trgPosition = newPos
-				case {-1,val.y, 1}: if !tile.solid[2] && !tile.solid[1] do playerData.unit.trgPosition = newPos
-				case { 1,val.y, 1}: if !tile.solid[3] && !tile.solid[2] do playerData.unit.trgPosition = newPos
-				case { 1,val.y,-1}: if !tile.solid[0] && !tile.solid[3] do playerData.unit.trgPosition = newPos
-				// TODO Decide if being able to move through diagonals surrounded by solids is a glitch or not
-			}
-
-			//* Check for entity
-			// TODO
 		}
 	}
 }
