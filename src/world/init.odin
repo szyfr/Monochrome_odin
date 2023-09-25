@@ -50,7 +50,7 @@ init_map :: proc( mapName : string ) {
 	file, _ := os.read_entire_file(mapName)
 	fileJson, _ := json.parse(file)
 
-	//* Parse json
+	//* Parse json for tiles
 	tilesRoot := fileJson.(json.Object)["tiles"].(json.Array)
 	for i:=0;i<len(tilesRoot);i+=1 {
 		solidArr : [4]bool = parse_solid(tilesRoot[i].(json.Object)["tags"].(json.Array)[0].(json.Array))
@@ -67,6 +67,12 @@ init_map :: proc( mapName : string ) {
 		}
 		data.worldData.currentMap[position] = tile
 	}
+
+	//* Parse json for units
+	// TODO
+
+	//* Player
+	data.worldData.unitMap["player"] = data.playerData.unit
 
 	//* Cleanup
 	json.destroy_value(fileJson)

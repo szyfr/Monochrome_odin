@@ -10,6 +10,7 @@ World :: struct {
 	models : map[string]raylib.Model,
 
 	currentMap : map[raylib.Vector3]Tile,
+	unitMap    : map[string]^Unit,
 }
 
 Tile :: struct {

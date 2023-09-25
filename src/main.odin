@@ -43,19 +43,19 @@ draw  :: proc() {
 
 	world.draw()
 
-	texture := graphics.textures["overworld_player"]
-	position := playerData.unit.position + {0,0.5,0}
-	raylib.DrawBillboardPro(
-		camera		= cameraData.rl,
-		texture		= texture,
-		source		= {0,0,16,16},
-		position	= position,
-		up			= {math.sin(cameraData.rotation / 57.3), 1, -math.cos(cameraData.rotation / 57.3)},
-		size		= {1, 0.75},
-		origin		= {0, 0},
-		rotation	= 0,
-		tint		= raylib.WHITE,
-	)
+	//texture := graphics.textures["overworld_player"]
+	//position := playerData.unit.position + {0,0.5,0}
+	//raylib.DrawBillboardPro(
+	//	camera		= cameraData.rl,
+	//	texture		= texture,
+	//	source		= {0,0,16,16},
+	//	position	= position,
+	//	up			= {math.sin(cameraData.rotation / 57.3), 1, -math.cos(cameraData.rotation / 57.3)},
+	//	size		= {1, 0.75},
+	//	origin		= {0, 0},
+	//	rotation	= 0,
+	//	tint		= raylib.WHITE,
+	//)
 
 	raylib.EndMode3D()
 
@@ -86,13 +86,16 @@ init  :: proc() {
 	if settings.screen_fps != 0 do raylib.SetTargetFPS(settings.screen_fps)
 	raylib.SetExitKey(.KEY_NULL)
 
+	//* Graphics
+	fmt.printf("Fuck\n")
+	graphics.init_textures()
+	fmt.printf("Fuck\n")
+	world.init_tiles()
+	fmt.printf("Fuck\n")
+
 	//* Camera and Player
 	camera.init()
 	player.init()
-
-	//* Graphics
-	graphics.init_textures()
-	world.init_tiles()
 
 	//! TEMP
 	world.init_map("data/world/test.json")

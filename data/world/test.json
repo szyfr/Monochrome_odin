@@ -71,7 +71,7 @@
 		{ "tile":"grass_1",				"position":[6,0,3],   "tags":[["none"], false,false ] }
 		{ "tile":"grass_1",				"position":[7,0,3],   "tags":[["none"], false,false ] }
 		{ "tile":"grass_1",				"position":[8,0,3],   "tags":[["none"], false,false ] }
-		{ "tile":"tree_1",				"position":[9,0,3],   "tags":[["all"],  false,false ] }
+		{ "tile":"tree_1",				"position":[9,0,3],   "tags":[["all"],  false,true ] }
 		{ "tile":"grass_1",				"position":[10,0,3],  "tags":[["none"], false,false ] }
 		{ "tile":"grass_1",				"position":[11,0,3],  "tags":[["none"], false,false ] }
 		{ "tile":"grass_1",				"position":[12,0,3],  "tags":[["none"], false,false ] }
